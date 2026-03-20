@@ -5328,7 +5328,7 @@
   </script>
   <script>
     async function loadProducts() {
-      const res = await fetch("http://127.0.0.1:5000/api/products");
+      const res = await fetch("/api/products");
       const data = await res.json();
 
       console.log(data);

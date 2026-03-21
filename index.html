@@ -4459,37 +4459,17 @@
     // ═══════════════════════════════════════════════════
     const ADMIN_EMAIL = 'admin@ashritha.com', ADMIN_PASS = 'admin123';
 
-    let settings = JSON.parse(localStorage.getItem('aj_settings') || '{}');
-    settings.waNumber = settings.waNumber || '919000000000';
-    settings.freeShipping = settings.freeShipping || 499;
-    settings.shippingCharge = settings.shippingCharge || 50;
+    let settings = {
+      waNumber: '919000000000',
+      freeShipping: 499,
+      shippingCharge: 50,
+      upiId: 'ashritha@upi',
+      annText: ''
+    };
 
-    // Products with rent support
-    let products = JSON.parse(localStorage.getItem('aj_products') || 'null') || [
-      { id: 1, name: 'Kundan Bridal Necklace Set', category: 'necklace', price: 1850, mrp: 2800, stock: 8, badge: 'Bestseller', desc: 'Stunning Kundan work necklace with matching earrings. Perfect for bridal and festive occasions. Premium 1 gram gold finish.', image: '', active: true, date: Date.now() - 10000, rentEnabled: true, rentPrice: 250, deposit: 2000, maxDays: 7 },
-      { id: 2, name: 'Temple Coin Drop Earrings', category: 'earrings', price: 450, mrp: 699, stock: 15, badge: 'Trending', desc: 'Traditional temple-style coin drop earrings with intricate gold work. Lightweight and comfortable for all-day wear.', image: '', active: true, date: Date.now() - 9000, rentEnabled: false },
-      { id: 3, name: 'Antique Gold Bangles Set of 4', category: 'bangles', price: 780, mrp: 1100, stock: 3, badge: '', desc: 'Beautiful antique-finish bangles with floral motif. Set of 4. Matches any traditional outfit perfectly.', image: '', active: true, date: Date.now() - 8000, rentEnabled: true, rentPrice: 120, deposit: 1000, maxDays: 5 },
-      { id: 4, name: 'Royal Kundan Bridal Set', category: 'sets', price: 3200, mrp: 4500, stock: 5, badge: 'Sale', desc: 'Complete bridal jewellery set: heavy kundan necklace, jhumka earrings, and maang tikka.', image: '', active: true, date: Date.now() - 7000, rentEnabled: true, rentPrice: 400, deposit: 3500, maxDays: 3 },
-      { id: 5, name: 'Classic Pearl Finger Ring', category: 'rings', price: 299, mrp: 450, stock: 20, badge: 'New', desc: 'Elegant adjustable ring with freshwater pearl. Perfect for daily wear or special occasions.', image: '', active: true, date: Date.now() - 6000, rentEnabled: false },
-      { id: 6, name: 'Oxidised Choker Necklace', category: 'necklace', price: 650, mrp: 950, stock: 12, badge: 'Trending', desc: 'Gorgeous oxidised finish choker with beaded detailing.', image: '', active: true, date: Date.now() - 5000, rentEnabled: true, rentPrice: 100, deposit: 700, maxDays: 7 },
-      { id: 7, name: 'Chandbali Jhumka Earrings', category: 'earrings', price: 580, mrp: 850, stock: 9, badge: 'Bestseller', desc: 'Traditional chandbali design with peacock motif and pearl drops.', image: '', active: true, date: Date.now() - 4000, rentEnabled: false },
-      { id: 8, name: 'Silver Jhumka Earrings', category: 'earrings', price: 890, mrp: 1200, stock: 7, badge: '', desc: 'Beautiful silver jhumkas with delicate filigree work. Lightweight and hypoallergenic.', image: '', active: true, date: Date.now() - 3500, rentEnabled: false },
-      { id: 9, name: 'Silver Bangles Set', category: 'earrings', price: 1200, mrp: 1600, stock: 4, badge: 'New', desc: 'Beautiful set of 4 silver bangles with intricate oxidised work. Certified and stamped.', image: '', active: true, date: Date.now() - 3000, rentEnabled: false },
-      { id: 10, name: 'Meenakari Bangles Set of 2', category: 'bangles', price: 520, mrp: 750, stock: 0, badge: '', desc: 'Colourful meenakari work bangles in vibrant hues. Set of 2.', image: '', active: true, date: Date.now() - 2000, rentEnabled: false },
-    ];
+    let products = [];
 
-    // Reviews: {id, productId, productName, author, rating(1-5), text, date, status('pending'|'approved')}
-    let reviews = JSON.parse(localStorage.getItem('aj_reviews') || '[]');
-    if (!reviews.length) {
-      reviews = [
-        { id: 1, productId: 1, productName: 'Kundan Bridal Necklace Set', author: 'Priya R.', rating: 5, text: 'Absolutely stunning! The quality is far better than I expected. Wore it for my mehendi and got so many compliments. Will definitely order more.', date: '2025-01-15', status: 'approved' },
-        { id: 2, productId: 1, productName: 'Kundan Bridal Necklace Set', author: 'Meena S.', rating: 4, text: 'Very pretty set. The gold finish looks real and lasts well. Only minor thing is one earring back was a bit loose but overall excellent value.', date: '2025-02-03', status: 'approved' },
-        { id: 3, productId: 2, productName: 'Temple Coin Drop Earrings', author: 'Ritu K.', rating: 5, text: 'Perfect for temple visits and traditional wear. Light weight and very comfortable.', date: '2025-02-20', status: 'approved' },
-        { id: 4, productId: 4, productName: 'Royal Kundan Bridal Set', author: 'Anjali V.', rating: 5, text: 'Rented this for my sister\'s wedding — absolutely gorgeous! The rental process was so smooth and the team was very helpful.', date: '2025-03-01', status: 'approved' },
-        { id: 5, productId: 3, productName: 'Antique Gold Bangles Set of 4', author: 'Kavya P.', rating: 3, text: 'Decent quality but the colour faded a little after a few wears. Still good for the price.', date: '2025-03-10', status: 'pending' },
-      ];
-      localStorage.setItem('aj_reviews', JSON.stringify(reviews));
-    }
+    let reviews = [];
 
     let cart = JSON.parse(localStorage.getItem('aj_cart') || '[]');
     let users = JSON.parse(localStorage.getItem('aj_users') || '[]');
@@ -4497,12 +4477,12 @@
     let currentProduct = null, currentQty = 1, currentFilter = 'all', currentRentProduct = null, reviewProductId = null;
 
     const sv = {
-      products() { localStorage.setItem('aj_products', JSON.stringify(products)); },
-      reviews() { localStorage.setItem('aj_reviews', JSON.stringify(reviews)); },
+      products() {},
+      reviews() {},
       cart() { localStorage.setItem('aj_cart', JSON.stringify(cart)); },
-      users() { localStorage.setItem('aj_users', JSON.stringify(users)); },
-      user(u) { localStorage.setItem('aj_user', JSON.stringify(u)); currentUser = u; },
-      settings() { localStorage.setItem('aj_settings', JSON.stringify(settings)); }
+      users() {},
+      user(u) { if (u) { localStorage.setItem('aj_user', JSON.stringify(u)); currentUser = u; } else { localStorage.removeItem('aj_user'); currentUser = null; } },
+      settings() {}
     };
 
     // ═══════════════════════════════════════════════════
@@ -4536,23 +4516,41 @@
     // ═══════════════════════════════════════════════════
     // AUTH
     // ═══════════════════════════════════════════════════
+    async function apiFetch(endpoint, options = {}) {
+      options.headers = options.headers || {};
+      options.headers['Content-Type'] = 'application/json';
+      const token = localStorage.getItem('aj_token');
+      if (token) options.headers['Authorization'] = 'Bearer ' + token;
+      const res = await fetch(endpoint, options);
+      const data = await res.json().catch(()=>({}));
+      if (!res.ok) throw new Error(data.error || 'API Error');
+      return data;
+    }
+
     function tglPw(id, btn) { const el = document.getElementById(id); if (el.type === 'password') { el.type = 'text'; btn.innerHTML = '&#128584;'; } else { el.type = 'password'; btn.innerHTML = '&#128065;'; } }
     const vEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     function showErr(id, show) { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; }
 
-    function handleSignIn() {
+    async function handleSignIn() {
       const email = document.getElementById('si-email').value.trim();
       const pass = document.getElementById('si-pw').value;
       let ok = true;
       if (!vEmail(email)) { showErr('si-email-err', true); ok = false; } else showErr('si-email-err', false);
       if (pass.length < 6) { showErr('si-pw-err', true); ok = false; } else showErr('si-pw-err', false);
       if (!ok) return;
-      if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { sv.user({ email, name: 'Admin', isAdmin: true }); toast('Welcome, Admin!'); showPage('page-admin'); return; }
-      const u = users.find(u => u.email === email && u.password === pass);
-      if (!u) { toast('Incorrect email or password'); return; }
-      sv.user(u); toast('Welcome back, ' + u.fname + '!'); showPage('page-store');
+      try {
+        const body = { email, password: pass };
+        const data = await apiFetch('/api/auth/login', { method: 'POST', body: JSON.stringify(body) });
+        localStorage.setItem('aj_token', data.token);
+        sv.user(data.user);
+        toast('Welcome back, ' + (data.user.fname || 'Admin') + '!');
+        showPage(data.user.is_admin ? 'page-admin' : 'page-store');
+      } catch (err) {
+        toast(err.message || 'Login failed');
+      }
     }
-    function handleSignUp() {
+
+    async function handleSignUp() {
       const fname = document.getElementById('su-fname').value.trim();
       const email = document.getElementById('su-email').value.trim();
       const pass = document.getElementById('su-pw').value;
@@ -4560,23 +4558,42 @@
       if (!vEmail(email)) { showErr('su-email-err', true); ok = false; } else showErr('su-email-err', false);
       if (pass.length < 6) { showErr('su-pw-err', true); ok = false; } else showErr('su-pw-err', false);
       if (!fname || !ok) { toast('Please fill all required fields'); return; }
-      if (users.find(u => u.email === email)) { toast('Account already exists with this email'); return; }
-      const nu = { email, fname, lname: document.getElementById('su-lname').value.trim(), phone: document.getElementById('su-phone').value.trim(), password: pass, address: '' };
-      users.push(nu); sv.users(); sv.user(nu);
-      toast('Welcome to Ashritha Jewellery, ' + fname + '!'); showPage('page-store');
+      try {
+        const body = {
+          email, fname, password: pass,
+          lname: document.getElementById('su-lname').value.trim(),
+          phone: document.getElementById('su-phone').value.trim()
+        };
+        const data = await apiFetch('/api/auth/register', { method: 'POST', body: JSON.stringify(body) });
+        localStorage.setItem('aj_token', data.token);
+        sv.user(data.user);
+        toast('Welcome to Ashritha Jewellery, ' + fname + '!');
+        showPage('page-store');
+      } catch (err) {
+        toast(err.message || 'Registration failed');
+      }
     }
+
     function handleForgot() {
       const e = document.getElementById('fp-email').value.trim();
       if (!vEmail(e)) { toast('Enter a valid email'); return; }
       toast('Reset link sent to ' + e + ' (demo)');
       setTimeout(() => showPage('page-signin'), 1800);
     }
+
     function googleSignIn() {
-      const u = { email: 'demo@gmail.com', fname: 'Google', lname: 'User', phone: '', address: '', password: '' };
-      if (!users.find(x => x.email === u.email)) { users.push(u); sv.users(); }
-      sv.user(u); toast('Signed in with Google!'); showPage('page-store');
+      toast('Social login not implemented yet.');
     }
-    function handleLogout() { localStorage.removeItem('aj_user'); currentUser = null; renderHeaderAuth(); toast('Signed out'); showPage('page-signin'); }
+
+    async function handleLogout() { 
+      try { await apiFetch('/api/auth/logout', { method: 'POST' }); } catch(e){}
+      localStorage.removeItem('aj_token');
+      localStorage.removeItem('aj_user'); 
+      currentUser = null; 
+      renderHeaderAuth(); 
+      toast('Signed out'); 
+      showPage('page-signin'); 
+    }
 
     // ═══════════════════════════════════════════════════
     // HEADER AUTH
@@ -4616,12 +4633,7 @@
     function stockStatus(p) { if (p.stock === 0) return 'oos'; if (p.stock <= 3) return 'low'; return 'in'; }
     function stockPct(p) { return Math.min(100, Math.round((p.stock / 20) * 100)); }
 
-    function getProductAvgRating(pid) {
-      const approved = reviews.filter(r => r.productId === pid && r.status === 'approved');
-      if (!approved.length) return null;
-      const avg = approved.reduce((s, r) => s + r.rating, 0) / approved.length;
-      return { avg: Math.round(avg * 10) / 10, count: approved.length };
-    }
+    function getProductAvgRating(pid) { return null; }
     function starsHtml(n, size = '13px') {
       let h = ''; for (let i = 1; i <= 5; i++)h += `<span style="color:${i <= Math.round(n) ? 'var(--gold)' : '#DDD'};font-size:${size};">★</span>`; return h;
     }
@@ -4699,14 +4711,28 @@
     // ═══════════════════════════════════════════════════
     // PRODUCT DETAIL PAGE
     // ═══════════════════════════════════════════════════
-    function openProductDetail(id) {
+    async function openProductDetail(id) {
       const p = products.find(x => x.id === id); if (!p) return;
       currentProduct = p; currentQty = 1;
       const ss = stockStatus(p);
       const disc = p.mrp ? Math.round((1 - p.price / p.mrp) * 100) : 0;
       const pct = stockPct(p);
-      const rating = getProductAvgRating(p.id);
-      const approvedReviews = reviews.filter(r => r.productId === p.id && r.status === 'approved');
+      
+      let approvedReviews = [];
+      let rating = null;
+      try {
+        const rRes = await apiFetch(`/api/products/${id}/reviews`);
+        approvedReviews = (rRes.reviews || []).map(r => ({
+           id: r.id, productId: r.product_id, productName: r.product_name,
+           author: r.name, rating: r.rating, text: r.comment,
+           date: r.created_at.split(' ')[0]
+        }));
+        if (approvedReviews.length) {
+          const avg = approvedReviews.reduce((sum, r) => sum + r.rating, 0) / approvedReviews.length;
+          rating = { avg, count: approvedReviews.length };
+        }
+      } catch(e) {}
+      
       const similar = products.filter(x => x.active && x.category === p.category && x.id !== p.id).slice(0, 4);
 
       // Stock text
@@ -4841,28 +4867,23 @@
     }
     function closeReviewModal() { document.getElementById('reviewModal').classList.remove('open'); }
 
-    function submitReview() {
+    async function submitReview() {
       const ratingInput = document.querySelector('#starPicker input:checked');
       const name = document.getElementById('rv-name').value.trim();
       const text = document.getElementById('rv-text').value.trim();
       if (!ratingInput) { toast('Please select a star rating'); return; }
       if (!name) { toast('Please enter your name'); return; }
       if (text.length < 10) { toast('Please write at least 10 characters'); return; }
-      const p = products.find(x => x.id === reviewProductId);
-      const newReview = {
-        id: Date.now(), productId: reviewProductId,
-        productName: p ? p.name : 'Product',
-        author: name, rating: parseInt(ratingInput.value),
-        text, date: new Date().toISOString().split('T')[0],
-        status: 'pending'
-      };
-      reviews.push(newReview); sv.reviews();
-      closeReviewModal();
-      toast('Thank you! Your review is submitted and will appear after approval.');
-      // Re-render detail if on product page
-      if (document.getElementById('page-product').classList.contains('active') && currentProduct?.id === reviewProductId) {
-        setTimeout(() => openProductDetail(reviewProductId), 500);
-      }
+      
+      const payload = { name, rating: parseInt(ratingInput.value), text };
+      try {
+        await apiFetch('/api/products/' + reviewProductId + '/reviews', { method: 'POST', body: JSON.stringify(payload) });
+        closeReviewModal();
+        toast('Thank you! Your review is submitted and will appear after approval.');
+        if (document.getElementById('page-product').classList.contains('active') && currentProduct?.id === reviewProductId) {
+          openProductDetail(reviewProductId);
+        }
+      } catch (err) { toast(err.message || 'Failed to submit review'); }
     }
 
     // ═══════════════════════════════════════════════════
@@ -4909,7 +4930,7 @@
       if (box) box.style.display = 'block';
     }
 
-    function submitRentRequest() {
+    async function submitRentRequest() {
       if (!currentRentProduct) { return; }
       const agreed = document.getElementById('rentAgree').checked;
       if (!agreed) { toast('Please agree to the rental terms and conditions'); return; }
@@ -4921,12 +4942,30 @@
       if (!name || !phone || !addr || !start || !end) { toast('Please fill all required fields'); return; }
       const days = Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24));
       if (days <= 0 || days > currentRentProduct.maxDays) { toast('Invalid rental dates'); return; }
-      const totalRent = days * currentRentProduct.rentPrice;
+      
       const p = currentRentProduct;
-      const msg = `Rental Request — Ashritha Jewellery\n\nItem: ${p.name}\nCategory: ${catLabel(p.category)}\n\nRental Period: ${start} to ${end} (${days} days)\nRent Amount: Rs ${totalRent.toLocaleString()}\nSecurity Deposit: Rs ${p.deposit.toLocaleString()} (refundable)\nTotal to Pay: Rs ${(totalRent + p.deposit).toLocaleString()}\n\nCustomer Details:\n  Name: ${name}\n  Mobile: ${phone}\n  Address: ${addr}\n\nI have read and agreed to all rental terms and conditions.\n\nPlease confirm availability and share payment details. Thank you!`;
-      closeRentModal();
-      openWhatsApp(msg);
-      toast('Rental request opening in WhatsApp!');
+      const totalRent = days * p.rentPrice;
+      
+      const payload = {
+        product_id: p.id,
+        start_date: start,
+        end_date: end,
+        name,
+        phone,
+        address: addr
+      };
+      
+      try {
+        const res = await apiFetch('/api/rent', { method: 'POST', body: JSON.stringify(payload) });
+        const rentId = res.rent.id;
+        
+        const msg = `Rental Request — Ashritha Jewellery\n\nRequest ID: #${rentId}\nItem: ${p.name}\nCategory: ${catLabel(p.category)}\n\nRental Period: ${start} to ${end} (${days} days)\nRent Amount: Rs ${totalRent.toLocaleString()}\nSecurity Deposit: Rs ${p.deposit.toLocaleString()} (refundable)\nTotal to Pay: Rs ${(totalRent + p.deposit).toLocaleString()}\n\nCustomer Details:\n  Name: ${name}\n  Mobile: ${phone}\n  Address: ${addr}\n\nI have read and agreed to all rental terms and conditions.\n\nPlease confirm availability and share payment details. Thank you!`;
+        closeRentModal();
+        openWhatsApp(msg);
+        toast('Rental request submitted successfully!');
+      } catch (err) {
+        toast(err.message || 'Failed to submit rental request');
+      }
     }
 
     // ═══════════════════════════════════════════════════
@@ -4990,7 +5029,7 @@
       document.getElementById('checkoutModal').classList.add('open');
     }
     function closeCheckout() { document.getElementById('checkoutModal').classList.remove('open'); }
-    function placeOrderWA() {
+    async function placeOrderWA() {
       const name = document.getElementById('co-name').value.trim();
       const phone = document.getElementById('co-phone').value.trim();
       const address = document.getElementById('co-addr').value.trim();
@@ -4999,15 +5038,29 @@
       const pin = document.getElementById('co-pin').value.trim();
       const notes = document.getElementById('co-notes').value.trim();
       if (!name || !phone || !address || !city || !pin) { toast('Please fill all required fields'); return; }
+      
       const { sub, ship, total } = calcTotals();
-      const orderId = 'AJ' + Date.now().toString().slice(-6);
-      const lines = cart.map(i => `  - ${i.name} (Qty: ${i.qty}) — Rs ${(i.price * i.qty).toLocaleString()}`).join('\n');
-      const msg = `New Order — Ashritha Jewellery\nOrder ID: #${orderId}\n\nCustomer Details:\n  Name: ${name}\n  Mobile: ${phone}\n\nDelivery Address:\n  ${address}\n  ${city}${state ? ', ' + state : ''} — ${pin}\n\nItems Ordered:\n${lines}\n\nPrice Breakdown:\n  Subtotal: Rs ${sub.toLocaleString()}\n  Shipping: ${ship === 0 ? 'FREE' : 'Rs ' + ship}\n  TOTAL PAYABLE: Rs ${total.toLocaleString()}\n${notes ? '\nNote: ' + notes : ''}\n\nPlease confirm and share payment details. Thank you!`;
-      closeCheckout(); document.getElementById('cartSidebar').classList.remove('open');
-      openWhatsApp(msg);
-      cart.forEach(item => { const p = products.find(x => x.id === item.id); if (p) p.stock = Math.max(0, p.stock - item.qty); });
-      sv.products();
-      setTimeout(() => { if (confirm('Order sent! Clear your cart?')) { cart = []; sv.cart(); updateCartUI(); } }, 800);
+      
+      const payload = {
+        name, phone, address, city, state, pincode: pin,
+        items: cart.map(i => ({ product_id: i.id, quantity: i.qty, price: i.price }))
+      };
+      
+      try {
+        const res = await apiFetch('/api/orders', { method: 'POST', body: JSON.stringify(payload) });
+        const orderId = res.order.id;
+        
+        const lines = cart.map(i => `  - ${i.name} (Qty: ${i.qty}) — Rs ${(i.price * i.qty).toLocaleString()}`).join('\n');
+        const msg = `New Order — Ashritha Jewellery\nOrder ID: #${orderId}\n\nCustomer Details:\n  Name: ${name}\n  Mobile: ${phone}\n\nDelivery Address:\n  ${address}\n  ${city}${state ? ', ' + state : ''} — ${pin}\n\nItems Ordered:\n${lines}\n\nPrice Breakdown:\n  Subtotal: Rs ${sub.toLocaleString()}\n  Shipping: ${ship === 0 ? 'FREE' : 'Rs ' + ship}\n  TOTAL PAYABLE: Rs ${total.toLocaleString()}\n${notes ? '\nNote: ' + notes : ''}\n\nPlease confirm and share payment details. Thank you!`;
+        closeCheckout(); document.getElementById('cartSidebar').classList.remove('open');
+        openWhatsApp(msg);
+        
+        cart = []; sv.cart(); updateCartUI();
+        toast('Order placed successfully!');
+        fetchInitialData(); // Refresh stock
+      } catch (err) {
+        toast(err.message || 'Failed to place order');
+      }
     }
 
     // ═══════════════════════════════════════════════════
@@ -5041,33 +5094,36 @@
     // ADMIN — PRODUCTS
     // ═══════════════════════════════════════════════════
     // showAdminTab moved to admin accounts section above
-    function addProduct() {
+    async function addProduct() {
       const name = document.getElementById('pName').value.trim();
       const price = parseFloat(document.getElementById('pPrice').value);
       const stock = parseInt(document.getElementById('pStock').value);
       const cat = document.getElementById('pCategory').value;
       if (!name || !price || isNaN(stock)) { toast('Please fill name, price and stock'); return; }
-      const comboItems = cat === 'combo' ? getComboItems() : [];
-      if (cat === 'combo' && comboItems.length < 2) { toast('Add at least 2 items for a combo set'); return; }
-      products.unshift({
-        id: Date.now(), name, price, stock,
-        category: cat,
+      
+      const payload = {
+        name, category: cat, price, stock,
         mrp: parseFloat(document.getElementById('pMRP').value) || null,
         badge: document.getElementById('pBadge').value,
-        desc: document.getElementById('pDesc').value,
-        image: document.getElementById('pImage').value || '',
-        active: true, date: Date.now(),
-        comboItems,
-        rentEnabled: document.getElementById('pRentEnabled').checked,
-        rentPrice: parseFloat(document.getElementById('pRentPrice').value) || 0,
+        description: document.getElementById('pDesc').value,
+        image_url: document.getElementById('pImage').value || '',
+        rent_enabled: document.getElementById('pRentEnabled').checked,
+        rent_price: parseFloat(document.getElementById('pRentPrice').value) || 0,
         deposit: parseFloat(document.getElementById('pDeposit').value) || 0,
-        maxDays: parseInt(document.getElementById('pMaxDays').value) || 7,
-      });
-      sv.products(); toast('Product added!');
-      ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pRentPrice', 'pDeposit', 'pMaxDays'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('pBadge').value = ''; document.getElementById('pRentEnabled').checked = false;
-      document.getElementById('pCategory').value = 'necklace';
-      toggleComboField('necklace'); resetComboItems(); clearImage();
+        max_days: parseInt(document.getElementById('pMaxDays').value) || 7
+      };
+      
+      try {
+        await apiFetch('/api/admin/products', { method: 'POST', body: JSON.stringify(payload) });
+        toast('Product added!');
+        ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pRentPrice', 'pDeposit', 'pMaxDays'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('pBadge').value = ''; document.getElementById('pRentEnabled').checked = false;
+        document.getElementById('pCategory').value = 'necklace';
+        clearImage();
+        fetchInitialData().then(() => renderAdminProducts());
+      } catch (err) {
+        toast(err.message || 'Failed to add product');
+      }
     }
     function renderAdminProducts(q = '') {
       const list = document.getElementById('adminProdList'); if (!list) return;
@@ -5080,9 +5136,28 @@
         return `<div class="admin-prod-row"><div class="admin-prod-thumb">${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.outerHTML='${svgPh}'">` : svgPh}</div><div class="admin-prod-info"><div class="admin-prod-name">${p.name}</div><div class="admin-prod-meta">${catLabel(p.category)}${p.badge ? ' · ' + p.badge : ''}${p.rentEnabled ? ' · <span style="color:var(--rent);font-weight:600;">For Rent</span>' : ''}</div><div class="admin-prod-stock">${stockPill}<input type="number" value="${p.stock}" min="0" style="width:64px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:12px;" onchange="updateStock(${p.id},this.value)" title="Update stock count"></div></div><div class="admin-prod-price">Rs ${p.price.toLocaleString()}</div><div class="admin-row-actions"><button class="toggle-vis-btn ${p.active ? 'tog-live' : 'tog-hidden'}" onclick="toggleVis(${p.id})">${p.active ? 'Live' : 'Hidden'}</button><button class="edit-btn" onclick="editProduct(${p.id})">Edit</button><button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button></div></div>`;
       }).join('');
     }
-    function updateStock(id, val) { const p = products.find(x => x.id === id); if (!p) return; p.stock = Math.max(0, parseInt(val) || 0); sv.products(); toast(`Stock updated: ${p.name} — ${p.stock} pieces`); }
-    function toggleVis(id) { const p = products.find(x => x.id === id); if (!p) return; p.active = !p.active; sv.products(); renderAdminProducts(); toast('Visibility updated.'); }
-    function deleteProduct(id) { if (!confirm('Delete this product?')) return; products = products.filter(x => x.id !== id); sv.products(); renderAdminProducts(); toast('Product deleted.'); }
+    async function updateStock(id, val) { 
+      try {
+        await apiFetch('/api/admin/products/' + id + '/stock', { method: 'PUT', body: JSON.stringify({ stock: parseInt(val) || 0 }) });
+        toast('Stock updated!');
+        fetchInitialData().then(() => renderAdminProducts());
+      } catch (err) { toast(err.message || 'Failed to update stock'); }
+    }
+    async function toggleVis(id) {
+       try {
+         await apiFetch('/api/admin/products/' + id + '/toggle', { method: 'PUT' });
+         toast('Visibility updated');
+         fetchInitialData().then(() => renderAdminProducts());
+       } catch (err) { toast(err.message || 'Error updating visibility'); }
+    }
+    async function deleteProduct(id) { 
+       if (!confirm('Delete this product?')) return;
+       try {
+         await apiFetch('/api/admin/products/' + id, { method: 'DELETE' });
+         toast('Product deleted');
+         fetchInitialData().then(() => renderAdminProducts());
+       } catch (err) { toast(err.message || 'Error deleting product'); }
+    }
     function searchAdmin(v) { renderAdminProducts(v); }
     function editProduct(id) {
       const p = products.find(x => x.id === id); if (!p) return;
@@ -5101,63 +5176,84 @@
       document.getElementById('pMaxDays').value = p.maxDays || '';
       const btn = document.getElementById('adminSubmitBtn');
       btn.textContent = 'Update Product';
-      btn.onclick = () => {
-        p.name = document.getElementById('pName').value.trim();
-        p.category = document.getElementById('pCategory').value;
-        p.price = parseFloat(document.getElementById('pPrice').value);
-        p.mrp = parseFloat(document.getElementById('pMRP').value) || null;
-        p.stock = parseInt(document.getElementById('pStock').value) || 0;
-        p.badge = document.getElementById('pBadge').value;
-        p.desc = document.getElementById('pDesc').value;
-        p.image = document.getElementById('pImage').value || '';
-        p.rentEnabled = document.getElementById('pRentEnabled').checked;
-        p.rentPrice = parseFloat(document.getElementById('pRentPrice').value) || 0;
-        p.deposit = parseFloat(document.getElementById('pDeposit').value) || 0;
-        p.maxDays = parseInt(document.getElementById('pMaxDays').value) || 7;
-        sv.products(); renderAdminProducts(); toast('Product updated!');
-        btn.textContent = 'Add Product to Catalog'; btn.onclick = addProduct;
-        ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pImage', 'pRentPrice', 'pDeposit', 'pMaxDays'].forEach(id => document.getElementById(id).value = '');
-        document.getElementById('pRentEnabled').checked = false;
+      btn.onclick = async () => {
+        const payload = {
+          name: document.getElementById('pName').value.trim(),
+          category: document.getElementById('pCategory').value,
+          price: parseFloat(document.getElementById('pPrice').value),
+          mrp: parseFloat(document.getElementById('pMRP').value) || null,
+          stock: parseInt(document.getElementById('pStock').value) || 0,
+          badge: document.getElementById('pBadge').value,
+          description: document.getElementById('pDesc').value,
+          image_url: document.getElementById('pImage').value || '',
+          rent_enabled: document.getElementById('pRentEnabled').checked,
+          rent_price: parseFloat(document.getElementById('pRentPrice').value) || 0,
+          deposit: parseFloat(document.getElementById('pDeposit').value) || 0,
+          max_days: parseInt(document.getElementById('pMaxDays').value) || 7
+        };
+        try {
+          await apiFetch('/api/admin/products/' + id, { method: 'PUT', body: JSON.stringify(payload) });
+          toast('Product updated!');
+          fetchInitialData().then(() => renderAdminProducts());
+          btn.textContent = 'Add Product to Catalog'; btn.onclick = addProduct;
+          ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pImage', 'pRentPrice', 'pDeposit', 'pMaxDays'].forEach(id => document.getElementById(id).value = '');
+          document.getElementById('pRentEnabled').checked = false;
+        } catch (err) { toast(err.message || 'Failed to update'); }
       };
     }
 
     // ═══════════════════════════════════════════════════
     // ADMIN — REVIEWS
     // ═══════════════════════════════════════════════════
-    function updatePendingBadge() {
-      const n = reviews.filter(r => r.status === 'pending').length;
-      const el = document.getElementById('pendingReviewBadge');
-      if (el) el.textContent = n > 0 ? n : '';
-    }
+    function updatePendingBadge() {}
     function filterAdminReviews(status, btn) {
       document.querySelectorAll('.admin-pane.active .filter-pill').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
       renderAdminReviews(status);
     }
-    function renderAdminReviews(status = 'pending') {
+    
+    async function renderAdminReviews(status = 'pending') {
       const list = document.getElementById('adminReviewList'); if (!list) return;
-      let filtered = reviews;
-      if (status === 'pending') filtered = reviews.filter(r => r.status === 'pending');
-      else if (status === 'approved') filtered = reviews.filter(r => r.status === 'approved');
-      filtered = [...filtered].sort((a, b) => a.status === 'pending' ? -1 : 1);
-      if (!filtered.length) { list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px;">No ${status === 'all' ? '' : status} reviews found.</div>`; return; }
-      list.innerHTML = filtered.map(r => `
+      try {
+        const res = await apiFetch('/api/admin/reviews');
+        let all = res.reviews || [];
+        let filtered = all;
+        if (status === 'pending') filtered = all.filter(r => !r.is_approved);
+        else if (status === 'approved') filtered = all.filter(r => r.is_approved);
+        
+        const n = all.filter(r => !r.is_approved).length;
+        const bdg = document.getElementById('pendingReviewBadge');
+        if (bdg) bdg.textContent = n > 0 ? n : '';
+        
+        if (!filtered.length) { list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px;">No ${status === 'all' ? '' : status} reviews found.</div>`; return; }
+        
+        list.innerHTML = filtered.map(r => `
     <div class="review-admin-row">
       <div class="review-admin-info">
-        <div class="review-admin-product">${r.productName}</div>
-        <div style="display:flex;align-items:center;gap:8px;"><span class="review-admin-name">${r.author}</span><span class="review-admin-stars">${starsHtml(r.rating)}</span><span class="review-admin-date">${r.date}</span></div>
-        <div class="review-admin-text">${r.text}</div>
+        <div class="review-admin-product">${r.product_name}</div>
+        <div style="display:flex;align-items:center;gap:8px;"><span class="review-admin-name">${r.name}</span><span class="review-admin-stars">${starsHtml(r.rating)}</span><span class="review-admin-date">${r.created_at.split(' ')[0]}</span></div>
+        <div class="review-admin-text">${r.comment}</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">
-        <span class="review-admin-status ${r.status === 'pending' ? 'ras-pending' : 'ras-approved'}">${r.status === 'pending' ? 'Pending' : 'Approved'}</span>
-        ${r.status === 'pending' ? `<button class="approve-btn" onclick="moderateReview(${r.id},'approved')">Approve</button><button class="reject-btn" onclick="moderateReview(${r.id},'delete')">Delete</button>` : `<button class="reject-btn" onclick="moderateReview(${r.id},'delete')">Remove</button>`}
+        <span class="review-admin-status ${!r.is_approved ? 'ras-pending' : 'ras-approved'}">${!r.is_approved ? 'Pending' : 'Approved'}</span>
+        ${!r.is_approved ? `<button class="approve-btn" onclick="moderateReview(${r.id},'approved')">Approve</button><button class="reject-btn" onclick="moderateReview(${r.id},'delete')">Delete</button>` : `<button class="reject-btn" onclick="moderateReview(${r.id},'delete')">Remove</button>`}
       </div>
     </div>`).join('');
+      } catch(err) { list.innerHTML = 'Error loading reviews.'; }
     }
-    function moderateReview(id, action) {
-      if (action === 'approved') { const r = reviews.find(x => x.id === id); if (r) { r.status = 'approved'; sv.reviews(); toast('Review approved and published!'); } }
-      else { reviews = reviews.filter(x => x.id !== id); sv.reviews(); toast('Review removed.'); }
-      renderAdminReviews('pending'); updatePendingBadge();
+    
+    async function moderateReview(id, action) {
+      try {
+        if (action === 'approved') { 
+          await apiFetch('/api/admin/reviews/' + id + '/approve', { method: 'PUT' });
+          toast('Review approved and published!');
+        } else {
+          if (!confirm("Delete review forever?")) return;
+          await apiFetch('/api/admin/reviews/' + id, { method: 'DELETE' });
+          toast('Review removed.');
+        }
+        renderAdminReviews('pending');
+      } catch (err) { toast(err.message || 'Error moderating review'); }
     }
 
     // ═══════════════════════════════════════════════════
@@ -5170,15 +5266,25 @@
       const setFs = document.getElementById('setFs'); if (setFs) setFs.value = settings.freeShipping || 499;
       const setSc = document.getElementById('setSc'); if (setSc) setSc.value = settings.shippingCharge || 50;
     }
-    function saveSettings() {
+    async function saveSettings() {
       settings.waNumber = document.getElementById('setWa').value.trim();
       settings.upiId = document.getElementById('setUpi').value.trim();
       settings.freeShipping = parseInt(document.getElementById('setFs').value) || 499;
       settings.shippingCharge = parseInt(document.getElementById('setSc').value) || 50;
       settings.annText = document.getElementById('setAnn').value.trim();
-      sv.settings();
-      const bar = document.getElementById('annBar'); if (bar && settings.annText) bar.textContent = settings.annText;
-      toast('Settings saved!');
+      
+      const payload = {
+        wa_number: settings.waNumber,
+        upi_id: settings.upiId,
+        free_shipping: settings.freeShipping,
+        shipping_charge: settings.shippingCharge,
+        announcement_text: settings.annText
+      };
+      
+      try {
+         await apiFetch('/api/admin/settings', { method: 'PUT', body: JSON.stringify(payload) });
+         toast('Settings saved successfully!');
+      } catch (err) { toast(err.message || 'Failed to save settings'); }
     }
 
     // ═══════════════════════════════════════════════════
@@ -5332,41 +5438,61 @@
     // ═══════════════════════════════════════════════════
     // INIT
     // ═══════════════════════════════════════════════════
+    async function fetchInitialData() {
+      try {
+        const pRes = await apiFetch('/api/products');
+        products = (pRes.products || []).map(p => ({
+          ...p,
+          image: p.image_url,
+          desc: p.description,
+          active: p.is_active,
+          rentEnabled: p.rent_enabled,
+          rentPrice: p.rent_price,
+          maxDays: p.max_days
+        }));
+      } catch (err) {
+        console.error("Failed to load products", err);
+        products = [];
+      }
+      
+      try {
+        const sRes = await apiFetch('/api/settings/public');
+        if (sRes && sRes.settings) {
+          settings.waNumber = sRes.settings.wa_number || settings.waNumber;
+          settings.upiId = sRes.settings.upi_id || settings.upiId;
+          settings.freeShipping = sRes.settings.free_shipping ?? settings.freeShipping;
+          settings.shippingCharge = sRes.settings.shipping_charge ?? settings.shippingCharge;
+          settings.annText = sRes.settings.announcement_text || '';
+        }
+      } catch (e) {}
+      
+      if (localStorage.getItem('aj_token')) {
+        try {
+          const uRes = await apiFetch('/api/auth/me');
+          sv.user(uRes.user);
+        } catch (err) {
+          localStorage.removeItem('aj_token');
+          sv.user(null);
+        }
+      }
+      
+      renderProducts(currentFilter);
+      renderHeaderAuth();
+      updateCartUI();
+    }
+
     (function init() {
       injectLogos();
       if (currentUser) showPage('page-store');
       else showPage('page-signin');
-      renderProducts(); updateCartUI(); renderHeaderAuth();
+      
+      renderProducts(); 
+      updateCartUI(); 
+      renderHeaderAuth();
+      
+      // Fetch live data to overwrite local cache
+      fetchInitialData();
     })();
-  </script>
-  <script>
-    async function loadProducts() {
-      const res = await fetch("/api/products");
-      const data = await res.json();
-
-      console.log(data);
-
-      const grid = document.querySelector(".prod-grid");
-
-      data.products.forEach(product => {
-        const card = `
-      <div class="prod-card">
-          <div class="prod-card-img">
-              <div class="prod-card-img-placeholder">
-                  📿
-              </div>
-          </div>
-          <div class="prod-info">
-              <div class="prod-name">${product.name}</div>
-              <div class="prod-price">₹${product.price}</div>
-          </div>
-      </div>
-      `;
-        grid.innerHTML += card;
-      });
-    }
-
-    loadProducts();
   </script>
 </body>
 

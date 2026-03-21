@@ -15,5 +15,3 @@ try:
     init_db()
 except Exception as e:
     print("Database initialization failed:", e)
-
-handler = app

@@ -3330,9 +3330,11 @@
     }
 
     @media(max-width:768px) {
-      .site-nav {
-        display: none;
-      }
+      .header { flex-wrap: wrap; }
+      .header-search { display: block; flex: 0 0 100%; margin: 12px 0 0 0; max-width: 100%; order: 3; }
+      .site-nav { display: block; }
+      .nav-inner { overflow-x: auto; white-space: nowrap; padding: 0 8px; }
+      .nav-inner::-webkit-scrollbar { display: none; }
 
       .hero-inner {
         grid-template-columns: 1fr;
@@ -3389,9 +3391,6 @@
         grid-template-columns: 1fr;
       }
 
-      .header-search {
-        display: none;
-      }
 
       .reviews-summary {
         flex-direction: column;

@@ -4570,7 +4570,7 @@
       // Cart button — show only for non-admin
       const cartWrap = document.getElementById('cartBtnWrap');
       if (cartWrap) {
-        if (currentUser && currentUser.isAdmin) {
+        if (currentUser && currentUser.is_admin) {
           cartWrap.innerHTML = '';
         } else {
           cartWrap.innerHTML = `<button class="hdr-btn" onclick="toggleCart()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span>Cart</span><span class="cart-badge" id="cartBadge">0</span></button>`;
@@ -4580,7 +4580,7 @@
         const area = document.getElementById(aId); if (!area) return;
         if (!currentUser) { area.innerHTML = `<button class="hdr-btn" onclick="showPage('page-signin')">Sign In</button><button class="btn btn-gold btn-sm" onclick="showPage('page-signup')">Register</button>`; return; }
         const init = (currentUser.fname || currentUser.email || 'A')[0].toUpperCase();
-        area.innerHTML = `<div class="user-menu-wrap"><button class="user-avatar-sm" onclick="this.nextElementSibling.classList.toggle('open')">${init}</button><div class="user-dropdown"><div class="user-dropdown-head"><div class="user-dropdown-name">${currentUser.fname ? currentUser.fname + ' ' + (currentUser.lname || '') : 'My Account'}</div><div class="user-dropdown-email">${currentUser.email}</div></div><div class="dd-divider"></div>${currentUser.isAdmin ? `<button class="dd-item gold" onclick="showPage('page-admin');closeDD()">Admin Dashboard</button>` : `<button class="dd-item" onclick="goProfile();closeDD()">My Profile</button>`}<button class="dd-item red" onclick="handleLogout()">Sign Out</button></div></div>`;
+        area.innerHTML = `<div class="user-menu-wrap"><button class="user-avatar-sm" onclick="this.nextElementSibling.classList.toggle('open')">${init}</button><div class="user-dropdown"><div class="user-dropdown-head"><div class="user-dropdown-name">${currentUser.fname ? currentUser.fname + ' ' + (currentUser.lname || '') : 'My Account'}</div><div class="user-dropdown-email">${currentUser.email}</div></div><div class="dd-divider"></div>${currentUser.is_admin ? `<button class="dd-item gold" onclick="showPage('page-admin');closeDD()">Admin Dashboard</button>` : `<button class="dd-item" onclick="goProfile();closeDD()">My Profile</button>`}<button class="dd-item red" onclick="handleLogout()">Sign Out</button></div></div>`;
       });
       // Also refresh cartBadge count after re-render
       updateCartBadge();

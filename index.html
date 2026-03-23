@@ -4894,7 +4894,7 @@
       if (days <= 0) { if (txt) txt.textContent = 'End date must be after start date.'; if (box) box.style.display = 'block'; return; }
       if (days > currentRentProduct.maxDays) { if (txt) txt.textContent = `Maximum rental period is ${currentRentProduct.maxDays} days.`; if (box) box.style.display = 'block'; return; }
       const total = days * currentRentProduct.rentPrice;
-      if (txt) txt.innerHTML = `<strong>${days} day${days !== 1 ? 's' : ''}</strong> rental = Rs ${total.toLocaleString()} rent + Rs ${currentRentProduct.deposit.toLocaleString()} deposit (refundable) = <strong>Rs ${(total + currentRentProduct.deposit).toLocaleString()} total to pay</strong>`;
+      if (txt) txt.innerHTML = `<strong>${days} day${days !== 1 ? 's' : ''}</strong> rental = Rs ${total.toLocaleString()} rent + Rs ${parseFloat(currentRentProduct.deposit).toLocaleString()} deposit (refundable) = <strong>Rs ${(total + (parseFloat(currentRentProduct.deposit) || 0)).toLocaleString()} total to pay</strong>`;
       if (box) box.style.display = 'block';
     }
 
@@ -4927,7 +4927,7 @@
         const res = await apiFetch('/api/rent', { method: 'POST', body: JSON.stringify(payload) });
         const rentId = res.rent.id;
         
-        const msg = `Rental Request — Ashritha Jewellery\n\nRequest ID: #${rentId}\nItem: ${p.name}\nCategory: ${catLabel(p.category)}\n\nRental Period: ${start} to ${end} (${days} days)\nRent Amount: Rs ${totalRent.toLocaleString()}\nSecurity Deposit: Rs ${p.deposit.toLocaleString()} (refundable)\nTotal to Pay: Rs ${(totalRent + p.deposit).toLocaleString()}\n\nCustomer Details:\n  Name: ${name}\n  Mobile: ${phone}\n  Address: ${addr}\n\nI have read and agreed to all rental terms and conditions.\n\nPlease confirm availability and share payment details. Thank you!`;
+        const msg = `Rental Request — Ashritha Jewellery\n\nRequest ID: #${rentId}\nItem: ${p.name}\nCategory: ${catLabel(p.category)}\n\nRental Period: ${start} to ${end} (${days} days)\nRent Amount: Rs ${totalRent.toLocaleString()}\nSecurity Deposit: Rs ${parseFloat(p.deposit).toLocaleString()} (refundable)\nTotal to Pay: Rs ${(totalRent + (parseFloat(p.deposit) || 0)).toLocaleString()}\n\nCustomer Details:\n  Name: ${name}\n  Mobile: ${phone}\n  Address: ${addr}\n\nI have read and agreed to all rental terms and conditions.\n\nPlease confirm availability and share payment details. Thank you!`;
         closeRentModal();
         openWhatsApp(msg);
         toast('Rental request submitted successfully!');
@@ -4958,7 +4958,9 @@
     }
     function calcTotals() {
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
-      const ship = sub >= (settings.freeShipping || 499) ? 0 : (settings.shippingCharge || 50);
+      const fs = parseFloat(settings.freeShipping) || 499;
+      const sc = parseFloat(settings.shippingCharge) || 50;
+      const ship = sub >= fs ? 0 : sc;
       return { sub, ship, total: sub + ship };
     }
     function updateCartUI() {

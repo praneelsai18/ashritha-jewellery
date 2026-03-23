@@ -67,6 +67,15 @@ def update_profile():
     fname = (d.get("fname") or "").strip()
     if not fname: return jsonify(error="First name required"), 400
     conn = get_conn()
+    
+    new_email = (d.get("email") or "").strip().lower()
+    if new_email and new_email != g.user["email"]:
+        if not valid_email(new_email):
+            conn.close(); return jsonify(error="Invalid email"), 400
+        if conn.execute("SELECT id FROM users WHERE email=%s AND id!=%s", (new_email, g.user_id)).fetchone():
+            conn.close(); return jsonify(error="Email already exists"), 409
+        conn.execute("UPDATE users SET email=%s WHERE id=%s", (new_email, g.user_id))
+
     conn.execute(
         "UPDATE users SET fname=%s,lname=%s,phone=%s,address=%s WHERE id=%s",
         (fname, d.get("lname","").strip(), d.get("phone","").strip(),
@@ -83,6 +92,47 @@ def update_profile():
         (g.user_id,)
     ).fetchone(); conn.close()
     return jsonify(user=safe(row)), 200
+
+@bp.route("/admins", methods=["GET"])
+@login_required
+def get_admins():
+    if not g.user["is_admin"]: return jsonify(error="Forbidden"), 403
+    conn = get_conn()
+    rows = conn.execute("SELECT id,fname,lname,email,phone,address,is_admin FROM users WHERE is_admin=1").fetchall()
+    conn.close()
+    return jsonify(admins=[safe(r) for r in rows]), 200
+
+@bp.route("/admin", methods=["POST"])
+@login_required
+def create_admin():
+    if not g.user["is_admin"]: return jsonify(error="Forbidden"), 403
+    d = request.get_json(silent=True) or {}
+    fname = (d.get("fname") or "").strip()
+    email = (d.get("email") or "").strip().lower()
+    pw = d.get("password") or ""
+    if not fname or not valid_email(email) or len(pw) < 6:
+        return jsonify(error="Invalid data"), 400
+    conn = get_conn()
+    if conn.execute("SELECT id FROM users WHERE email=%s", (email,)).fetchone():
+        conn.close(); return jsonify(error="Email already exists"), 409
+    conn.execute(
+        "INSERT INTO users (fname,email,password,is_admin) VALUES (%s,%s,%s,1)",
+        (fname, email, generate_password_hash(pw))
+    )
+    conn.commit(); conn.close()
+    return jsonify(message="Admin created"), 201
+
+@bp.route("/admin/<email>", methods=["DELETE"])
+@login_required
+def delete_admin(email):
+    if not g.user["is_admin"]: return jsonify(error="Forbidden"), 403
+    email = email.lower()
+    if email == g.user["email"]: return jsonify(error="Cannot delete yourself"), 400
+    if email == "admin@ashrithajewellery.com": return jsonify(error="Cannot delete primary admin"), 400
+    conn = get_conn()
+    conn.execute("DELETE FROM users WHERE email=%s AND is_admin=1", (email,))
+    conn.commit(); conn.close()
+    return jsonify(message="Admin deleted"), 200
 
 
 @bp.route("/logout", methods=["POST"])

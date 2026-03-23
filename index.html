@@ -4843,7 +4843,7 @@
       if (!name) { toast('Please enter your name'); return; }
       if (text.length < 10) { toast('Please write at least 10 characters'); return; }
       
-      const payload = { name, rating: parseInt(ratingInput.value), text };
+      const payload = { author_name: name, rating: parseInt(ratingInput.value), review_text: text };
       try {
         await apiFetch('/api/products/' + reviewProductId + '/reviews', { method: 'POST', body: JSON.stringify(payload) });
         closeReviewModal();
@@ -4918,8 +4918,8 @@
         product_id: p.id,
         start_date: start,
         end_date: end,
-        name,
-        phone,
+        customer_name: name,
+        customer_phone: phone,
         address: addr
       };
       
@@ -5010,8 +5010,8 @@
       const { sub, ship, total } = calcTotals();
       
       const payload = {
-        name, phone, address, city, state, pincode: pin,
-        items: cart.map(i => ({ product_id: i.id, quantity: i.qty, price: i.price }))
+        customer_name: name, customer_phone: phone, address, city, state, pin_code: pin, notes,
+        items: cart.map(i => ({ product_id: i.id, qty: i.qty }))
       };
       
       try {

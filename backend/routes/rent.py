@@ -45,13 +45,15 @@ def submit_rent():
         """INSERT INTO rent_requests
            (product_id,user_id,customer_name,customer_phone,address,
             start_date,end_date,days,rent_total,deposit,grand_total)
-           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
         (pid, g.user_id,
          d["customer_name"].strip(), d["customer_phone"].strip(),
          d["address"].strip(), d["start_date"], d["end_date"],
          days, rent_total, deposit, grand)
     )
-    rid = cur.lastrowid; conn.commit()
+    res = cur.fetchone()
+    rid = res["id"] if (res and isinstance(res, dict)) else (res[0] if res else None)
+    conn.commit()
     row = conn.execute("SELECT * FROM rent_requests WHERE id=%s", (rid,)).fetchone()
     conn.close()
     return jsonify(

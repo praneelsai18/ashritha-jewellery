@@ -51,10 +51,12 @@ def submit_review(pid):
     if len(text) < 10:   conn.close(); return jsonify(error="Review must be at least 10 characters"), 400
 
     cur = conn.execute(
-        "INSERT INTO reviews (product_id,user_id,author_name,rating,review_text,status) VALUES (%s,%s,%s,%s,%s,'pending')",
+        "INSERT INTO reviews (product_id,user_id,author_name,rating,review_text,status) VALUES (%s,%s,%s,%s,%s,'pending') RETURNING id",
         (pid, g.user_id, name, rating, text)
     )
-    rid = cur.lastrowid; conn.commit()
+    res = cur.fetchone()
+    rid = res["id"] if (res and isinstance(res, dict)) else (res[0] if res else None)
+    conn.commit()
     row = conn.execute("SELECT * FROM reviews WHERE id=%s", (rid,)).fetchone(); conn.close()
     return jsonify(review=fmt(row), message="Review submitted — pending approval"), 201
 

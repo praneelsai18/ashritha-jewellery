@@ -53,14 +53,15 @@ def place_order():
     cur = conn.execute(
         """INSERT INTO orders
            (order_ref,user_id,customer_name,customer_phone,address,city,state,pin_code,notes,subtotal,shipping,total)
-           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
         (ref, g.user_id,
          d["customer_name"].strip(), d["customer_phone"].strip(),
          d["address"].strip(), d["city"].strip(),
          d.get("state","").strip(), d["pin_code"].strip(),
          d.get("notes","").strip(), subtotal, ship, total)
     )
-    oid = cur.lastrowid
+    res = cur.fetchone()
+    oid = res["id"] if (res and isinstance(res, dict)) else (res[0] if res else None)
     for item in order_items:
         conn.execute(
             "INSERT INTO order_items (order_id,product_id,product_name,price,qty) VALUES (%s,%s,%s,%s,%s)",

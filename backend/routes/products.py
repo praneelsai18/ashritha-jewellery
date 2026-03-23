@@ -85,7 +85,7 @@ def add_product():
         """INSERT INTO products
            (name,category,price,mrp,stock,badge,description,image_url,
             rent_enabled,rent_price,deposit,max_days)
-           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
         (name, cat, float(price),
          float(d["mrp"]) if d.get("mrp") else None,
          int(stock), badge if badge in BADGES else "",
@@ -96,7 +96,15 @@ def add_product():
          float(d.get("deposit") or 0),
          int(d.get("max_days") or 7))
     )
-    pid = cur.lastrowid; conn.commit()
+    res = cur.fetchone()
+    if res and isinstance(res, dict):
+        pid = res["id"]
+    elif res:
+        pid = res[0]
+    else:
+        pid = None
+        
+    conn.commit()
     row = conn.execute("SELECT * FROM products WHERE id=%s", (pid,)).fetchone(); conn.close()
     return jsonify(product=fmt(row), message="Product added"), 201
 

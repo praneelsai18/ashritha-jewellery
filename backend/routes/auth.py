@@ -28,11 +28,13 @@ def register():
     if conn.execute("SELECT id FROM users WHERE email=%s", (email,)).fetchone():
         conn.close(); return jsonify(error="Account already exists"), 409
     cur = conn.execute(
-        "INSERT INTO users (fname,lname,email,phone,password) VALUES (%s,%s,%s,%s,%s)",
+        "INSERT INTO users (fname,lname,email,phone,password) VALUES (%s,%s,%s,%s,%s) RETURNING id",
         (fname, d.get("lname","").strip(), email,
          d.get("phone","").strip(), generate_password_hash(pw))
     )
-    uid = cur.lastrowid; conn.commit()
+    res = cur.fetchone()
+    uid = res["id"] if (res and isinstance(res, dict)) else (res[0] if res else None)
+    conn.commit()
     row = conn.execute(
         "SELECT id,fname,lname,email,phone,address,is_admin FROM users WHERE id=%s", (uid,)
     ).fetchone(); conn.close()

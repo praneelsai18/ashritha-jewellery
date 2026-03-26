@@ -137,6 +137,25 @@ def delete_admin(email):
     return jsonify(message="Admin deleted"), 200
 
 
+@bp.route("/cart", methods=["GET"])
+@login_required
+def get_cart():
+    conn = get_conn()
+    row = conn.execute("SELECT cart_data FROM users WHERE id=%s", (g.user_id,)).fetchone()
+    conn.close()
+    return jsonify(cart=row["cart_data"] if row and row.get("cart_data") else "[]"), 200
+
+@bp.route("/cart", methods=["PUT"])
+@login_required
+def update_cart():
+    d = request.get_json(silent=True) or {}
+    cart_data = d.get("cart_data", "[]")
+    conn = get_conn()
+    conn.execute("UPDATE users SET cart_data=%s WHERE id=%s", (cart_data, g.user_id))
+    conn.commit()
+    conn.close()
+    return jsonify(message="Cart updated"), 200
+
 @bp.route("/logout", methods=["POST"])
 def logout():
     return jsonify(message="Logged out"), 200

@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone      TEXT    DEFAULT '',
     password   TEXT    NOT NULL,
     address    TEXT    DEFAULT '',
+    cart_data  TEXT    DEFAULT '[]',
     is_admin   INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -188,6 +189,11 @@ def init_db():
         return
 
     conn.executescript(SCHEMA)
+
+    try:
+        conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS cart_data TEXT DEFAULT '[]'")
+    except Exception:
+        pass # Ignored if unsupported or already exists
 
     # Admin user
     if not conn.execute("SELECT id FROM users WHERE email=%s", ("admin@ashritha.com",)).fetchone():

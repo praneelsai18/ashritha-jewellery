@@ -3330,7 +3330,7 @@
     }
 
     @media(max-width:768px) {
-      .header { flex-wrap: wrap; }
+      .header-top { flex-wrap: wrap; height: auto; padding: 12px 16px; }
       .header-search { display: block; flex: 0 0 100%; margin: 12px 0 0 0; max-width: 100%; order: 3; }
       .site-nav { display: block; }
       .nav-inner { overflow-x: auto; white-space: nowrap; padding: 0 8px; }
@@ -3589,18 +3589,26 @@
               Us</button>
           </div>
         </div>
-        <div class="hero-right">
-          <div class="hero-stat">
-            <div class="hero-stat-num">500+</div>
-            <div class="hero-stat-label">Unique Designs</div>
+        <div class="hero-right" style="display: flex; flex-direction: column; align-items: flex-end; gap: 30px;">
+          <div class="hero-image-wrap" style="position:relative; width: 280px; border-radius: 16px; overflow: hidden; box-shadow: 0 24px 48px rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.1);">
+            <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Bridal Collection" style="width:100%; height:auto; display:block; object-fit: cover; aspect-ratio: 4/5;">
+            <div class="featured-badge" style="position:absolute; bottom: 16px; left: 16px; background: rgba(255,255,255,0.95); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: var(--dark); backdrop-filter: blur(4px); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+               ✨ New Collection
+            </div>
           </div>
-          <div class="hero-stat">
-            <div class="hero-stat-num">10K+</div>
-            <div class="hero-stat-label">Happy Customers</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-num">1GM</div>
-            <div class="hero-stat-label">Gold Certified</div>
+          <div class="hero-stats-row" style="display:flex; gap: 24px; text-align: center;">
+            <div class="hero-stat">
+              <div class="hero-stat-num">500+</div>
+              <div class="hero-stat-label">Unique Designs</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-num" style="color:var(--gold2);">10K+</div>
+              <div class="hero-stat-label">Happy Customers</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-num">1GM</div>
+              <div class="hero-stat-label">Gold Certified</div>
+            </div>
           </div>
         </div>
       </div>
@@ -3889,15 +3897,21 @@
         </div>
         <div class="profile-card">
           <h3>Order History</h3>
-          <div style="text-align:center;padding:40px 20px;color:var(--muted);"><svg viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="1.5" width="48" height="48"
-              style="color:var(--border);margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
-              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-            <p style="font-weight:600;margin-bottom:6px;color:var(--dark);">No orders yet</p><button
-              class="btn btn-gold" style="margin-top:16px;" onclick="showPage('page-store')">Start Shopping</button>
+          <div id="orderHistoryList">
+            <div style="text-align:center;padding:40px 20px;color:var(--muted);"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5" width="48" height="48"
+                style="color:var(--border);margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="profile-card">
+          <h3>My Wishlist</h3>
+          <div id="wishlistContainer" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));gap:16px;margin-top:16px;">
+             <!-- Saved items will go here -->
           </div>
         </div>
       </div>
@@ -4020,18 +4034,16 @@
                   </svg>
                   Choose Image from Device
                 </label>
-                <input type="file" id="pImageFile" accept="image/*" style="display:none;"
+                <input type="file" id="pImageFile" accept="image/*" multiple style="display:none;"
                   onchange="handleImageUpload(this)">
-                <span id="pImageFileName" style="font-size:12.5px;color:var(--muted);">No image selected</span>
+                <span id="pImageFileName" style="font-size:12.5px;color:var(--muted);">No images selected</span>
               </div>
-              <div id="pImagePreview" style="margin-top:10px;display:none;">
-                <img id="pImagePreviewImg"
-                  style="width:120px;height:120px;object-fit:cover;border-radius:8px;border:2px solid var(--gold);">
-                <button onclick="clearImage()"
-                  style="display:block;margin-top:6px;background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;">Remove
-                  image</button>
+              <div id="pImagePreview" style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
+                <!-- Previews append here -->
               </div>
-              <input type="hidden" id="pImage" value="">
+              <button id="pClearImagesBtn" onclick="clearImage()"
+                  style="display:none;margin-top:6px;background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;">Clear all images</button>
+              <input type="hidden" id="pImage" value="[]">
             </div>
           </div>
           <button class="admin-submit" id="adminSubmitBtn" onclick="addProduct()">Add Product to Catalog</button>
@@ -4444,13 +4456,20 @@
     let cart = JSON.parse(localStorage.getItem('aj_cart') || '[]');
     let users = JSON.parse(localStorage.getItem('aj_users') || '[]');
     let currentUser = JSON.parse(localStorage.getItem('aj_user') || 'null');
+    let wishlist = JSON.parse(localStorage.getItem('aj_wishlist') || '[]');
     let currentProduct = null, currentQty = 1, currentFilter = 'all', currentRentProduct = null, reviewProductId = null;
 
     const sv = {
       products() {},
       reviews() {},
-      cart() { localStorage.setItem('aj_cart', JSON.stringify(cart)); },
+      cart() { 
+        localStorage.setItem('aj_cart', JSON.stringify(cart)); 
+        if (currentUser && !currentUser.is_admin) {
+          apiFetch('/api/auth/cart', { method: 'PUT', body: JSON.stringify({ cart_data: JSON.stringify(cart) }) }).catch(e => console.error('Cart sync err', e));
+        }
+      },
       users() {},
+      wishs() { localStorage.setItem('aj_wishlist', JSON.stringify(wishlist)); },
       user(u) { if (u) { localStorage.setItem('aj_user', JSON.stringify(u)); currentUser = u; } else { localStorage.removeItem('aj_user'); currentUser = null; } },
       settings() {}
     };
@@ -4513,6 +4532,21 @@
         const data = await apiFetch('/api/auth/login', { method: 'POST', body: JSON.stringify(body) });
         localStorage.setItem('aj_token', data.token);
         sv.user(data.user);
+        
+        if (!data.user.is_admin) {
+          try {
+            const cb = await apiFetch('/api/auth/cart');
+            const clCart = JSON.parse(cb.cart || '[]');
+            if (clCart.length > 0 && cart.length === 0) {
+               cart = clCart;
+               localStorage.setItem('aj_cart', JSON.stringify(cart));
+            } else if (cart.length > 0) {
+               sv.cart(); // Push local cart up
+            }
+          } catch(e) {}
+        }
+        updateCartUI();
+        
         toast('Welcome back, ' + (data.user.fname || 'Admin') + '!');
         showPage(data.user.is_admin ? 'page-admin' : 'page-store');
       } catch (err) {
@@ -4637,14 +4671,22 @@
       let badgeHtml = '';
       if (ss === 'oos') badgeHtml = '<span class="prod-badge badge-oos">Out of Stock</span>';
       else if (p.badge) badgeHtml = `<span class="prod-badge ${p.badge === 'Sale' ? 'badge-sale' : p.badge === 'New' ? 'badge-new' : 'badge-gold'}">${p.badge}</span>`;
-      const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
-      const phHtml = `<div class="prod-card-img-placeholder" style="${p.image ? 'display:none' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="52" height="52"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21"/></svg></div>`;
+      
+      let firstImage = null;
+      try { const arr = JSON.parse(p.image || '[]'); firstImage = Array.isArray(arr) && arr.length > 0 ? arr[0] : null; } catch(e) { firstImage = p.image; }
+      
+      const imgHtml = firstImage ? `<img src="${firstImage}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
+      const phHtml = `<div class="prod-card-img-placeholder" style="${firstImage ? 'display:none' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="52" height="52"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21"/></svg></div>`;
       let stockHtml = '';
       if (ss === 'low') stockHtml = `<div class="prod-stock-bar"><div class="prod-stock-fill" style="width:${pct}%;background:#F59E0B;"></div></div><div class="prod-stock-text prod-stock-low">Only ${p.stock} left!</div>`;
+      const isWished = wishlist.includes(p.id);
+      const heartIcon = isWished 
+        ? `<svg viewBox="0 0 24 24" fill="var(--red)" stroke="var(--red)" stroke-width="2" width="16" height="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
+        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
       return `<div class="prod-card" onclick="openProductDetail(${p.id})">
     <div class="prod-card-img">${imgHtml}${phHtml}${badgeHtml}
       ${ss === 'oos' ? '<div class="prod-oos-overlay"><div class="prod-oos-tag">Out of Stock</div></div>' : ''}
-      <button class="prod-wish" onclick="event.stopPropagation();wishItem(${p.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <button class="prod-wish" onclick="event.stopPropagation();wishItem(${p.id})">${heartIcon}</button>
     </div>
     <div class="prod-info">
       <div class="prod-name">${p.name}</div>
@@ -4767,11 +4809,21 @@
 
       const imgSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="80" height="80" style="color:var(--border2);"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21"/></svg>`;
 
+      let firstImage = null, allImages = [];
+      try { allImages = JSON.parse(p.image || '[]'); firstImage = Array.isArray(allImages) && allImages.length ? allImages[0] : null; } catch(e) { firstImage = p.image; allImages = p.image ? [p.image] : []; }
+
+      let galleryHtml = '';
+      if (allImages.length > 1) {
+         galleryHtml = `<div class="prod-gallery-thumbs" style="display:flex;gap:10px;margin-top:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">` + 
+         allImages.map((img, i) => `<img src="${img}" onclick="document.getElementById('pdMainImg').src=this.src" style="width:64px;height:64px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;transition: border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='transparent'">`).join('') + `</div>`;
+      }
+
       document.getElementById('productDetailContent').innerHTML = `
   <div class="breadcrumb"><a onclick="showPage('page-store')">Home</a><span class="breadcrumb-sep">›</span><a onclick="filterCatTile('${p.category}',{classList:{add:()=>{},remove:()=>{}}});showPage('page-store')">${catLabel(p.category)}</a><span class="breadcrumb-sep">›</span><span style="color:var(--dark);">${p.name}</span></div>
   <div class="prod-detail-inner">
     <div class="prod-detail-img-col">
-      <div class="prod-detail-main-img">${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.outerHTML='${imgSvg}'">` : imgSvg}</div>
+      <div class="prod-detail-main-img">${firstImage ? `<img id="pdMainImg" src="${firstImage}" alt="${p.name}" onerror="this.outerHTML='${imgSvg}'">` : imgSvg}</div>
+      ${galleryHtml}
     </div>
     <div class="prod-detail-info">
       <div class="prod-detail-badges">
@@ -4943,8 +4995,12 @@
       if (!lp || lp.stock === 0) { toast('Sorry, this item is out of stock'); return; }
       if (qty > lp.stock) { toast(`Only ${lp.stock} pieces available`); qty = lp.stock; }
       const ex = cart.find(i => i.id === product.id);
+      
+      let firstImage = null;
+      try { const arr = JSON.parse(product.image || '[]'); firstImage = Array.isArray(arr) && arr.length > 0 ? arr[0] : null; } catch(e) { firstImage = product.image; }
+      
       if (ex) { const nq = ex.qty + qty; if (nq > lp.stock) { toast(`Only ${lp.stock} pieces available`); ex.qty = lp.stock; } else ex.qty = nq; }
-      else cart.push({ id: product.id, name: product.name, price: product.price, image: product.image || '', qty });
+      else cart.push({ id: product.id, name: product.name, price: product.price, image: firstImage || '', qty });
       sv.cart(); updateCartUI(); toast(`${product.name} added to cart`);
     }
     function quickAdd(id) { const p = products.find(x => x.id === id); if (p) addToCart(p, 1); }
@@ -5047,6 +5103,69 @@
       const phEl = document.getElementById('pf-phone'); if (phEl) phEl.value = u.phone || '';
       const adEl = document.getElementById('pf-addr'); if (adEl) adEl.value = u.address || '';
       renderHeaderAuth();
+      fetchMyOrders();
+      renderWishlist();
+    }
+    
+    function renderWishlist() {
+      const container = document.getElementById('wishlistContainer');
+      if (!container) return;
+      const wItems = products.filter(p => wishlist.includes(p.id));
+      if (!wItems.length) {
+        container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--muted);font-size:14px;"><br>Your wishlist is empty.<br><br><button class="btn btn-outline-dark" onclick="showPage('page-store')">Explore Collection</button></div>`;
+        return;
+      }
+      container.innerHTML = wItems.map(p => {
+        let firstImage = null;
+        try { const arr = JSON.parse(p.image || '[]'); firstImage = Array.isArray(arr) && arr.length > 0 ? arr[0] : null; } catch(e) { firstImage = p.image; }
+        return `
+        <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--white);cursor:pointer;position:relative;" onclick="openProductDetail(${p.id})">
+          <div style="width:100%;aspect-ratio:1;background:#F8F8F8;">
+             ${firstImage ? `<img src="${firstImage}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#DDD;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21"/></svg></div>`}
+          </div>
+          <button style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.9);box-shadow:0 2px 4px rgba(0,0,0,0.1);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="event.stopPropagation();wishItem(${p.id})">
+            <svg viewBox="0 0 24 24" fill="var(--red)" stroke="var(--red)" stroke-width="2" width="14" height="14"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div style="padding:10px;">
+            <div style="font-weight:600;font-size:13px;color:var(--dark);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
+            <div style="font-weight:700;font-size:14px;color:var(--gold2);">Rs ${p.price.toLocaleString()}</div>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+    
+    async function fetchMyOrders() {
+      const list = document.getElementById('orderHistoryList');
+      if (!list) return;
+      list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px;">Loading orders...</div>';
+      try {
+        const res = await apiFetch('/api/orders/my');
+        const orders = res.orders || [];
+        if (!orders.length) {
+          list.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--muted);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48" style="color:var(--border);margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><p style="font-weight:600;margin-bottom:6px;color:var(--dark);">No orders yet</p><button class="btn btn-gold" style="margin-top:16px;" onclick="showPage('page-store')">Start Shopping</button></div>`;
+          return;
+        }
+        list.innerHTML = orders.map(o => {
+          const date = new Date(o.created_at).toLocaleDateString(undefined, {year: 'numeric', month: 'short', day: 'numeric'});
+          return `
+            <div style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px;background:var(--white);">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--light);padding-bottom:12px;margin-bottom:12px;">
+                <div>
+                  <div style="font-size:12px;color:var(--muted);font-weight:500;">Order #${o.id} • ${date}</div>
+                  <div style="font-weight:700;margin-top:6px;font-size:15px;color:var(--dark);">Rs ${parseFloat(o.total).toLocaleString()}</div>
+                </div>
+                <div><span style="background:${o.status==='pending'?'#FEF3C7':o.status==='cancelled'?'#FEE2E2':'#D1FAE5'};color:${o.status==='pending'?'#D97706':o.status==='cancelled'?'#DC2626':'#059669'};font-size:10px;font-weight:700;padding:4px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.5px;">${o.status.replace('_', ' ')}</span></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                ${(o.items||[]).map(i => `<div style="font-size:13px;display:flex;justify-content:space-between;color:var(--body);"><span style="flex:1;padding-right:12px;">${i.qty} x ${i.product_name}</span><span style="font-weight:600;white-space:nowrap;">Rs ${(i.price*i.qty).toLocaleString()}</span></div>`).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--red);font-size:13px;">Failed to load orders.</div>';
+      }
     }
     async function saveProfile() {
       if (!currentUser) return;
@@ -5117,7 +5236,9 @@
       list.innerHTML = filtered.map(p => {
         const ss = stockStatus(p);
         const stockPill = ss === 'oos' ? `<span class="stock-pill stock-out">Out of Stock</span>` : ss === 'low' ? `<span class="stock-pill stock-low">${p.stock} left</span>` : `<span class="stock-pill stock-in">In Stock: ${p.stock}</span>`;
-        return `<div class="admin-prod-row"><div class="admin-prod-thumb">${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.outerHTML='${svgPh}'">` : svgPh}</div><div class="admin-prod-info"><div class="admin-prod-name">${p.name}</div><div class="admin-prod-meta">${catLabel(p.category)}${p.badge ? ' · ' + p.badge : ''}${p.rentEnabled ? ' · <span style="color:var(--rent);font-weight:600;">For Rent</span>' : ''}</div><div class="admin-prod-stock">${stockPill}<input type="number" value="${p.stock}" min="0" style="width:64px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:12px;" onchange="updateStock(${p.id},this.value)" title="Update stock count"></div></div><div class="admin-prod-price">Rs ${p.price.toLocaleString()}</div><div class="admin-row-actions"><button class="toggle-vis-btn ${p.active ? 'tog-live' : 'tog-hidden'}" onclick="toggleVis(${p.id})">${p.active ? 'Live' : 'Hidden'}</button><button class="edit-btn" onclick="editProduct(${p.id})">Edit</button><button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button></div></div>`;
+        let firstImage = null;
+        try { const arr = JSON.parse(p.image); firstImage = Array.isArray(arr) && arr.length ? arr[0] : null; } catch(e) { firstImage = p.image; }
+        return `<div class="admin-prod-row"><div class="admin-prod-thumb">${firstImage ? `<img src="${firstImage}" alt="${p.name}" onerror="this.outerHTML='${svgPh}'">` : svgPh}</div><div class="admin-prod-info"><div class="admin-prod-name">${p.name}</div><div class="admin-prod-meta">${catLabel(p.category)}${p.badge ? ' · ' + p.badge : ''}${p.rentEnabled ? ' · <span style="color:var(--rent);font-weight:600;">For Rent</span>' : ''}</div><div class="admin-prod-stock">${stockPill}<input type="number" value="${p.stock}" min="0" style="width:64px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:12px;" onchange="updateStock(${p.id},this.value)" title="Update stock count"></div></div><div class="admin-prod-price">Rs ${p.price.toLocaleString()}</div><div class="admin-row-actions"><button class="toggle-vis-btn ${p.active ? 'tog-live' : 'tog-hidden'}" onclick="toggleVis(${p.id})">${p.active ? 'Live' : 'Hidden'}</button><button class="edit-btn" onclick="editProduct(${p.id})">Edit</button><button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button></div></div>`;
       }).join('');
     }
     async function updateStock(id, val) { 
@@ -5153,7 +5274,17 @@
       document.getElementById('pStock').value = p.stock;
       document.getElementById('pBadge').value = p.badge || '';
       document.getElementById('pDesc').value = p.desc || '';
-      document.getElementById('pImage').value = p.image || '';
+      
+      let currentImages = [];
+      try { 
+        currentImages = JSON.parse(p.image || '[]'); 
+        if (!Array.isArray(currentImages)) currentImages = p.image ? [p.image] : [];
+      } catch(e) { 
+        currentImages = p.image ? [p.image] : []; 
+      }
+      document.getElementById('pImage').value = JSON.stringify(currentImages);
+      document.getElementById('pImageFileName').textContent = currentImages.length > 0 ? `${currentImages.length} images selected` : 'No images selected';
+      renderAdminImagePreviews(currentImages);
       document.getElementById('pRentEnabled').checked = !!p.rentEnabled;
       document.getElementById('pRentPrice').value = p.rentPrice || '';
       document.getElementById('pDeposit').value = p.deposit || '';
@@ -5180,7 +5311,8 @@
           toast('Product updated!');
           fetchInitialData().then(() => renderAdminProducts());
           btn.textContent = 'Add Product to Catalog'; btn.onclick = addProduct;
-          ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pImage', 'pRentPrice', 'pDeposit', 'pMaxDays'].forEach(id => document.getElementById(id).value = '');
+          ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pRentPrice', 'pDeposit', 'pMaxDays'].forEach(id => document.getElementById(id).value = '');
+          clearImage();
           document.getElementById('pRentEnabled').checked = false;
         } catch (err) { toast(err.message || 'Failed to update'); }
       };
@@ -5275,7 +5407,20 @@
     // UTILS
     // ═══════════════════════════════════════════════════
     function openWhatsApp(msg) { const n = (settings.waNumber || '919000000000').replace(/\D/g, ''); window.open(`https://wa.me/${n}?text=${encodeURIComponent(msg)}`, '_blank'); }
-    function wishItem(id) { const p = products.find(x => x.id === id); if (p) toast(`${p.name} saved to wishlist`); }
+    function wishItem(id) { 
+      const p = products.find(x => x.id === id); 
+      if (!p) return; 
+      if (wishlist.includes(id)) {
+        wishlist = wishlist.filter(x => x !== id);
+        toast(`${p.name} removed from wishlist`);
+      } else {
+        wishlist.push(id);
+        toast(`${p.name} saved to wishlist`);
+      }
+      sv.wishs();
+      if (document.getElementById('page-profile').classList.contains('active')) renderWishlist();
+      renderProducts(currentFilter);
+    }
     let _tt;
     function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(_tt); _tt = setTimeout(() => t.classList.remove('show'), 3200); }
 
@@ -5284,24 +5429,80 @@
     // IMAGE UPLOAD
     // ═══════════════════════════════════════════════════
     function handleImageUpload(input) {
-      const file = input.files[0];
-      if (!file) return;
-      if (file.size > 5 * 1024 * 1024) { toast('Image too large — max 5MB'); input.value = ''; return; }
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const base64 = e.target.result;
-        document.getElementById('pImage').value = base64;
-        document.getElementById('pImageFileName').textContent = file.name;
-        document.getElementById('pImagePreviewImg').src = base64;
-        document.getElementById('pImagePreview').style.display = 'block';
-      };
-      reader.readAsDataURL(file);
+      const files = input.files;
+      if (!files || files.length === 0) return;
+      
+      let currentImages = [];
+      try {
+        currentImages = JSON.parse(document.getElementById('pImage').value || '[]');
+      } catch (e) {
+        currentImages = [];
+      }
+      
+      if (!Array.isArray(currentImages)) currentImages = [];
+
+      let promises = Array.from(files).map(file => {
+        return new Promise((resolve, reject) => {
+          if (file.size > 5 * 1024 * 1024) { toast(`Image ${file.name} too large — max 5MB`); resolve(null); return; }
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            resolve(e.target.result);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      });
+
+      Promise.all(promises).then(results => {
+        const validBase64s = results.filter(r => r !== null);
+        currentImages = currentImages.concat(validBase64s);
+        document.getElementById('pImage').value = JSON.stringify(currentImages);
+        document.getElementById('pImageFileName').textContent = `${currentImages.length} images selected`;
+        
+        renderAdminImagePreviews(currentImages);
+      });
     }
+    
+    function renderAdminImagePreviews(images) {
+      const previewContainer = document.getElementById('pImagePreview');
+      previewContainer.innerHTML = '';
+      images.forEach((base64, idx) => {
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+        
+        const img = document.createElement('img');
+        img.src = base64;
+        img.style.cssText = 'width:120px;height:120px;object-fit:cover;border-radius:8px;border:2px solid var(--gold);';
+        
+        const remBtn = document.createElement('button');
+        remBtn.innerHTML = '✕';
+        remBtn.style.cssText = 'position:absolute;top:4px;right:4px;background:var(--red);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;';
+        remBtn.onclick = function() { removeAdminImage(idx); };
+        
+        wrapper.appendChild(img);
+        wrapper.appendChild(remBtn);
+        previewContainer.appendChild(wrapper);
+      });
+      document.getElementById('pClearImagesBtn').style.display = images.length > 0 ? 'inline-block' : 'none';
+    }
+    
+    function removeAdminImage(idx) {
+      let currentImages = [];
+      try { currentImages = JSON.parse(document.getElementById('pImage').value || '[]'); } catch (e) {}
+      if (!Array.isArray(currentImages)) return;
+      currentImages.splice(idx, 1);
+      document.getElementById('pImage').value = JSON.stringify(currentImages);
+      document.getElementById('pImageFileName').textContent = currentImages.length > 0 ? `${currentImages.length} images selected` : 'No images selected';
+      renderAdminImagePreviews(currentImages);
+      if (currentImages.length === 0) document.getElementById('pImageFile').value = '';
+    }
+
     function clearImage() {
-      document.getElementById('pImage').value = '';
+      document.getElementById('pImage').value = '[]';
       document.getElementById('pImageFile').value = '';
-      document.getElementById('pImageFileName').textContent = 'No image selected';
-      document.getElementById('pImagePreview').style.display = 'none';
+      document.getElementById('pImageFileName').textContent = 'No images selected';
+      document.getElementById('pImagePreview').innerHTML = '';
+      document.getElementById('pClearImagesBtn').style.display = 'none';
     }
 
     // ═══════════════════════════════════════════════════
@@ -5474,6 +5675,18 @@
         try {
           const uRes = await apiFetch('/api/auth/me');
           sv.user(uRes.user);
+          if (!uRes.user.is_admin) {
+              try {
+                  const cRes = await apiFetch('/api/auth/cart');
+                  const clCart = JSON.parse(cRes.cart || '[]');
+                  if (clCart.length > 0 && cart.length === 0) {
+                      cart = clCart;
+                      localStorage.setItem('aj_cart', JSON.stringify(cart));
+                  } else if (cart.length > 0) {
+                      sv.cart(); // Try to sync local up
+                  }
+              } catch(e) {}
+          }
         } catch (err) {
           localStorage.removeItem('aj_token');
           sv.user(null);

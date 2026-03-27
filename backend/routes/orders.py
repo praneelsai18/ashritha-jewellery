@@ -67,10 +67,12 @@ def place_order():
             "INSERT INTO order_items (order_id,product_id,product_name,price,qty) VALUES (%s,%s,%s,%s,%s)",
             (oid, item["id"], item["name"], item["price"], item["qty"])
         )
-        conn.execute(
-            "UPDATE products SET stock=GREATEST(0,stock-%s),updated_at=CURRENT_TIMESTAMP WHERE id=%s",
-            (item["qty"], item["id"])
-        )
+        # NOTE: Stock deduction is disabled to allow WhatsApp checkout without immediately reducing available stock.
+        # Admin can manually adjust stock levels in the dashboard when an order is finalized.
+        # conn.execute(
+        #     "UPDATE products SET stock=GREATEST(0,stock-%s),updated_at=CURRENT_TIMESTAMP WHERE id=%s",
+        #     (item["qty"], item["id"])
+        # )
     conn.commit()
     order = conn.execute("SELECT * FROM orders WHERE id=%s", (oid,)).fetchone()
     conn.close()

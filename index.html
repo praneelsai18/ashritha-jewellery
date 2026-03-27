@@ -3677,6 +3677,13 @@
             <div class="cat-tile-name">Combo Sets</div>
             <div class="cat-tile-count" id="cnt-combo">—</div>
           </div>
+          <div class="cat-tile" onclick="filterCatTile('longchains',this)">
+            <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M6 6v12M6 12h12M18 6v12" stroke-linecap="round" stroke-linejoin="round" />
+              </svg></div>
+            <div class="cat-tile-name">Long Chains</div>
+            <div class="cat-tile-count" id="cnt-longchains">—</div>
+          </div>
         </div>
       </div>
     </section>
@@ -3692,6 +3699,7 @@
         <button class="filter-pill" onclick="filterProducts('sets',this)">Bridal Sets</button>
         <button class="filter-pill" onclick="filterProducts('rings',this)">Rings</button>
         <button class="filter-pill" onclick="filterProducts('combo',this)">Combo Sets</button>
+        <button class="filter-pill" onclick="filterProducts('longchains',this)">Long Chains</button>
         <button class="filter-pill" onclick="filterProducts('rent',this)" style="color:var(--rent);">For Rent</button>
         <button class="filter-pill" onclick="filterProducts('sale',this)">On Sale</button>
         <select class="sort-sel" id="sortSel" onchange="sortProducts()">
@@ -3790,11 +3798,11 @@
             <p>Crafting exquisite 1 Gram Gold jewellery for the modern Indian woman. Tradition, elegance, and
               affordability in every piece.</p>
             <div class="footer-social">
-              <a title="Instagram"><svg viewBox="0 0 24 24" fill="currentColor">
+              <a href="https://www.instagram.com/ashritha_jewellery?igsh=MXJzMXg4ZGlzeGh5ZQ==" target="_blank" title="Instagram"><svg viewBox="0 0 24 24" fill="currentColor">
                   <path
                     d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
                 </svg></a>
-              <a title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor">
+              <a href="https://www.facebook.com/share/1BFcpY87t9/" target="_blank" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor">
                   <path
                     d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg></a>
@@ -3820,7 +3828,7 @@
               onclick="openPolicyPage('return')">Return Policy</a>
           </div>
           <div class="footer-col">
-            <h5>Support</h5><a>About Us</a><a>Jewellery Care Guide</a><a onclick="openPolicyPage('return')">Return &amp;
+            <h5>Support</h5><a onclick="openPolicyPage('about')">About Us</a><a onclick="openPolicyPage('jewellery-care')">Jewellery Care Guide</a><a onclick="openPolicyPage('return')">Return &amp;
               Exchange</a><a onclick="openPolicyPage('shipping')">Shipping Policy</a><a
               onclick="openWhatsApp('I need help with my order')">Contact Us</a>
           </div>
@@ -4727,23 +4735,6 @@
       const disc = p.mrp ? Math.round((1 - p.price / p.mrp) * 100) : 0;
       const pct = stockPct(p);
       
-      let approvedReviews = [];
-      let rating = null;
-      try {
-        const rRes = await apiFetch(`/api/products/${id}/reviews`);
-        approvedReviews = (rRes.reviews || []).map(r => ({
-           id: r.id, productId: r.product_id, productName: r.product_name,
-           author: r.name, rating: r.rating, text: r.comment,
-           date: r.created_at.split(' ')[0]
-        }));
-        if (approvedReviews.length) {
-          const avg = approvedReviews.reduce((sum, r) => sum + r.rating, 0) / approvedReviews.length;
-          rating = { avg, count: approvedReviews.length };
-        }
-      } catch(e) {}
-      
-      const similar = products.filter(x => x.active && x.category === p.category && x.id !== p.id).slice(0, 4);
-
       // Stock text
       let stockHtml = '';
       if (ss === 'oos') stockHtml = `<div class="pd-stock-bar"><div class="pd-stock-fill" style="width:0%;"></div></div><div class="pd-stock-txt" style="color:var(--red);font-weight:600;">Currently out of stock</div>`;
@@ -4768,31 +4759,11 @@
     </div>`;
       }
 
-      // Reviews HTML
-      let reviewsHtml = '';
-      if (approvedReviews.length) {
-        const ratingDist = [5, 4, 3, 2, 1].map(s => ({ stars: s, count: approvedReviews.filter(r => r.rating === s).length }));
-        const avgRating = approvedReviews.reduce((s, r) => s + r.rating, 0) / approvedReviews.length;
-        reviewsHtml = `
-    <div class="reviews-summary">
-      <div class="rs-big"><div class="rs-score">${avgRating.toFixed(1)}</div><div class="rs-stars">${starsHtml(avgRating, '20px')}</div><div class="rs-count">${approvedReviews.length} review${approvedReviews.length !== 1 ? 's' : ''}</div></div>
-      <div class="rs-bars">${ratingDist.map(r => `<div class="rs-bar-row"><span class="rs-bar-lbl">${r.stars}★</span><div class="rs-bar-track"><div class="rs-bar-fill" style="width:${approvedReviews.length ? Math.round(r.count / approvedReviews.length * 100) : 0}%"></div></div><span class="rs-bar-num">${r.count}</span></div>`).join('')}</div>
-    </div>
-    <div class="reviews-list">${approvedReviews.map(r => `
-      <div class="review-card">
-        <div class="review-top">
-          <div class="reviewer-info"><div class="reviewer-av">${r.author[0].toUpperCase()}</div><div><div class="reviewer-name">${r.author}</div><div class="reviewer-date">${r.date}</div></div></div>
-          <div class="review-stars">${starsHtml(r.rating, '16px')}</div>
-        </div>
-        <div class="review-text">${r.text}</div>
-        <div class="review-helpful"><span>Was this helpful?</span><button class="helpful-btn">Yes</button><button class="helpful-btn">No</button></div>
-      </div>`).join('')}
-    </div>`;
-      } else {
-        reviewsHtml = `<div class="no-reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p style="font-weight:600;color:var(--dark);margin-bottom:4px;">No reviews yet</p><p>Be the first to review this product!</p></div>`;
-      }
+      // Placeholder reviews HTML (skeleton loading)
+      const skeletonReviewsHtml = `<div class="reviews-skeleton" style="padding:20px;text-align:center;color:var(--muted);"><svg style="display:inline-block;width:40px;height:40px;animation:spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4.25 2.5" style="opacity:0;"/></svg><p style="margin-top:10px;">Loading reviews...</p></div>`;
 
-      // Similar products
+      // Similar products (can be empty initially)
+      const similar = products.filter(x => x.active && x.category === p.category && x.id !== p.id).slice(0, 4);
       const similarHtml = similar.length ? `
     <section class="similar-section">
       <h3 class="similar-title">Similar Products You May Like</h3>
@@ -4818,6 +4789,8 @@
          allImages.map((img, i) => `<img src="${img}" onclick="document.getElementById('pdMainImg').src=this.src" style="width:64px;height:64px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;transition: border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='transparent'">`).join('') + `</div>`;
       }
 
+      let rating = null;
+      // Show modal immediately with skeleton placeholders
       document.getElementById('productDetailContent').innerHTML = `
   <div class="breadcrumb"><a onclick="showPage('page-store')">Home</a><span class="breadcrumb-sep">›</span><a onclick="filterCatTile('${p.category}',{classList:{add:()=>{},remove:()=>{}}});showPage('page-store')">${catLabel(p.category)}</a><span class="breadcrumb-sep">›</span><span style="color:var(--dark);">${p.name}</span></div>
   <div class="prod-detail-inner">
@@ -4829,11 +4802,10 @@
       <div class="prod-detail-badges">
         ${p.badge ? `<span class="prod-badge ${p.badge === 'Sale' ? 'badge-sale' : p.badge === 'New' ? 'badge-new' : 'badge-gold'}">${p.badge}</span>` : ''}
         ${p.rentEnabled ? '<span class="prod-badge badge-rent">For Rent</span>' : ''}
-        
       </div>
       <h1 class="prod-detail-title">${p.name}</h1>
       <div class="prod-detail-sub">${catLabel(p.category)} · 1 Gram Gold</div>
-      ${rating ? `<div class="prod-detail-stars"><span class="pd-stars">${starsHtml(rating.avg, '20px')}</span><span class="pd-stars-num">${rating.avg}</span><a class="pd-reviews-link" onclick="document.getElementById('reviewsSection').scrollIntoView({behavior:'smooth'})">${rating.count} review${rating.count !== 1 ? 's' : ''}</a></div>` : '<div class="prod-detail-stars" style="font-size:12px;color:var(--muted);">No reviews yet — <a class="pd-reviews-link" onclick="document.getElementById(\'reviewsSection\').scrollIntoView({behavior:\'smooth\'})">Be the first</a></div>'}
+      <div class="prod-detail-stars" id="pdRatingContainer" style="font-size:12px;color:var(--muted);">Loading rating...</div>
       <div class="prod-detail-price-row"><span class="pd-price">Rs ${p.price.toLocaleString()}</span>${p.mrp ? `<span class="pd-mrp">Rs ${p.mrp.toLocaleString()}</span>` : ''} ${disc > 0 ? `<span class="pd-disc">${disc}% off</span>` : ''}</div>
       <div class="prod-detail-stock">${stockHtml}</div>
       <div class="prod-detail-desc">${p.desc || 'No description available.'}</div>
@@ -4849,12 +4821,74 @@
       <h2 class="reviews-title">Customer Reviews</h2>
       <button class="write-review-btn" onclick="openReviewModal(${p.id},'${p.name.replace(/'/g, "\\'")}')">Write a Review</button>
     </div>
-    ${reviewsHtml}
+    <div id="reviewsContainer">${skeletonReviewsHtml}</div>
   </section>
   ${similarHtml}`;
 
       showPage('page-product');
       renderHeaderAuth(); updateCartUI();
+
+      // Now load reviews asynchronously after the modal is rendered
+      try {
+        const rRes = await apiFetch(`/api/products/${id}/reviews`);
+        const approvedReviews = (rRes.reviews || []).map(r => ({
+           id: r.id, productId: r.product_id, productName: r.product_name,
+           author: r.name, rating: r.rating, text: r.comment,
+           date: r.created_at.split(' ')[0]
+        }));
+        
+        // Calculate rating
+        if (approvedReviews.length) {
+          const avg = approvedReviews.reduce((sum, r) => sum + r.rating, 0) / approvedReviews.length;
+          rating = { avg, count: approvedReviews.length };
+        }
+
+        // Build and update reviews HTML
+        let reviewsHtml = '';
+        if (approvedReviews.length) {
+          const ratingDist = [5, 4, 3, 2, 1].map(s => ({ stars: s, count: approvedReviews.filter(r => r.rating === s).length }));
+          const avgRating = approvedReviews.reduce((s, r) => s + r.rating, 0) / approvedReviews.length;
+          reviewsHtml = `
+    <div class="reviews-summary">
+      <div class="rs-big"><div class="rs-score">${avgRating.toFixed(1)}</div><div class="rs-stars">${starsHtml(avgRating, '20px')}</div><div class="rs-count">${approvedReviews.length} review${approvedReviews.length !== 1 ? 's' : ''}</div></div>
+      <div class="rs-bars">${ratingDist.map(r => `<div class="rs-bar-row"><span class="rs-bar-lbl">${r.stars}★</span><div class="rs-bar-track"><div class="rs-bar-fill" style="width:${approvedReviews.length ? Math.round(r.count / approvedReviews.length * 100) : 0}%"></div></div><span class="rs-bar-num">${r.count}</span></div>`).join('')}</div>
+    </div>
+    <div class="reviews-list">${approvedReviews.map(r => `
+      <div class="review-card">
+        <div class="review-top">
+          <div class="reviewer-info"><div class="reviewer-av">${r.author[0].toUpperCase()}</div><div><div class="reviewer-name">${r.author}</div><div class="reviewer-date">${r.date}</div></div></div>
+          <div class="review-stars">${starsHtml(r.rating, '16px')}</div>
+        </div>
+        <div class="review-text">${r.text}</div>
+        <div class="review-helpful"><span>Was this helpful?</span><button class="helpful-btn">Yes</button><button class="helpful-btn">No</button></div>
+      </div>`).join('')}
+    </div>`;
+        } else {
+          reviewsHtml = `<div class="no-reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p style="font-weight:600;color:var(--dark);margin-bottom:4px;">No reviews yet</p><p>Be the first to review this product!</p></div>`;
+        }
+
+        // Update reviews container if the product page is still active
+        const reviewCont = document.getElementById('reviewsContainer');
+        if (reviewCont) {
+          reviewCont.innerHTML = reviewsHtml;
+        }
+
+        // Update rating display at the top
+        const ratingEl = document.getElementById('pdRatingContainer');
+        if (ratingEl) {
+          if (rating) {
+            ratingEl.innerHTML = `<span class="pd-stars">${starsHtml(rating.avg, '20px')}</span><span class="pd-stars-num" style="margin:0 8px;">${rating.avg}</span><a class="pd-reviews-link" style="cursor:pointer;" onclick="document.getElementById('reviewsSection').scrollIntoView({behavior:'smooth'})">${rating.count} review${rating.count !== 1 ? 's' : ''}</a>`;
+          } else {
+            ratingEl.innerHTML = `<span style="cursor:pointer;" class="pd-reviews-link" onclick="document.getElementById('reviewsSection').scrollIntoView({behavior:'smooth'})">No reviews yet — Be the first</span>`;
+          }
+        }
+      } catch(e) {
+        // If reviews fail to load, show no reviews message
+        const reviewCont = document.getElementById('reviewsContainer');
+        if (reviewCont) {
+          reviewCont.innerHTML = `<div class="no-reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p style="font-weight:600;color:var(--dark);margin-bottom:4px;">No reviews yet</p><p>Be the first to review this product!</p></div>`;
+        }
+      }
     }
 
     function chgDetailQty(d) {

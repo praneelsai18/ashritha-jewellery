@@ -3569,6 +3569,7 @@
         <div class="nav-item"><span class="nav-link" onclick="filterProducts('sets',this)">Bridal Sets</span></div>
         <div class="nav-item"><span class="nav-link" onclick="filterProducts('rings',this)">Rings</span></div>
         <div class="nav-item"><span class="nav-link" onclick="filterProducts('combo',this)">Combo Sets</span></div>
+        <div class="nav-item"><span class="nav-link" onclick="filterProducts('longchains',this)">Long Chains</span></div>
       </div>
     </nav>
 
@@ -3657,6 +3658,14 @@
               </svg></div>
             <div class="cat-tile-name">Bridal Sets</div>
             <div class="cat-tile-count" id="cnt-sets">—</div>
+          </div>
+          <div class="cat-tile" onclick="filterCatTile('rings',this)">
+            <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="7" />
+                <path d="M12 5v2M12 17v2M5 12h2M17 12h2" />
+              </svg></div>
+            <div class="cat-tile-name">Rings</div>
+            <div class="cat-tile-count" id="cnt-rings">—</div>
           </div>
           <div class="cat-tile" onclick="filterCatTile('combo',this)">
             <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -3964,6 +3973,7 @@
                 <option value="sets">Bridal Set</option>
                 <option value="rings">Ring</option>
                 <option value="combo">Combo Set</option>
+                <option value="longchains">Long Chains</option>
               </select></div>
             <div class="form-group"><label>Selling Price (Rs) *</label><input type="number" id="pPrice"
                 placeholder="850"></div>
@@ -4457,6 +4467,7 @@
     let currentUser = JSON.parse(localStorage.getItem('aj_user') || 'null');
     let wishlist = JSON.parse(localStorage.getItem('aj_wishlist') || '[]');
     let currentProduct = null, currentQty = 1, currentFilter = 'all', currentRentProduct = null, reviewProductId = null;
+    let isLoadingProducts = false;
 
     const sv = {
       products() {},
@@ -4547,6 +4558,7 @@
         updateCartUI();
         
         toast('Welcome back, ' + (data.user.fname || 'Admin') + '!');
+        if (!products.length) await fetchInitialData();
         showPage(data.user.is_admin ? 'page-admin' : 'page-store');
       } catch (err) {
         toast(err.message || 'Login failed');
@@ -4571,6 +4583,7 @@
         localStorage.setItem('aj_token', data.token);
         sv.user(data.user);
         toast('Welcome to Ashritha Jewellery, ' + fname + '!');
+        if (!products.length) await fetchInitialData();
         showPage('page-store');
       } catch (err) {
         toast(err.message || 'Registration failed');
@@ -4629,7 +4642,7 @@
     // ═══════════════════════════════════════════════════
     // HELPERS
     // ═══════════════════════════════════════════════════
-    const catLabel = c => ({ necklace: 'Neckset', earrings: 'Earrings', bangles: 'Bangles', sets: 'Bridal Set', rings: 'Ring', }[c] || c);
+    const catLabel = c => ({ necklace: 'Neckset', earrings: 'Earrings', bangles: 'Bangles', sets: 'Bridal Set', rings: 'Ring', combo: 'Combo Set', longchains: 'Long Chain' }[c] || c);
     function stockStatus(p) { if (p.stock === 0) return 'oos'; if (p.stock <= 3) return 'low'; return 'in'; }
     function stockPct(p) { return Math.min(100, Math.round((p.stock / 20) * 100)); }
 
@@ -4653,12 +4666,19 @@
       else if (sv2 === 'price-desc') list.sort((a, b) => b.price - a.price);
       else if (sv2 === 'newest') list.sort((a, b) => b.date - a.date);
       const cnt = document.getElementById('prodCount');
-      if (cnt) cnt.textContent = `Showing ${list.length} product${list.length !== 1 ? 's' : ''}`;
-      const cats = ['necklace', 'earrings', 'bangles', 'sets', 'rings', 'combo'];
+      if (cnt) cnt.textContent = `Showing ${isLoadingProducts ? '...': list.length} product${list.length !== 1 ? 's' : ''}`;
+      const cats = ['necklace', 'earrings', 'bangles', 'sets', 'rings', 'combo', 'longchains'];
       const allC = products.filter(p => p.active);
       const allEl = document.getElementById('cnt-all'); if (allEl) allEl.textContent = allC.length + ' pieces';
       cats.forEach(c => { const el = document.getElementById('cnt-' + c); if (el) { const n = allC.filter(p => p.category === c).length; el.textContent = n + ' piece' + (n !== 1 ? 's' : ''); } });
-      if (!list.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">No products found.</div>'; return; }
+      if (!list.length) {
+        if (isLoadingProducts) {
+          grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">Loading products... please wait.</div>';
+          return;
+        }
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">No products found.</div>';
+        return;
+      }
       grid.innerHTML = list.map(p => prodCardHtml(p)).join('');
     }
 
@@ -5669,6 +5689,8 @@
     // INIT
     // ═══════════════════════════════════════════════════
     async function fetchInitialData() {
+      isLoadingProducts = true;
+      renderProducts(currentFilter);
       try {
         const pRes = await apiFetch('/api/products');
         products = (pRes.products || []).map(p => ({
@@ -5684,6 +5706,8 @@
         console.error("Failed to load products", err);
         products = [];
       }
+      isLoadingProducts = false;
+
       
       try {
         const sRes = await apiFetch('/api/settings/public');
@@ -5728,7 +5752,8 @@
       if (currentUser) showPage('page-store');
       else showPage('page-signin');
       
-      renderProducts(); 
+      isLoadingProducts = true;
+      renderProducts(currentFilter); 
       updateCartUI(); 
       renderHeaderAuth();
       

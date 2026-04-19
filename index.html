@@ -4537,6 +4537,11 @@
       if (!vEmail(email)) { showErr('si-email-err', true); ok = false; } else showErr('si-email-err', false);
       if (pass.length < 6) { showErr('si-pw-err', true); ok = false; } else showErr('si-pw-err', false);
       if (!ok) return;
+      
+      let btn = window.event ? window.event.target : null;
+      let oldTxt = '';
+      if (btn && btn.tagName === 'BUTTON') { oldTxt = btn.textContent; btn.textContent = 'Processing...'; btn.disabled = true; }
+      
       try {
         const body = { email, password: pass };
         const data = await apiFetch('/api/auth/login', { method: 'POST', body: JSON.stringify(body) });
@@ -4547,9 +4552,15 @@
           try {
             const cb = await apiFetch('/api/auth/cart');
             const clCart = JSON.parse(cb.cart || '[]');
-            if (clCart.length > 0 && cart.length === 0) {
-               cart = clCart;
-               localStorage.setItem('aj_cart', JSON.stringify(cart));
+            if (clCart.length > 0) {
+               let merged = [...cart];
+               clCart.forEach(serverItem => {
+                  const existing = merged.find(i => i.id === serverItem.id);
+                  if (existing) existing.qty = Math.max(existing.qty, serverItem.qty);
+                  else merged.push(serverItem);
+               });
+               cart = merged;
+               sv.cart(); // Save merged locally and push up
             } else if (cart.length > 0) {
                sv.cart(); // Push local cart up
             }
@@ -4562,6 +4573,8 @@
         showPage(data.user.is_admin ? 'page-admin' : 'page-store');
       } catch (err) {
         toast(err.message || 'Login failed');
+      } finally {
+        if (btn && btn.tagName === 'BUTTON') { btn.textContent = oldTxt; btn.disabled = false; }
       }
     }
 
@@ -4573,6 +4586,11 @@
       if (!vEmail(email)) { showErr('su-email-err', true); ok = false; } else showErr('su-email-err', false);
       if (pass.length < 6) { showErr('su-pw-err', true); ok = false; } else showErr('su-pw-err', false);
       if (!fname || !ok) { toast('Please fill all required fields'); return; }
+      
+      let btn = window.event ? window.event.target : null;
+      let oldTxt = '';
+      if (btn && btn.tagName === 'BUTTON') { oldTxt = btn.textContent; btn.textContent = 'Processing...'; btn.disabled = true; }
+      
       try {
         const body = {
           email, fname, password: pass,
@@ -4587,6 +4605,8 @@
         showPage('page-store');
       } catch (err) {
         toast(err.message || 'Registration failed');
+      } finally {
+        if (btn && btn.tagName === 'BUTTON') { btn.textContent = oldTxt; btn.disabled = false; }
       }
     }
 
@@ -4602,8 +4622,11 @@
       try { await apiFetch('/api/auth/logout', { method: 'POST' }); } catch(e){}
       localStorage.removeItem('aj_token');
       localStorage.removeItem('aj_user'); 
+      localStorage.removeItem('aj_cart');
+      cart = [];
       currentUser = null; 
       renderHeaderAuth(); 
+      updateCartUI();
       toast('Signed out'); 
       showPage('page-signin'); 
     }
@@ -5019,6 +5042,10 @@
         address: addr
       };
       
+      let btn = window.event ? window.event.target : null;
+      let oldTxt = '';
+      if (btn && btn.tagName === 'BUTTON') { oldTxt = btn.textContent; btn.textContent = 'Processing...'; btn.disabled = true; }
+      
       try {
         const res = await apiFetch('/api/rent', { method: 'POST', body: JSON.stringify(payload) });
         const rentId = res.rent.id;
@@ -5029,6 +5056,8 @@
         toast('Rental request submitted successfully!');
       } catch (err) {
         toast(err.message || 'Failed to submit rental request');
+      } finally {
+        if (btn && btn.tagName === 'BUTTON') { btn.textContent = oldTxt; btn.disabled = false; }
       }
     }
 
@@ -5116,6 +5145,10 @@
         items: cart.map(i => ({ product_id: i.id, qty: i.qty }))
       };
       
+      let btn = window.event ? window.event.target : null;
+      let oldTxt = '';
+      if (btn && btn.tagName === 'BUTTON') { oldTxt = btn.textContent; btn.textContent = 'Processing...'; btn.disabled = true; }
+      
       try {
         const res = await apiFetch('/api/orders', { method: 'POST', body: JSON.stringify(payload) });
         const orderId = res.order.id;
@@ -5130,6 +5163,8 @@
         fetchInitialData(); // Refresh stock
       } catch (err) {
         toast(err.message || 'Failed to place order');
+      } finally {
+        if (btn && btn.tagName === 'BUTTON') { btn.textContent = oldTxt; btn.disabled = false; }
       }
     }
 
@@ -5728,9 +5763,15 @@
               try {
                   const cRes = await apiFetch('/api/auth/cart');
                   const clCart = JSON.parse(cRes.cart || '[]');
-                  if (clCart.length > 0 && cart.length === 0) {
-                      cart = clCart;
-                      localStorage.setItem('aj_cart', JSON.stringify(cart));
+                  if (clCart.length > 0) {
+                      let merged = [...cart];
+                      clCart.forEach(serverItem => {
+                         const existing = merged.find(i => i.id === serverItem.id);
+                         if (existing) existing.qty = Math.max(existing.qty, serverItem.qty);
+                         else merged.push(serverItem);
+                      });
+                      cart = merged;
+                      sv.cart(); // Save locally and push up
                   } else if (cart.length > 0) {
                       sv.cart(); // Try to sync local up
                   }

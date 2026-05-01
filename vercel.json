@@ -9,7 +9,7 @@
       }
     },
     {
-      "src": "index.html",
+      "src": "**",
       "use": "@vercel/static"
     }
   ],
@@ -17,6 +17,10 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/index.py"
+    },
+    {
+      "src": "/(.*\\.(jpg|png|css|js|svg|ico))",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",

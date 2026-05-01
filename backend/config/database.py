@@ -1,5 +1,5 @@
 """
-Ashritha Jewellery — Database (PostgreSQL via Supabase)
+Ashritha Jewellers — Database (PostgreSQL via Supabase)
 Run standalone:  python config/database.py
 """
 import os
@@ -130,7 +130,7 @@ SEED_SETTINGS = [
     ("ann_text",        "Free Shipping on Orders Above Rs 499  |  100% Genuine 1 Gram Gold"),
     ("free_shipping",   "499"),
     ("shipping_charge", "50"),
-    ("store_name",      "Ashritha Jewellery"),
+    ("store_name",      "Ashritha Jewellers"),
 ]
 
 SEED_REVIEWS = [

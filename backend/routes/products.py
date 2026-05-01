@@ -5,7 +5,7 @@ from middleware.auth import admin_required, optional_auth
 
 bp = Blueprint("products", __name__)
 
-CATS   = {"necklace","earrings","bangles","sets","rings"}
+CATS   = {"necklace","earrings","bangles","sets","rings","combo","longchains"}
 BADGES = {"","New","Bestseller","Sale","Limited","Trending"}
 
 

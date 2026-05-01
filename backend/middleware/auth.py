@@ -1,4 +1,4 @@
-"""JWT auth middleware — Ashritha Jewellery"""
+"""JWT auth middleware — Ashritha Jewellers"""
 import os, time, jwt
 from functools import wraps
 from flask import request, jsonify, g

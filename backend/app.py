@@ -1,5 +1,5 @@
 """
-Ashritha Jewellery — Backend API
+Ashritha Jewellers — Backend API
 Run:  python app.py
 Prod: gunicorn app:app
 """
@@ -28,7 +28,7 @@ app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024   # 20 MB
 @app.route("/")
 def home():
     return jsonify(
-        status="Ashritha Jewelleries API running",
+        status="Ashritha Jewellers API running",
         message="Backend deployed successfully"
     ), 200
 
@@ -81,7 +81,7 @@ for bp in [auth_bp, products_bp, orders_bp, reviews_bp, rent_bp, settings_bp]:
 def health():
     return jsonify(
         status="ok",
-        service="Ashritha Jewellery API",
+        service="Ashritha Jewellers API",
         version="2.0.0"
     ), 200
 
@@ -118,7 +118,7 @@ if __name__ == "__main__":
 
     print(f"""
 ╔══════════════════════════════════════════════════════╗
-║   Ashritha Jewellery API  v2.0                       ║
+║   Ashritha Jewellers API  v2.0                       ║
 ║   http://localhost:{port}                            ║
 ║   Admin: admin@ashritha.com / admin123               ║
 ╚══════════════════════════════════════════════════════╝

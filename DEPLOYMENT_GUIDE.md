@@ -1,11 +1,11 @@
-# Ashritha Jewellery — Complete Deployment Guide
+# Ashritha Jewellers — Complete Deployment Guide
 
 ---
 
 ## YOUR FILE STRUCTURE
 
 ```
-Ashritha Jewellery/
+Ashritha Jewellers/
 ├── index.html                  ← Your complete website
 └── backend/
      ├── app.py                 ← Main server file
@@ -41,7 +41,7 @@ The database (`ashritha.db`) is created automatically with all sample data.
 You should see:
 ```
 ╔══════════════════════════════════════════════════════╗
-║   Ashritha Jewellery API  v2.0                       ║
+║   Ashritha Jewellers API  v2.0                       ║
 ║   http://localhost:5000                              ║
 ║   Admin: admin@ashritha.com / admin123               ║
 ╚══════════════════════════════════════════════════════╝

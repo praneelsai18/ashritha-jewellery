@@ -1,5 +1,5 @@
 """
-Ashritha Jewellery — Database (PostgreSQL via Supabase)
+Ashritha Jewellers — Database (PostgreSQL via Supabase)
 Run standalone:  python config/database.py
 """
 import os
@@ -113,31 +113,13 @@ CREATE TABLE IF NOT EXISTS settings (
 );
 """
 
-SEED_PRODUCTS = [
-    ("Kundan Bridal Necklace Set",  "necklace", 1850, 2800, 8,  "Bestseller", "Stunning Kundan work necklace with matching earrings.",   "", 1, 250, 2000, 7),
-    ("Temple Coin Drop Earrings",   "earrings", 450,  699,  15, "Trending",   "Traditional temple-style coin drop earrings.",             "", 0, 0,   0,    7),
-    ("Antique Gold Bangles Set",    "bangles",  780,  1100, 3,  "",           "Beautiful antique-finish bangles with floral motif.",      "", 1, 120, 1000, 5),
-    ("Royal Kundan Bridal Set",     "sets",     3200, 4500, 5,  "Sale",       "Complete bridal jewellery set.",                           "", 1, 400, 3500, 3),
-    ("Classic Pearl Finger Ring",   "rings",    299,  450,  20, "New",        "Elegant adjustable ring with freshwater pearl.",           "", 0, 0,   0,    7),
-    ("Oxidised Choker Necklace",    "necklace", 650,  950,  12, "Trending",   "Gorgeous oxidised finish choker.",                        "", 1, 100, 700,  7),
-    ("Chandbali Jhumka Earrings",   "earrings", 580,  850,  9,  "Bestseller", "Traditional chandbali design with peacock motif.",        "", 0, 0,   0,    7),
-    ("Meenakari Bangles Set of 2",  "bangles",  520,  750,  0,  "",           "Colourful meenakari work bangles.",                       "", 0, 0,   0,    7),
-]
-
 SEED_SETTINGS = [
     ("wa_number",       "919000000000"),
     ("upi_id",          ""),
     ("ann_text",        "Free Shipping on Orders Above Rs 499  |  100% Genuine 1 Gram Gold"),
     ("free_shipping",   "499"),
     ("shipping_charge", "50"),
-    ("store_name",      "Ashritha Jewellery"),
-]
-
-SEED_REVIEWS = [
-    (1, None, "Priya R.",   5, "Absolutely stunning! The quality is far better than expected. So many compliments!", "approved"),
-    (1, None, "Meena S.",   4, "Very pretty set. The gold finish looks real and lasts well.", "approved"),
-    (2, None, "Ritu K.",    5, "Perfect for temple visits. Light weight and very comfortable.", "approved"),
-    (4, None, "Anjali V.",  5, "Rented for my sister's wedding — gorgeous! The rental process was so smooth.", "approved"),
+    ("store_name",      "Ashritha Jewellers"),
 ]
 
 
@@ -202,21 +184,7 @@ def init_db():
             ("Admin", "admin@ashritha.com", generate_password_hash("admin123"))
         )
 
-    # Products
-    if conn.execute("SELECT COUNT(*) AS count FROM products").fetchone()["count"] == 0:
-        conn.executemany(
-            """INSERT INTO products
-               (name,category,price,mrp,stock,badge,description,image_url,rent_enabled,rent_price,deposit,max_days)
-               VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-            SEED_PRODUCTS
-        )
 
-    # Reviews
-    if conn.execute("SELECT COUNT(*) AS count FROM reviews").fetchone()["count"] == 0:
-        conn.executemany(
-            "INSERT INTO reviews (product_id,user_id,author_name,rating,review_text,status) VALUES (%s,%s,%s,%s,%s,%s)",
-            SEED_REVIEWS
-        )
 
     # Settings
     for k, v in SEED_SETTINGS:

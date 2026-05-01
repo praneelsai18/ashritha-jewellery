@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashritha Jewellers – 1 Gram Gold & 92.5 Silver</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#B8860B; --gold2:#D4A017; --gold-light:#F5E6C0; --gold-pale:#FEFAF0;
+  --dark:#1C1C1C; --body:#3A3A3A; --muted:#777; --light:#F9F9F9;
+  --border:#E8E0D0; --border2:#D5CAB5; --white:#FFFFFF;
+  --red:#C0392B; --green:#2E7D32; --silver:#8C8C8C; --silver-bg:#F5F5F5;
+  --radius:4px; --shadow:0 2px 16px rgba(0,0,0,0.08); --shadow2:0 8px 32px rgba(0,0,0,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--white);color:var(--body);font-size:14px;line-height:1.6;}
+
+
+/* ─── LOGO SVG ─── */
+.site-logo-svg{height:54px;width:auto;display:block;}
+.site-logo-mark{height:44px;width:44px;display:block;}
+.auth-brand-logo{background:transparent;border:none;width:auto;height:auto;margin:0 auto 20px;display:block;}
+.footer-brand-logo-ph{background:transparent;border:none;height:auto;display:block;margin-bottom:12px;}
+/* ─── PAGE SYSTEM ─── */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* ─── AUTH ─── */
+.auth-wrap{min-height:100vh;display:flex;background:var(--white);}
+.auth-left{flex:1;background:linear-gradient(160deg,#1C1C1C 0%,#2A2010 60%,#1C1600 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px;position:relative;overflow:hidden;}
+.auth-left::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B8860B' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.auth-brand{position:relative;z-index:1;text-align:center;}
+.auth-brand-logo{width:120px;height:60px;background:rgba(184,134,11,0.15);border:1px solid rgba(184,134,11,0.3);border-radius:6px;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;font-family:'Playfair Display',serif;font-size:11px;color:var(--gold2);letter-spacing:2px;text-transform:uppercase;}
+.auth-brand h1{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;color:var(--white);line-height:1.15;margin-bottom:14px;}
+.auth-brand h1 span{color:var(--gold2);font-style:italic;}
+.auth-brand p{color:#A09070;font-size:14px;line-height:1.7;max-width:300px;}
+.auth-brand-badges{display:flex;gap:12px;justify-content:center;margin-top:32px;flex-wrap:wrap;}
+.auth-badge{background:rgba(184,134,11,0.12);border:1px solid rgba(184,134,11,0.25);color:var(--gold2);font-size:11px;padding:5px 14px;border-radius:20px;letter-spacing:.5px;}
+.auth-right{width:480px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:40px;}
+.auth-card{width:100%;}
+.auth-card-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.auth-card-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+.auth-divider{display:flex;align-items:center;gap:14px;margin:20px 0;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.auth-divider span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.auth-switch{text-align:center;margin-top:20px;font-size:13px;color:var(--muted);}
+.auth-switch a{color:var(--gold);font-weight:600;text-decoration:none;cursor:pointer;}
+.auth-guest{text-align:center;margin-top:12px;}
+.auth-guest a{font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;}
+
+/* ─── FORM ELEMENTS ─── */
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--dark);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase;}
+.form-group input,.form-group select,.form-group textarea{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:11px 14px;font-size:14px;color:var(--dark);background:var(--white);font-family:'Inter',sans-serif;transition:border-color .2s,box-shadow .2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,134,11,0.08);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.password-wrap{position:relative;}
+.password-wrap input{padding-right:42px;}
+.toggle-pw{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:2px;}
+.field-error{font-size:11px;color:var(--red);margin-top:4px;display:none;}
+.forgot-row{text-align:right;margin-top:-8px;margin-bottom:16px;}
+.forgot-row a{font-size:12px;color:var(--gold);cursor:pointer;text-decoration:none;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.3px;transition:all .2s;border-radius:var(--radius);}
+.btn-gold{background:var(--gold);color:var(--white);padding:12px 24px;font-size:14px;}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px);}
+.btn-gold.full{width:100%;padding:13px;}
+.btn-outline-dark{background:transparent;color:var(--dark);border:1.5px solid var(--dark);padding:11px 24px;font-size:13px;}
+.btn-outline-dark:hover{background:var(--dark);color:var(--white);}
+.btn-wa{background:#25D366;color:var(--white);padding:12px 24px;font-size:14px;}
+.btn-wa:hover{background:#1db954;}
+.btn-wa.full{width:100%;padding:13px;}
+.btn-sm{padding:7px 16px;font-size:12px;}
+.google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;transition:all .2s;}
+.google-btn:hover{border-color:var(--gold);background:var(--gold-pale);}
+
+/* ─── ANNOUNCEMENT BAR ─── */
+.ann-bar{background:var(--dark);color:#D4A017;text-align:center;padding:8px 20px;font-size:11.5px;letter-spacing:1.8px;text-transform:uppercase;font-weight:500;}
+
+/* ─── HEADER ─── */
+.site-header{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:900;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
+.header-top{max-width:1320px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;gap:20px;}
+.header-logo-area{display:flex;align-items:center;gap:14px;flex-shrink:0;}
+.site-logo-img{height:52px;width:auto;object-fit:contain;}
+.site-logo-placeholder{height:52px;width:130px;background:var(--gold-pale);border:1px dashed var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:9px;color:var(--muted);letter-spacing:1px;text-align:center;padding:4px;cursor:default;}
+.header-search{flex:1;max-width:400px;position:relative;}
+.header-search input{width:100%;border:1.5px solid var(--border);border-radius:20px;padding:9px 16px 9px 40px;font-size:13px;color:var(--dark);background:var(--light);transition:all .2s;}
+.header-search input:focus{outline:none;border-color:var(--gold);background:var(--white);}
+.header-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;}
+.header-actions{display:flex;align-items:center;gap:4px;margin-left:auto;}
+.hdr-btn{background:none;border:none;cursor:pointer;color:var(--dark);padding:8px 10px;border-radius:var(--radius);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;transition:all .2s;position:relative;white-space:nowrap;}
+.hdr-btn:hover{background:var(--light);color:var(--gold);}
+.hdr-btn svg{width:18px;height:18px;flex-shrink:0;}
+.cart-badge{position:absolute;top:4px;right:4px;background:var(--gold);color:var(--white);border-radius:50%;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.user-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--white);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;flex-shrink:0;}
+.user-menu-wrap{position:relative;}
+.user-dropdown{position:absolute;top:calc(100%+8px);right:0;background:var(--white);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow2);min-width:200px;padding:6px 0;opacity:0;visibility:hidden;transform:translateY(-4px);transition:all .2s;z-index:100;}
+.user-dropdown.open{opacity:1;visibility:visible;transform:translateY(0);}
+.user-dropdown-head{padding:10px 16px 8px;border-bottom:1px solid var(--border);}
+.user-dropdown-name{font-weight:600;font-size:13px;color:var(--dark);}
+.user-dropdown-email{font-size:11px;color:var(--muted);margin-top:1px;}
+.dd-item{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:13px;color:var(--body);cursor:pointer;transition:background .15s;border:none;background:none;width:100%;text-align:left;}
+.dd-item:hover{background:var(--light);}
+.dd-item.gold{color:var(--gold);font-weight:600;}
+.dd-item.red{color:var(--red);}
+.dd-divider{height:1px;background:var(--border);margin:4px 0;}
+
+/* ─── NAV ─── */
+.site-nav{background:var(--white);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1320px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:0;}
+.nav-item{position:relative;}
+.nav-link{display:block;padding:13px 16px;font-size:13px;font-weight:500;color:var(--dark);text-decoration:none;cursor:pointer;transition:color .2s;white-space:nowrap;border-bottom:2px solid transparent;}
+.nav-link:hover,.nav-link.active{color:var(--gold);border-bottom-color:var(--gold);}
+.nav-item:hover .nav-dropdown{opacity:1;visibility:visible;transform:translateY(0);}
+.nav-dropdown{position:absolute;top:100%;left:0;background:var(--white);border:1px solid var(--border);border-top:2px solid var(--gold);border-radius:0 0 6px 6px;box-shadow:var(--shadow2);min-width:200px;padding:8px 0;opacity:0;visibility:hidden;transform:translateY(-4px);transition:all .2s;z-index:200;}
+.nav-dropdown a{display:block;padding:9px 20px;font-size:13px;color:var(--body);text-decoration:none;transition:all .15s;cursor:pointer;}
+.nav-dropdown a:hover{background:var(--gold-pale);color:var(--gold);padding-left:26px;}
+.nav-dropdown-title{padding:6px 20px 4px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+
+/* ─── HERO / BANNER ─── */
+.hero-banner{background:linear-gradient(105deg,#1C1600 0%,#2A1E00 40%,#1C1C1C 100%);min-height:480px;display:flex;align-items:center;position:relative;overflow:hidden;}
+.hero-banner::after{content:'';position:absolute;right:0;top:0;width:50%;height:100%;background:radial-gradient(ellipse at 70% 50%,rgba(184,134,11,0.18) 0%,transparent 70%);}
+.hero-inner{max-width:1320px;margin:0 auto;padding:60px 24px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;position:relative;z-index:1;width:100%;}
+.hero-text .tag{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:14px;display:block;}
+.hero-text h2{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;color:var(--white);line-height:1.1;margin-bottom:16px;}
+.hero-text h2 em{color:var(--gold2);font-style:italic;display:block;}
+.hero-text p{color:#B0A088;font-size:15px;line-height:1.75;margin-bottom:32px;max-width:420px;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-right{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.hero-stat{background:rgba(255,255,255,0.06);border:1px solid rgba(184,134,11,0.2);border-radius:8px;padding:22px 18px;text-align:center;}
+.hero-stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold2);line-height:1;}
+.hero-stat-label{font-size:12px;color:#A09070;margin-top:5px;}
+
+
+
+/* ─── SECTION COMMON ─── */
+.section{padding:60px 24px;}
+.section-light{background:var(--light);}
+.section-inner{max-width:1320px;margin:0 auto;}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px;}
+.section-head-left .section-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.section-head-left h3{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--dark);}
+.view-all{font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;cursor:pointer;display:flex;align-items:center;gap:4px;border:none;background:none;}
+.view-all:hover{text-decoration:underline;}
+
+/* ─── CATEGORIES ─── */
+.cat-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
+.cat-tile{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:22px 14px;text-align:center;cursor:pointer;transition:all .25s;}
+.cat-tile:hover{border-color:var(--gold);box-shadow:var(--shadow);transform:translateY(-2px);}
+.cat-tile.active{border-color:var(--gold);background:var(--gold-pale);}
+.cat-icon-box{width:48px;height:48px;border-radius:50%;background:var(--gold-pale);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;}
+.cat-icon-box svg{width:22px;height:22px;color:var(--gold);}
+.cat-tile-name{font-size:12.5px;font-weight:600;color:var(--dark);}
+.cat-tile-count{font-size:11px;color:var(--muted);margin-top:3px;}
+
+/* ─── FILTER BAR ─── */
+.filter-bar{background:var(--white);border-bottom:1px solid var(--border);padding:12px 24px;position:sticky;top:72px;z-index:800;}
+.filter-bar-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.filter-label{font-size:12px;font-weight:600;color:var(--dark);margin-right:6px;white-space:nowrap;}
+.filter-pill{padding:6px 16px;border:1px solid var(--border);background:var(--white);border-radius:20px;font-size:12.5px;cursor:pointer;color:var(--body);transition:all .2s;font-weight:500;}
+.filter-pill.active,.filter-pill:hover{background:var(--gold);color:var(--white);border-color:var(--gold);}
+.sort-sel{border:1px solid var(--border);padding:7px 12px;border-radius:var(--radius);font-size:12.5px;color:var(--dark);background:var(--white);cursor:pointer;margin-left:auto;}
+
+/* ─── PRODUCT GRID ─── */
+.products-section{padding:32px 24px 60px;}
+.products-inner{max-width:1320px;margin:0 auto;}
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.prod-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:all .25s;cursor:pointer;position:relative;}
+.prod-card:hover{box-shadow:var(--shadow2);transform:translateY(-3px);}
+.prod-card-img{aspect-ratio:1/1;background:var(--gold-pale);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.prod-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .35s;}
+.prod-card:hover .prod-card-img img{transform:scale(1.05);}
+.prod-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--gold-pale);}
+.prod-card-img-placeholder svg{width:52px;height:52px;color:var(--border2);}
+.prod-badge{position:absolute;top:10px;left:10px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:3px;letter-spacing:.5px;text-transform:uppercase;}
+.badge-gold{background:var(--gold);color:var(--white);}
+.badge-sale{background:#C0392B;color:var(--white);}
+.badge-new{background:var(--dark);color:var(--white);}
+.badge-silver{background:var(--silver);color:var(--white);}
+.badge-oos{background:#888;color:var(--white);}
+.prod-wish{position:absolute;top:10px;right:10px;background:var(--white);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.12);transition:all .2s;}
+.prod-wish:hover{background:#FEE2E2;}
+.prod-wish svg{width:16px;height:16px;color:var(--muted);}
+.prod-oos-overlay{position:absolute;inset:0;background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;}
+.prod-oos-tag{background:#888;color:white;font-size:11px;font-weight:700;padding:6px 18px;letter-spacing:1px;text-transform:uppercase;}
+.prod-info{padding:14px 14px 16px;}
+.prod-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--dark);margin-bottom:3px;line-height:1.3;}
+.prod-sub{font-size:11.5px;color:var(--muted);margin-bottom:8px;}
+.prod-pricing{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;}
+.prod-price{font-size:17px;font-weight:700;color:var(--dark);}
+.prod-mrp{font-size:12px;color:var(--muted);text-decoration:line-through;}
+.prod-disc{font-size:11.5px;color:var(--green);font-weight:600;}
+.prod-stock-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:10px;overflow:hidden;}
+.prod-stock-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .3s;}
+.prod-stock-text{font-size:11px;color:var(--muted);margin-bottom:10px;}
+.prod-stock-low{color:#C0392B;font-weight:600;}
+.prod-add-btn{width:100%;background:var(--dark);color:var(--white);border:none;padding:9px;border-radius:var(--radius);font-size:12.5px;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .2s;}
+.prod-add-btn:hover{background:var(--gold);}
+.prod-add-btn.oos{background:#888;cursor:not-allowed;}
+.prod-count-info{font-size:11px;margin-bottom:8px;}
+.prod-pieces-left{color:var(--red);font-weight:600;}
+
+/* ─── PRODUCT MODAL ─── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--white);border-radius:10px;max-width:860px;width:100%;max-height:90vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;position:relative;}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);z-index:1;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;}
+.modal-close:hover{background:var(--light);}
+.modal-img-col{background:var(--gold-pale);border-radius:10px 0 0 10px;display:flex;align-items:center;justify-content:center;min-height:360px;overflow:hidden;position:relative;}
+.modal-img-col img{width:100%;height:100%;object-fit:cover;}
+.modal-img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--border2);gap:8px;}
+.modal-img-placeholder svg{width:64px;height:64px;}
+.modal-info-col{padding:32px;}
+.modal-badge{margin-bottom:10px;}
+.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);margin-bottom:4px;line-height:1.3;}
+.modal-sub{font-size:12.5px;color:var(--muted);margin-bottom:14px;}
+.modal-price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+.modal-price{font-size:26px;font-weight:700;color:var(--dark);}
+.modal-mrp{font-size:14px;color:var(--muted);text-decoration:line-through;}
+.modal-disc{font-size:13px;color:var(--green);font-weight:600;}
+.modal-stock-info{margin-bottom:16px;}
+.modal-stock-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:5px;}
+.modal-stock-fill{height:100%;background:var(--gold);border-radius:2px;}
+.modal-stock-text{font-size:12px;color:var(--muted);}
+.modal-stock-text.low{color:var(--red);font-weight:600;}
+.modal-desc{font-size:13.5px;line-height:1.7;color:var(--body);margin-bottom:20px;}
+.qty-row{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.qty-lbl{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--dark);}
+.qty-ctrl{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.qty-ctrl button{background:var(--light);border:none;width:34px;height:34px;font-size:16px;cursor:pointer;font-weight:600;transition:background .2s;}
+.qty-ctrl button:hover{background:var(--border);}
+.qty-ctrl span{width:40px;text-align:center;font-weight:700;font-size:15px;}
+.modal-actions{display:flex;flex-direction:column;gap:10px;}
+.modal-oos-msg{background:#F5F5F5;border:1px solid #DDD;border-radius:var(--radius);padding:12px;text-align:center;font-size:13px;color:#888;font-weight:600;letter-spacing:.5px;}
+
+/* ─── CART SIDEBAR ─── */
+.cart-sidebar{position:fixed;top:0;right:-460px;width:440px;height:100vh;background:var(--white);z-index:3000;transition:right .32s ease;box-shadow:-4px 0 30px rgba(0,0,0,0.12);display:flex;flex-direction:column;}
+.cart-sidebar.open{right:0;}
+.cart-hd{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.cart-hd h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark);}
+.cart-body{flex:1;overflow-y:auto;padding:18px 22px;}
+.cart-empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
+.cart-empty-state svg{width:52px;height:52px;color:var(--border);margin-bottom:12px;}
+.cart-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);}
+.cart-item-thumb{width:68px;height:68px;border-radius:6px;background:var(--gold-pale);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.cart-item-thumb img{width:100%;height:100%;object-fit:cover;}
+.cart-item-thumb svg{width:28px;height:28px;color:var(--border2);}
+.cart-item-info{flex:1;}
+.cart-item-name{font-weight:600;font-size:13.5px;color:var(--dark);margin-bottom:2px;line-height:1.3;}
+.cart-item-price{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.cart-item-qty-row{display:flex;align-items:center;gap:8px;}
+.ci-q-btn{background:var(--light);border:1px solid var(--border);width:26px;height:26px;border-radius:3px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.ci-q-num{font-size:13px;font-weight:600;min-width:22px;text-align:center;}
+.cart-item-rm{background:none;border:none;cursor:pointer;color:var(--muted);margin-left:auto;padding:4px;}
+.cart-item-rm svg{width:16px;height:16px;}
+.cart-item-rm:hover svg{color:var(--red);}
+.cart-ft{padding:18px 22px;border-top:1px solid var(--border);}
+.cart-subtotal{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.cart-subtotal-lbl{font-size:14px;font-weight:600;}
+.cart-subtotal-val{font-size:20px;font-weight:700;color:var(--dark);}
+.cart-ship-note{font-size:12px;color:var(--green);margin-bottom:14px;}
+
+/* ─── CHECKOUT MODAL ─── */
+.checkout-box{max-width:620px;display:block;border-radius:10px;position:relative;max-height:90vh;overflow-y:auto;}
+.checkout-inner{padding:32px;}
+.checkout-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.checkout-sub{font-size:13px;color:var(--muted);margin-bottom:22px;}
+.order-summ{background:var(--light);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:24px;}
+.order-summ h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;}
+.order-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);}
+.order-row:last-of-type{border:none;}
+.order-total-row{display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding-top:10px;margin-top:6px;border-top:2px solid var(--border);}
+.co-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.co-grid .full{grid-column:1/-1;}
+.wa-order-note{background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:var(--radius);padding:12px;font-size:12px;color:var(--gold);margin-top:10px;text-align:center;line-height:1.5;}
+
+/* ─── TRUST ─── */
+.trust-band{background:var(--dark);padding:28px 24px;}
+.trust-inner{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.trust-item{display:flex;align-items:center;gap:12px;}
+.trust-icon{width:38px;height:38px;background:rgba(184,134,11,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.trust-icon svg{width:18px;height:18px;color:var(--gold2);}
+.trust-txt strong{display:block;font-size:13px;color:var(--white);margin-bottom:1px;}
+.trust-txt span{font-size:11.5px;color:#888;}
+
+/* ─── TESTIMONIALS ─── */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.testi-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:24px;}
+.testi-stars{color:var(--gold);font-size:14px;margin-bottom:10px;letter-spacing:2px;}
+.testi-text{font-style:italic;font-size:13.5px;line-height:1.7;color:var(--body);margin-bottom:14px;}
+.testi-author{font-weight:700;font-size:13px;color:var(--dark);}
+.testi-loc{font-size:11px;color:var(--muted);}
+
+/* ─── FOOTER ─── */
+.site-footer{background:#111;color:#888;padding:48px 24px 24px;}
+.footer-inner{max-width:1320px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px;}
+.footer-brand-logo{height:44px;width:auto;object-fit:contain;margin-bottom:14px;}
+.footer-brand-logo-ph{height:44px;width:110px;background:#1F1F1F;border:1px dashed #333;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#444;margin-bottom:14px;letter-spacing:1px;}
+.footer-brand p{font-size:13px;line-height:1.7;max-width:270px;color:#666;}
+.footer-social{display:flex;gap:10px;margin-top:16px;}
+.footer-social a{width:34px;height:34px;background:#1F1F1F;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#666;cursor:pointer;transition:all .2s;text-decoration:none;}
+.footer-social a:hover{background:var(--gold);color:var(--white);}
+.footer-social a svg{width:15px;height:15px;}
+.footer-col h5{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#BBB;margin-bottom:16px;}
+.footer-col a{display:block;font-size:13px;color:#666;margin-bottom:9px;text-decoration:none;cursor:pointer;transition:color .2s;}
+.footer-col a:hover{color:var(--gold2);}
+.footer-bottom{border-top:1px solid #222;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.footer-bottom p{font-size:12px;color:#444;}
+
+/* ─── PROFILE ─── */
+.profile-section{padding:40px 24px 80px;}
+.profile-inner{max-width:880px;margin:0 auto;}
+.profile-hero{background:linear-gradient(120deg,var(--dark) 0%,#2A1E00 100%);border-radius:12px;padding:36px;display:flex;align-items:center;gap:24px;margin-bottom:28px;}
+.profile-av{width:72px;height:72px;border-radius:50%;background:var(--gold);color:var(--white);font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.profile-nm{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--white);}
+.profile-em{font-size:13px;color:#A09070;margin-top:3px;}
+.profile-verified{display:inline-block;margin-top:8px;font-size:11px;color:var(--gold2);background:rgba(184,134,11,0.15);border:1px solid rgba(184,134,11,0.25);padding:3px 12px;border-radius:20px;}
+.profile-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:28px;margin-bottom:16px;}
+.profile-card h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:20px;}
+.prof-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.prof-grid .full{grid-column:1/-1;}
+.prof-actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
+.btn-outline-red{background:none;border:1.5px solid var(--red);color:var(--red);padding:11px 22px;font-size:13px;font-weight:600;cursor:pointer;border-radius:var(--radius);transition:all .2s;}
+.btn-outline-red:hover{background:var(--red);color:var(--white);}
+
+/* ─── ADMIN ─── */
+.admin-section{padding:32px 24px 80px;}
+.admin-inner{max-width:1000px;margin:0 auto;}
+.admin-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.admin-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--dark);}
+.admin-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:28px;overflow-x:auto;}
+.admin-tab{padding:11px 22px;background:none;border:none;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap;}
+.admin-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.admin-pane{display:none;}
+.admin-pane.active{display:block;}
+.admin-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.admin-form-grid .full{grid-column:1/-1;}
+.admin-submit{background:var(--gold);color:var(--white);border:none;padding:12px 28px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:8px;}
+.admin-submit:hover{background:var(--gold2);}
+.admin-prod-list{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.admin-prod-row{display:flex;align-items:center;gap:14px;border:1px solid var(--border);border-radius:8px;padding:12px 16px;background:var(--light);}
+.admin-prod-thumb{width:52px;height:52px;border-radius:6px;background:var(--gold-pale);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.admin-prod-thumb img{width:100%;height:100%;object-fit:cover;}
+.admin-prod-thumb svg{width:22px;height:22px;color:var(--border2);}
+.admin-prod-info{flex:1;min-width:0;}
+.admin-prod-name{font-weight:600;font-size:14px;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.admin-prod-meta{font-size:11.5px;color:var(--muted);margin-top:1px;}
+.admin-prod-stock{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.stock-pill{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:10px;}
+.stock-in{background:#D1FAE5;color:var(--green);}
+.stock-low{background:#FEF3C7;color:#92400E;}
+.stock-out{background:#FEE2E2;color:var(--red);}
+.admin-prod-price{font-size:15px;font-weight:700;color:var(--dark);min-width:70px;text-align:right;}
+.admin-row-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.edit-btn{background:var(--dark);color:var(--white);border:none;padding:5px 12px;border-radius:4px;font-size:11.5px;cursor:pointer;font-weight:600;}
+.delete-btn{background:#FEE2E2;color:var(--red);border:none;padding:5px 12px;border-radius:4px;font-size:11.5px;cursor:pointer;font-weight:600;}
+.toggle-vis-btn{border:none;padding:5px 12px;border-radius:4px;font-size:11px;cursor:pointer;font-weight:700;}
+.tog-live{background:#D1FAE5;color:var(--green);}
+.tog-hidden{background:#FEE2E2;color:var(--red);}
+
+
+
+
+
+
+
+.search-input{border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 14px;font-size:13px;color:var(--dark);width:260px;transition:border-color .2s;}
+.search-input:focus{outline:none;border-color:var(--gold);}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#D4A017;padding:12px 24px;border-radius:6px;font-size:13.5px;z-index:9999;transition:transform .3s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.25);font-weight:500;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ─── POLICY PAGES ─── */
+.policy-page-wrap{max-width:860px;margin:0 auto;padding:48px 24px 80px;}
+.policy-hero{background:linear-gradient(120deg,var(--dark) 0%,#2A1E00 100%);border-radius:12px;padding:40px 40px 36px;margin-bottom:36px;position:relative;overflow:hidden;}
+.policy-hero::after{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(184,134,11,0.08);}
+.policy-hero-tag{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:10px;display:block;}
+.policy-hero h1{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:10px;}
+.policy-hero p{font-size:13.5px;color:#A09070;line-height:1.7;max-width:540px;}
+.policy-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:32px;}
+.policy-tab{padding:11px 22px;background:none;border:none;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap;}
+.policy-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.policy-pane{display:none;}
+.policy-pane.active{display:block;}
+.policy-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:32px;margin-bottom:20px;}
+.policy-card h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--gold-light);}
+.policy-card h3{font-size:15px;font-weight:700;color:var(--dark);margin:20px 0 10px;}
+.policy-card p{font-size:13.5px;line-height:1.8;color:var(--body);margin-bottom:10px;}
+.policy-card ul{padding-left:0;list-style:none;margin-bottom:14px;}
+.policy-card ul li{font-size:13.5px;line-height:1.8;color:var(--body);padding:4px 0 4px 20px;position:relative;}
+.policy-card ul li::before{content:'';position:absolute;left:0;top:12px;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+.policy-card ul li.check::before{content:'✅';background:none;font-size:13px;top:4px;left:0;}
+.policy-card ul li.cross::before{content:'❌';background:none;font-size:13px;top:4px;left:0;}
+.policy-card ul li.note::before{content:'•';background:none;color:var(--gold);font-size:18px;top:2px;left:0;}
+.policy-highlight{background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:8px;padding:16px 20px;margin:14px 0;font-size:13.5px;color:var(--dark);line-height:1.7;}
+.policy-highlight strong{color:var(--gold);display:block;margin-bottom:4px;}
+.policy-warning{background:#FFF5F5;border:1px solid #FECACA;border-radius:8px;padding:16px 20px;margin:14px 0;font-size:13.5px;color:#7F1D1D;line-height:1.7;}
+.policy-contact-box{background:var(--dark);border-radius:10px;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:24px;}
+.policy-contact-box p{font-size:14px;color:#A09070;line-height:1.6;}
+.policy-contact-box p strong{color:var(--white);display:block;font-size:16px;margin-bottom:4px;}
+.policy-number{font-size:17px;font-weight:700;color:var(--gold2);}
+.policy-wa-btn{background:#25D366;color:var(--white);border:none;padding:12px 22px;border-radius:var(--radius);font-size:13.5px;font-weight:700;cursor:pointer;transition:background .2s;white-space:nowrap;}
+.policy-wa-btn:hover{background:#1db954;}
+.policy-step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
+.policy-step:last-child{border:none;}
+.policy-step-num{width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--white);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.policy-step-content h4{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.policy-step-content p{font-size:13px;color:var(--body);line-height:1.7;}
+.delivery-table{width:100%;border-collapse:collapse;margin:14px 0;}
+.delivery-table th{background:var(--dark);color:var(--gold2);padding:10px 16px;text-align:left;font-size:12px;letter-spacing:.5px;text-transform:uppercase;}
+.delivery-table td{padding:10px 16px;border-bottom:1px solid var(--border);font-size:13.5px;color:var(--body);}
+.delivery-table tr:last-child td{border:none;}
+.delivery-table tr:nth-child(even) td{background:var(--light);}
+
+/* ─── MOBILE ─── */
+@media(max-width:1024px){.prod-grid{grid-template-columns:repeat(3,1fr);}.cat-strip{grid-template-columns:repeat(3,1fr);}.footer-grid{grid-template-columns:1fr 1fr;}.modal-box{grid-template-columns:1fr;}.modal-img-col{border-radius:10px 10px 0 0;min-height:240px;}}
+@media(max-width:768px){nav,.site-nav{display:none;}.hero-inner{grid-template-columns:1fr;}.hero-right{display:none;}.hero-text h2{font-size:36px;}.prod-grid{grid-template-columns:repeat(2,1fr);gap:12px;}.trust-inner{grid-template-columns:repeat(2,1fr);}.testi-grid{grid-template-columns:1fr;}.footer-grid{grid-template-columns:1fr;}.cart-sidebar{width:100%;right:-100%;}.auth-left{display:none;}.auth-right{width:100%;}.co-grid{grid-template-columns:1fr;}.admin-form-grid{grid-template-columns:1fr;}.prof-grid{grid-template-columns:1fr;}.header-search{display:none;}}
+@media(max-width:480px){.cat-strip{grid-template-columns:repeat(2,1fr);}.prod-grid{grid-template-columns:repeat(2,1fr);gap:10px;}.header-top{padding:0 12px;}.section,.products-section{padding-left:12px;padding-right:12px;}}
+</style>
+</head>
+<body>
+
+<!-- ══════════ SIGN IN ══════════ -->
+<div class="page active" id="page-signin">
+<div class="auth-wrap">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" class="site-logo-svg" aria-label="Ashritha Jewellers">
+  <g transform="translate(30,30)">
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(0)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(45)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(90)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(135)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(22.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(67.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(112.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(157.5)"/>
+    <circle r="4.5" fill="#D4A017"/>
+    <text x="0" y="1.8" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display',serif" font-size="7" font-weight="700" fill="#1C1C1C" letter-spacing="0">A</text>
+  </g>
+  <text x="60" y="22" font-family="'Playfair Display',serif" font-size="18" font-weight="700" fill="#FFFFFF" letter-spacing="0.5">Ashritha</text>
+  <text x="60" y="38" font-family="'Inter',sans-serif" font-size="9" font-weight="500" fill="#D4A017" letter-spacing="3.5">JEWELLERIES</text>
+  <line x1="60" y1="42" x2="208" y2="42" stroke="#D4A017" stroke-width="0.8" opacity="0.5"/>
+  <text x="60" y="52" font-family="'Inter',sans-serif" font-size="7.5" fill="#888" letter-spacing="1">1 Gram Gold &amp; 92.5 Silver</text>
+</svg>
+      <h1>Ashritha<br><span>Jewelleries</span></h1>
+      <p>Exquisite 1 Gram Gold &amp; 92.5 Silver jewellery crafted for the modern Indian woman.</p>
+      <div class="auth-brand-badges">
+        <span class="auth-badge">1 Gram Gold</span>
+        <span class="auth-badge">92.5 Silver</span>
+        <span class="auth-badge">Pan India Delivery</span>
+      </div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2 class="auth-card-title">Welcome Back</h2>
+      <p class="auth-card-sub">Sign in to your account to continue</p>
+      <button class="google-btn" onclick="googleSignIn()">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-divider"><span>or</span></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="si-email" placeholder="you@email.com"><div class="field-error" id="si-email-err">Enter a valid email</div></div>
+      <div class="form-group"><label>Password</label><div class="password-wrap"><input type="password" id="si-pw" placeholder="Your password"><button class="toggle-pw" onclick="tglPw('si-pw',this)">&#128065;</button></div><div class="field-error" id="si-pw-err">At least 6 characters</div></div>
+      <div class="forgot-row"><a onclick="showPage('page-forgot')">Forgot password?</a></div>
+      <button class="btn btn-gold full" onclick="handleSignIn()">Sign In</button>
+      <div class="auth-switch">New here? <a onclick="showPage('page-signup')">Create an account</a></div>
+      <div class="auth-guest"><a onclick="showPage('page-store')">Browse without signing in</a></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ SIGN UP ══════════ -->
+<div class="page" id="page-signup">
+<div class="auth-wrap">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" class="site-logo-svg" aria-label="Ashritha Jewellers">
+  <g transform="translate(30,30)">
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(0)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(45)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(90)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(135)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(22.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(67.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(112.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(157.5)"/>
+    <circle r="4.5" fill="#D4A017"/>
+    <text x="0" y="1.8" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display',serif" font-size="7" font-weight="700" fill="#1C1C1C" letter-spacing="0">A</text>
+  </g>
+  <text x="60" y="22" font-family="'Playfair Display',serif" font-size="18" font-weight="700" fill="#FFFFFF" letter-spacing="0.5">Ashritha</text>
+  <text x="60" y="38" font-family="'Inter',sans-serif" font-size="9" font-weight="500" fill="#D4A017" letter-spacing="3.5">JEWELLERIES</text>
+  <line x1="60" y1="42" x2="208" y2="42" stroke="#D4A017" stroke-width="0.8" opacity="0.5"/>
+  <text x="60" y="52" font-family="'Inter',sans-serif" font-size="7.5" fill="#888" letter-spacing="1">1 Gram Gold &amp; 92.5 Silver</text>
+</svg>
+      <h1>Join<br><span>Ashritha</span></h1>
+      <p>Create your free account and enjoy exclusive offers, order tracking, and personalized recommendations.</p>
+      <div class="auth-brand-badges"><span class="auth-badge">Free Shipping</span><span class="auth-badge">Easy Returns</span><span class="auth-badge">Exclusive Deals</span></div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2 class="auth-card-title">Create Account</h2>
+      <p class="auth-card-sub">Join thousands of happy customers</p>
+      <button class="google-btn" onclick="googleSignIn()">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-divider"><span>or</span></div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name *</label><input type="text" id="su-fname" placeholder="Priya"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="su-lname" placeholder="Reddy"></div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" id="su-email" placeholder="you@email.com"><div class="field-error" id="su-email-err">Enter a valid email</div></div>
+      <div class="form-group"><label>Mobile</label><input type="tel" id="su-phone" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label>Password *</label><div class="password-wrap"><input type="password" id="su-pw" placeholder="Min. 6 characters"><button class="toggle-pw" onclick="tglPw('su-pw',this)">&#128065;</button></div><div class="field-error" id="su-pw-err">At least 6 characters</div></div>
+      <button class="btn btn-gold full" onclick="handleSignUp()">Create Account</button>
+      <div class="auth-switch">Already have an account? <a onclick="showPage('page-signin')">Sign in</a></div>
+      <div class="auth-guest"><a onclick="showPage('page-store')">Browse without signing in</a></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ FORGOT ══════════ -->
+<div class="page" id="page-forgot">
+<div class="auth-wrap">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" class="site-logo-svg" aria-label="Ashritha Jewellers">
+  <g transform="translate(30,30)">
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(0)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(45)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(90)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(135)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(22.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(67.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(112.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(157.5)"/>
+    <circle r="4.5" fill="#D4A017"/>
+    <text x="0" y="1.8" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display',serif" font-size="7" font-weight="700" fill="#1C1C1C" letter-spacing="0">A</text>
+  </g>
+  <text x="60" y="22" font-family="'Playfair Display',serif" font-size="18" font-weight="700" fill="#FFFFFF" letter-spacing="0.5">Ashritha</text>
+  <text x="60" y="38" font-family="'Inter',sans-serif" font-size="9" font-weight="500" fill="#D4A017" letter-spacing="3.5">JEWELLERIES</text>
+  <line x1="60" y1="42" x2="208" y2="42" stroke="#D4A017" stroke-width="0.8" opacity="0.5"/>
+  <text x="60" y="52" font-family="'Inter',sans-serif" font-size="7.5" fill="#888" letter-spacing="1">1 Gram Gold &amp; 92.5 Silver</text>
+</svg>
+      <h1>Reset Your<br><span>Password</span></h1>
+      <p>Enter your email and we'll send you instructions to reset your password.</p>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2 class="auth-card-title">Forgot Password</h2>
+      <p class="auth-card-sub">We'll send a reset link to your email</p>
+      <div class="form-group"><label>Email Address</label><input type="email" id="fp-email" placeholder="you@email.com"></div>
+      <button class="btn btn-gold full" onclick="handleForgot()">Send Reset Link</button>
+      <div class="auth-switch"><a onclick="showPage('page-signin')">Back to Sign In</a></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ MAIN STORE ══════════ -->
+<div class="page" id="page-store">
+  <div class="ann-bar" id="annBar">Free Shipping on Orders Above Rs 499 &nbsp;&nbsp;|&nbsp;&nbsp; 100% Genuine 1 Gram Gold &nbsp;&nbsp;|&nbsp;&nbsp; 92.5 Silver Collection Now Available</div>
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo-area">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" class="site-logo-svg" aria-label="Ashritha Jewellers">
+  <g transform="translate(30,30)">
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(0)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(45)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(90)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(135)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(22.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(67.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(112.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(157.5)"/>
+    <circle r="4.5" fill="#B8860B"/>
+    <text x="0" y="1.8" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display',serif" font-size="7" font-weight="700" fill="#FFFFFF">A</text>
+  </g>
+  <text x="60" y="22" font-family="'Playfair Display',serif" font-size="18" font-weight="700" fill="#1C1C1C" letter-spacing="0.5">Ashritha</text>
+  <text x="60" y="38" font-family="'Inter',sans-serif" font-size="9" font-weight="500" fill="#B8860B" letter-spacing="3.5">JEWELLERIES</text>
+  <line x1="60" y1="42" x2="208" y2="42" stroke="#B8860B" stroke-width="0.8" opacity="0.5"/>
+  <text x="60" y="52" font-family="'Inter',sans-serif" font-size="7.5" fill="#777" letter-spacing="1">1 Gram Gold &amp; 92.5 Silver</text>
+</svg>
+        <div style="display:flex;flex-direction:column;">
+          <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);letter-spacing:.5px;line-height:1.1;">Ashritha</span>
+          <span style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;">Jewelleries</span>
+        </div>
+      </div>
+      <div class="header-search">
+        <span class="header-search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </span>
+        <input type="text" placeholder="Search jewellery..." id="searchInput" oninput="handleSearch(this.value)">
+      </div>
+      <div class="header-actions">
+        <div id="headerAuthArea"></div>
+        <button class="hdr-btn" onclick="toggleCart()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Cart</span>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <div class="nav-item"><span class="nav-link" onclick="filterProducts('all',this)">All Collections</span></div>
+      <div class="nav-item">
+        <span class="nav-link" onclick="filterProducts('necklace',this)">Necksets</span>
+        <div class="nav-dropdown">
+          <div class="nav-dropdown-title">By Type</div>
+          <a onclick="filterProducts('necklace',null)">All Necksets</a>
+          <a onclick="filterProducts('necklace',null)">Antique Necksets</a>
+          <a onclick="filterProducts('necklace',null)">Kundan Necksets</a>
+          <a onclick="filterProducts('necklace',null)">Victorian Necksets</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <span class="nav-link" onclick="filterProducts('earrings',this)">Earrings</span>
+        <div class="nav-dropdown">
+          <div class="nav-dropdown-title">By Category</div>
+          <a onclick="filterProducts('earrings',null)">All Earrings</a>
+          <a onclick="filterProducts('earrings',null)">Jhumkas</a>
+          <a onclick="filterProducts('earrings',null)">Chandbalis</a>
+          <a onclick="filterProducts('earrings',null)">Studs</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <span class="nav-link" onclick="filterProducts('bangles',this)">Bangles</span>
+        <div class="nav-dropdown">
+          <a onclick="filterProducts('bangles',null)">All Bangles</a>
+          <a onclick="filterProducts('bangles',null)">Antique Bangles</a>
+          <a onclick="filterProducts('bangles',null)">Kundan Bangles</a>
+        </div>
+      </div>
+      <div class="nav-item"><span class="nav-link" onclick="filterProducts('sets',this)">Bridal Sets</span></div>
+      <div class="nav-item"><span class="nav-link" onclick="filterProducts('rings',this)">Rings</span></div>
+      <div class="nav-item"><span class="nav-link" onclick="filterProducts('silver',this)" style="color:var(--silver);">92.5 Silver</span></div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-banner">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <span class="tag">Hyderabad's Premier Destination</span>
+        <h2>Timeless<br><em>Elegance</em></h2>
+        <p>Handcrafted 1 Gram Gold &amp; 92.5 Silver jewellery. Bridal, festive and everyday designs inspired by South Indian tradition.</p>
+        <div class="hero-actions">
+          <button class="btn btn-gold" onclick="scrollToProducts()">Shop Collection</button>
+          <button class="btn btn-outline-dark" style="border-color:rgba(255,255,255,0.3);color:var(--white);" onclick="openWhatsApp('Hi! I would like to enquire about your jewellery collection.')">WhatsApp Enquiry</button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-stat"><div class="hero-stat-num">500+</div><div class="hero-stat-label">Unique Designs</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">10K+</div><div class="hero-stat-label">Happy Customers</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">1GM</div><div class="hero-stat-label">Gold Certified</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">92.5</div><div class="hero-stat-label">Silver Certified</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CATEGORIES -->
+  <section class="section section-light">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-head-left"><div class="section-label">Browse By</div><h3>Shop Category</h3></div></div>
+      <div class="cat-strip">
+        <div class="cat-tile" onclick="filterCatTile('all',this)">
+          <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+          <div class="cat-tile-name">All Pieces</div><div class="cat-tile-count" id="cnt-all">—</div>
+        </div>
+        <div class="cat-tile" onclick="filterCatTile('necklace',this)">
+          <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="18" r="3"/><path d="M5 3a7 7 0 0 1 14 0"/><path d="M5 3c0 3.866 3.134 7 7 7s7-3.134 7-7"/></svg></div>
+          <div class="cat-tile-name">Necksets</div><div class="cat-tile-count" id="cnt-necklace">—</div>
+        </div>
+        <div class="cat-tile" onclick="filterCatTile('earrings',this)">
+          <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><circle cx="12" cy="14" r="3"/></svg></div>
+          <div class="cat-tile-name">Earrings</div><div class="cat-tile-count" id="cnt-earrings">—</div>
+        </div>
+        <div class="cat-tile" onclick="filterCatTile('bangles',this)">
+          <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></svg></div>
+          <div class="cat-tile-name">Bangles</div><div class="cat-tile-count" id="cnt-bangles">—</div>
+        </div>
+        <div class="cat-tile" onclick="filterCatTile('sets',this)">
+          <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div class="cat-tile-name">Bridal Sets</div><div class="cat-tile-count" id="cnt-sets">—</div>
+        </div>
+        <div class="cat-tile" onclick="filterCatTile('silver',this)" style="border-color:rgba(140,140,140,0.3);">
+          <div class="cat-icon-box" style="background:#F5F5F5;"><svg viewBox="0 0 24 24" fill="none" stroke="#8C8C8C" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          <div class="cat-tile-name" style="color:var(--silver);">92.5 Silver</div><div class="cat-tile-count" id="cnt-silver">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar" id="filterBar">
+    <div class="filter-bar-inner">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-pill active" onclick="filterProducts('all',this)">All</button>
+      <button class="filter-pill" onclick="filterProducts('necklace',this)">Necksets</button>
+      <button class="filter-pill" onclick="filterProducts('earrings',this)">Earrings</button>
+      <button class="filter-pill" onclick="filterProducts('bangles',this)">Bangles</button>
+      <button class="filter-pill" onclick="filterProducts('sets',this)">Bridal Sets</button>
+      <button class="filter-pill" onclick="filterProducts('rings',this)">Rings</button>
+      <button class="filter-pill" onclick="filterProducts('silver',this)" style="color:var(--silver);">92.5 Silver</button>
+      <button class="filter-pill" onclick="filterProducts('sale',this)">On Sale</button>
+      <select class="sort-sel" id="sortSel" onchange="sortProducts()">
+        <option value="default">Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="newest">Newest First</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <section class="products-section" id="products">
+    <div class="products-inner">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <p style="font-size:13px;color:var(--muted);" id="prodCount">Showing all products</p>
+      </div>
+      <div class="prod-grid" id="prodGrid"></div>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <div class="trust-band">
+    <div class="trust-inner">
+      <div class="trust-item"><div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div><div class="trust-txt"><strong>Free Shipping</strong><span>Orders above Rs 499</span></div></div>
+      <div class="trust-item"><div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div><div class="trust-txt"><strong>Easy Returns</strong><span>7-day return policy</span></div></div>
+      <div class="trust-item"><div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div><div class="trust-txt"><strong>100% Authentic</strong><span>Certified 1 Gram Gold</span></div></div>
+      <div class="trust-item"><div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div><div class="trust-txt"><strong>WhatsApp Support</strong><span>24/7 customer care</span></div></div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <section class="section section-light">
+    <div class="section-inner">
+      <div class="section-head"><div class="section-head-left"><div class="section-label">Customer Stories</div><h3>What Our Brides Say</h3></div></div>
+      <div class="testi-grid">
+        <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"The necklace set I ordered for my wedding was absolutely stunning. Received so many compliments. The quality is truly exceptional for the price."</p><div class="testi-author">Priya Reddy</div><div class="testi-loc">Hyderabad</div></div>
+        <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"The 1 gram gold bangles look exactly like real gold! Packaging was premium and delivery was very prompt. Will order again for sure."</p><div class="testi-author">Lakshmi Sharma</div><div class="testi-loc">Bangalore</div></div>
+        <div class="testi-card"><div class="testi-stars">★★★★☆</div><p class="testi-text">"Amazing bridal set at such an affordable price. WhatsApp ordering was smooth and convenient. The 92.5 silver ring I ordered is beautiful!"</p><div class="testi-author">Meena Iyer</div><div class="testi-loc">Chennai</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" class="site-logo-svg" aria-label="Ashritha Jewellers">
+  <g transform="translate(30,30)">
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(0)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(45)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(90)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.6" transform="rotate(135)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(22.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(67.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(112.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#D4A017" opacity="0.22" transform="rotate(157.5)"/>
+    <circle r="4.5" fill="#D4A017"/>
+    <text x="0" y="1.8" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display',serif" font-size="7" font-weight="700" fill="#1C1C1C" letter-spacing="0">A</text>
+  </g>
+  <text x="60" y="22" font-family="'Playfair Display',serif" font-size="18" font-weight="700" fill="#FFFFFF" letter-spacing="0.5">Ashritha</text>
+  <text x="60" y="38" font-family="'Inter',sans-serif" font-size="9" font-weight="500" fill="#D4A017" letter-spacing="3.5">JEWELLERIES</text>
+  <line x1="60" y1="42" x2="208" y2="42" stroke="#D4A017" stroke-width="0.8" opacity="0.5"/>
+  <text x="60" y="52" font-family="'Inter',sans-serif" font-size="7.5" fill="#888" letter-spacing="1">1 Gram Gold &amp; 92.5 Silver</text>
+</svg>
+          <p>Crafting exquisite 1 Gram Gold and 92.5 Silver jewellery for the modern Indian woman. Tradition, elegance, and affordability in every piece.</p>
+          <div class="footer-social">
+            <a title="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+            <a title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+            <a onclick="openWhatsApp('Hi, I want to know more about Ashritha Jewellers')" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Shop</h5>
+          <a onclick="filterProducts('necklace',null)">Necksets</a>
+          <a onclick="filterProducts('earrings',null)">Earrings</a>
+          <a onclick="filterProducts('bangles',null)">Bangles</a>
+          <a onclick="filterProducts('sets',null)">Bridal Sets</a>
+          <a onclick="filterProducts('silver',null)">92.5 Silver</a>
+        </div>
+        <div class="footer-col">
+          <h5>Account</h5>
+          <a onclick="showPage('page-signin')">Sign In</a>
+          <a onclick="showPage('page-signup')">Register</a>
+          <a onclick="goProfile()">My Profile</a>
+          <a>Track Order</a>
+          <a onclick="openPolicyPage('return')">Return Policy</a>
+        </div>
+        <div class="footer-col">
+          <h5>Support</h5>
+          <a>About Us</a>
+          <a>Jewellery Care Guide</a>
+          <a onclick="openPolicyPage('return')">Return &amp; Exchange Policy</a>
+          <a onclick="openPolicyPage('shipping')">Shipping Policy</a>
+          <a onclick="openWhatsApp('I need help with my order')">Contact Us</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Ashritha Jewellers. All rights reserved.</p>
+        <p>Accepts: UPI &nbsp;|&nbsp; Visa &nbsp;|&nbsp; Mastercard &nbsp;|&nbsp; Cash on Delivery</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════ PROFILE ══════════ -->
+<div class="page" id="page-profile">
+  <div class="ann-bar">Ashritha Jewellers — My Account</div>
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo-area" style="cursor:pointer;" onclick="showPage('page-store')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" class="site-logo-svg" aria-label="Ashritha Jewellers">
+  <!-- Lotus / mandala mark -->
+  <g transform="translate(30,30)">
+    <!-- outer petals -->
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(0)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(45)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(90)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(135)"/>
+    <!-- inner petals -->
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(22.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(67.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(112.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(157.5)"/>
+    <!-- centre dot -->
+    <circle r="4.5" fill="#B8860B"/>
+    <!-- A monogram -->
+    <text x="0" y="1.8" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display',serif" font-size="7" font-weight="700" fill="#FFFFFF" letter-spacing="0">A</text>
+  </g>
+  <!-- Wordmark -->
+  <text x="60" y="22" font-family="'Playfair Display',serif" font-size="18" font-weight="700" fill="#1C1C1C" letter-spacing="0.5">Ashritha</text>
+  <text x="60" y="38" font-family="'Inter',sans-serif" font-size="9" font-weight="500" fill="#B8860B" letter-spacing="3.5" text-transform="uppercase">JEWELLERIES</text>
+  <!-- thin gold rule -->
+  <line x1="60" y1="42" x2="208" y2="42" stroke="#B8860B" stroke-width="0.8" opacity="0.5"/>
+  <!-- tagline -->
+  <text x="60" y="52" font-family="'Inter',sans-serif" font-size="7.5" fill="#777" letter-spacing="1">1 Gram Gold &amp; 92.5 Silver</text>
+</svg>
+      </div>
+      <nav style="display:flex;margin-left:auto;margin-right:16px;"><a style="padding:8px 16px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;" onclick="showPage('page-store')">Back to Shop</a></nav>
+      <div class="header-actions"><div id="profileHeaderAuth"></div></div>
+    </div>
+  </header>
+  <div class="profile-section">
+    <div class="profile-inner">
+      <div class="profile-hero">
+        <div class="profile-av" id="profAv">A</div>
+        <div>
+          <div class="profile-nm" id="profNm">My Account</div>
+          <div class="profile-em" id="profEm">—</div>
+          <div class="profile-verified">Verified Customer</div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <h3>Personal Information</h3>
+        <div class="prof-grid">
+          <div class="form-group"><label>First Name</label><input type="text" id="pf-fname"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" id="pf-lname"></div>
+          <div class="form-group"><label>Email</label><input type="email" id="pf-email" readonly style="background:var(--light);cursor:not-allowed;"></div>
+          <div class="form-group"><label>Mobile</label><input type="tel" id="pf-phone"></div>
+          <div class="form-group full"><label>Default Delivery Address</label><textarea id="pf-addr" placeholder="House No, Street, Area, City, PIN..."></textarea></div>
+        </div>
+        <div class="prof-actions">
+          <button class="btn btn-gold" onclick="saveProfile()">Save Changes</button>
+          <button class="btn-outline-red" onclick="handleLogout()">Sign Out</button>
+        </div>
+      </div>
+      <div class="profile-card">
+        <h3>Order History</h3>
+        <div style="text-align:center;padding:40px 20px;color:var(--muted);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48" style="color:var(--border);margin-bottom:12px;"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <p style="font-weight:600;margin-bottom:6px;color:var(--dark);">No orders yet</p>
+          <p style="font-size:13px;">Your WhatsApp orders will appear here once confirmed.</p>
+          <button class="btn btn-gold" style="margin-top:16px;" onclick="showPage('page-store')">Start Shopping</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ADMIN ══════════ -->
+<div class="page" id="page-admin">
+  <div class="ann-bar" style="background:#111;">Admin Dashboard — Ashritha Jewellers</div>
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo-area" style="cursor:pointer;" onclick="showPage('page-store')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" class="site-logo-svg" aria-label="Ashritha Jewellers">
+  <!-- Lotus / mandala mark -->
+  <g transform="translate(30,30)">
+    <!-- outer petals -->
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(0)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(45)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(90)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(135)"/>
+    <!-- inner petals -->
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(22.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(67.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(112.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(157.5)"/>
+    <!-- centre dot -->
+    <circle r="4.5" fill="#B8860B"/>
+    <!-- A monogram -->
+    <text x="0" y="1.8" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display',serif" font-size="7" font-weight="700" fill="#FFFFFF" letter-spacing="0">A</text>
+  </g>
+  <!-- Wordmark -->
+  <text x="60" y="22" font-family="'Playfair Display',serif" font-size="18" font-weight="700" fill="#1C1C1C" letter-spacing="0.5">Ashritha</text>
+  <text x="60" y="38" font-family="'Inter',sans-serif" font-size="9" font-weight="500" fill="#B8860B" letter-spacing="3.5" text-transform="uppercase">JEWELLERIES</text>
+  <!-- thin gold rule -->
+  <line x1="60" y1="42" x2="208" y2="42" stroke="#B8860B" stroke-width="0.8" opacity="0.5"/>
+  <!-- tagline -->
+  <text x="60" y="52" font-family="'Inter',sans-serif" font-size="7.5" fill="#777" letter-spacing="1">1 Gram Gold &amp; 92.5 Silver</text>
+</svg>
+      </div>
+      <div class="header-actions" style="margin-left:auto;">
+        <button class="hdr-btn" onclick="showPage('page-store')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> View Store</button>
+        <button class="hdr-btn" onclick="handleLogout()" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg> Logout</button>
+      </div>
+    </div>
+  </header>
+  <div class="admin-section">
+    <div class="admin-inner">
+      <div class="admin-hd">
+        <h2 class="admin-title">Admin Dashboard</h2>
+        <div style="font-size:13px;color:var(--muted);">Manage products and store settings</div>
+      </div>
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="showAdminTab('add',this)">Add Product</button>
+        <button class="admin-tab" onclick="showAdminTab('manage',this)">Manage Catalog</button>
+
+        <button class="admin-tab" onclick="showAdminTab('settings',this)">Settings</button>
+      </div>
+
+      <!-- ADD PRODUCT -->
+      <div class="admin-pane active" id="tab-add">
+        <div class="admin-form-grid">
+          <div class="form-group"><label>Product Name *</label><input type="text" id="pName" placeholder="e.g. Kundan Bridal Necklace Set"></div>
+          <div class="form-group"><label>Category *</label>
+            <select id="pCategory">
+              <option value="necklace">Neckset</option>
+              <option value="earrings">Earrings</option>
+              <option value="bangles">Bangles</option>
+              <option value="sets">Bridal Set</option>
+              <option value="rings">Ring</option>
+              <option value="silver">92.5 Silver</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Selling Price (Rs) *</label><input type="number" id="pPrice" placeholder="850"></div>
+          <div class="form-group"><label>MRP / Original Price (Rs)</label><input type="number" id="pMRP" placeholder="1200"></div>
+          <div class="form-group"><label>Pieces Available *</label><input type="number" id="pStock" placeholder="10" min="0"></div>
+          <div class="form-group"><label>Badge</label>
+            <select id="pBadge">
+              <option value="">None</option>
+              <option value="New">New Arrival</option>
+              <option value="Bestseller">Bestseller</option>
+              <option value="Sale">Sale</option>
+              <option value="Limited">Limited Stock</option>
+              <option value="Trending">Trending</option>
+            </select>
+          </div>
+          <div class="form-group full"><label>Description</label><textarea id="pDesc" placeholder="Describe the product — material, style, occasion..."></textarea></div>
+          <div class="form-group full"><label>Product Image URL (optional — paste image link)</label><input type="url" id="pImage" placeholder="https://..."></div>
+        </div>
+        <button class="admin-submit" id="adminSubmitBtn" onclick="addProduct()">Add Product to Catalog</button>
+      </div>
+
+      <!-- MANAGE CATALOG -->
+      <div class="admin-pane" id="tab-manage">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <strong id="manageCount" style="font-size:14px;color:var(--dark);">—</strong>
+          <input class="search-input" type="text" placeholder="Search products..." oninput="searchAdmin(this.value)">
+        </div>
+        <div class="admin-prod-list" id="adminProdList"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="admin-pane" id="tab-settings">
+        <div class="admin-form-grid">
+          <div class="form-group full"><label>Store Name</label><input type="text" id="setStoreName" value="Ashritha Jewellers"></div>
+          <div class="form-group"><label>Owner WhatsApp Number (with country code, e.g. 919876543210)</label><input type="text" id="setWa" placeholder="919XXXXXXXXX"></div>
+          <div class="form-group"><label>UPI ID</label><input type="text" id="setUpi" placeholder="yourname@upi"></div>
+          <div class="form-group full"><label>Announcement Bar Text</label><input type="text" id="setAnn" value="Free Shipping on Orders Above Rs 499 | 100% Genuine 1 Gram Gold | 92.5 Silver Collection Now Available"></div>
+          <div class="form-group"><label>Free Shipping Minimum (Rs)</label><input type="number" id="setFs" value="499"></div>
+          <div class="form-group"><label>Shipping Charge (Rs)</label><input type="number" id="setSc" value="50"></div>
+        </div>
+        <button class="admin-submit" onclick="saveSettings()">Save Settings</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ RETURN & EXCHANGE POLICY ══════════ -->
+<div class="page" id="page-return">
+  <div class="ann-bar">Ashritha Jewellers — Policies</div>
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo-area" style="cursor:pointer;" onclick="showPage('page-store')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" class="site-logo-svg" aria-label="Ashritha Jewellers">
+  <!-- Lotus / mandala mark -->
+  <g transform="translate(30,30)">
+    <!-- outer petals -->
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(0)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(45)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(90)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(135)"/>
+    <!-- inner petals -->
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(22.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(67.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(112.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(157.5)"/>
+    <!-- centre dot -->
+    <circle r="4.5" fill="#B8860B"/>
+    <!-- A monogram -->
+    <text x="0" y="1.8" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display',serif" font-size="7" font-weight="700" fill="#FFFFFF" letter-spacing="0">A</text>
+  </g>
+  <!-- Wordmark -->
+  <text x="60" y="22" font-family="'Playfair Display',serif" font-size="18" font-weight="700" fill="#1C1C1C" letter-spacing="0.5">Ashritha</text>
+  <text x="60" y="38" font-family="'Inter',sans-serif" font-size="9" font-weight="500" fill="#B8860B" letter-spacing="3.5" text-transform="uppercase">JEWELLERIES</text>
+  <!-- thin gold rule -->
+  <line x1="60" y1="42" x2="208" y2="42" stroke="#B8860B" stroke-width="0.8" opacity="0.5"/>
+  <!-- tagline -->
+  <text x="60" y="52" font-family="'Inter',sans-serif" font-size="7.5" fill="#777" letter-spacing="1">1 Gram Gold &amp; 92.5 Silver</text>
+</svg>
+      </div>
+      <nav style="display:flex;margin-left:auto;margin-right:16px;gap:8px;">
+        <a style="padding:8px 16px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;" onclick="showPage('page-store')">Back to Shop</a>
+        <a style="padding:8px 16px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;" onclick="openPolicyPage('shipping')">Shipping Policy</a>
+      </nav>
+      <div class="header-actions"><div id="returnHeaderAuth"></div></div>
+    </div>
+  </header>
+
+  <div class="policy-page-wrap">
+    <div class="policy-hero">
+      <span class="policy-hero-tag">Legal &amp; Policies</span>
+      <h1>Return &amp; Exchange Policy</h1>
+      <p>At Ashritha Jewellers, we strive to provide you with the finest quality jewellery. Please read our policy carefully before initiating any request.</p>
+    </div>
+
+    <div class="policy-warning">
+      <strong style="color:var(--red);font-size:15px;">Important Notice</strong>
+      We do <strong>not accept returns</strong> under any circumstances. However, if you receive a damaged product, we offer an <strong>exchange with valid proof</strong>. Please review the full policy below.
+    </div>
+
+    <div class="policy-card">
+      <h2>1. Eligibility for Exchange</h2>
+      <p>We accept exchanges only under the following condition:</p>
+      <ul>
+        <li class="check">Damaged Product – If the product is received in a damaged condition due to shipping or manufacturing defects.</li>
+      </ul>
+      <h3>Returns Not Accepted</h3>
+      <ul>
+        <li class="cross">We do not accept returns for any reason.</li>
+        <li class="cross">Change of mind or personal dislike after purchase.</li>
+        <li class="cross">Custom-made, personalised, or engraved jewellery.</li>
+        <li class="cross">Minor colour variations due to screen differences.</li>
+        <li class="cross">Products damaged due to mishandling after delivery.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <h2>2. Exchange Request Process</h2>
+      <p>To request an exchange, follow these steps within <strong>24 hours of delivery</strong>:</p>
+      <div style="margin-top:16px;">
+        <div class="policy-step">
+          <div class="policy-step-num">1</div>
+          <div class="policy-step-content">
+            <h4>Contact Us Immediately</h4>
+            <p>Reach out via WhatsApp at <strong>+91 8688479975</strong> within 24 hours of receiving your order.</p>
+          </div>
+        </div>
+        <div class="policy-step">
+          <div class="policy-step-num">2</div>
+          <div class="policy-step-content">
+            <h4>Record an Unboxing Video</h4>
+            <p>Provide a 360-degree uninterrupted unboxing video that clearly shows the shipping label, delivery address, and the damage. This is mandatory proof for all exchange requests.</p>
+          </div>
+        </div>
+        <div class="policy-step">
+          <div class="policy-step-num">3</div>
+          <div class="policy-step-content">
+            <h4>Await Approval</h4>
+            <p>Our team will review your request and respond with a decision within 24–48 business hours.</p>
+          </div>
+        </div>
+        <div class="policy-step">
+          <div class="policy-step-num">4</div>
+          <div class="policy-step-content">
+            <h4>Ship the Product Back</h4>
+            <p>If approved, ship the item in its original packaging with all tags and certificates intact, as per the instructions provided by our team.</p>
+          </div>
+        </div>
+      </div>
+      <div class="policy-highlight">
+        <strong>Unboxing Video Requirement</strong>
+        A 360-degree uninterrupted unboxing video including the shipping label and delivery address is <strong>mandatory</strong>. Requests without this proof will not be processed.
+      </div>
+    </div>
+
+    <div class="policy-card">
+      <h2>3. Exchange Shipping</h2>
+      <ul>
+        <li class="note">Once your exchange request is approved, we will provide detailed shipping instructions.</li>
+        <li class="note">Customers may need to self-ship the product in its original packaging with all tags and certificates intact.</li>
+        <li class="note">In case of a seller error (damaged product), we will cover the return shipping costs.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <h2>4. Exchange Policy Conditions</h2>
+      <ul>
+        <li class="note">If eligible, you can request an exchange for the same damaged item.</li>
+        <li class="note">Exchanges are subject to product availability at the time of request.</li>
+        <li class="note">If the same product is unavailable, we will offer an alternative of equal value.</li>
+        <li class="note">No cash refund will be issued in any case.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card" style="background:var(--dark);border-color:transparent;">
+      <h2 style="color:var(--white);border-bottom-color:rgba(184,134,11,0.3);">5. Contact Us</h2>
+      <p style="color:#A09070;margin-bottom:18px;">For any exchange queries, reach out to us on WhatsApp — we're available to help you resolve any issues quickly and fairly.</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div>
+          <div style="font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">WhatsApp</div>
+          <div class="policy-number">+91 8688479975</div>
+        </div>
+        <button class="policy-wa-btn" onclick="openWhatsApp('Hi! I would like to raise an exchange request for a damaged product I received.')">Chat on WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SHIPPING POLICY ══════════ -->
+<div class="page" id="page-shipping">
+  <div class="ann-bar">Ashritha Jewellers — Policies</div>
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo-area" style="cursor:pointer;" onclick="showPage('page-store')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" class="site-logo-svg" aria-label="Ashritha Jewellers">
+  <!-- Lotus / mandala mark -->
+  <g transform="translate(30,30)">
+    <!-- outer petals -->
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(0)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(45)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(90)"/>
+    <ellipse rx="9" ry="18" fill="none" stroke="#B8860B" stroke-width="1.2" opacity="0.55" transform="rotate(135)"/>
+    <!-- inner petals -->
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(22.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(67.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(112.5)"/>
+    <ellipse rx="5.5" ry="11" fill="#B8860B" opacity="0.18" transform="rotate(157.5)"/>
+    <!-- centre dot -->
+    <circle r="4.5" fill="#B8860B"/>
+    <!-- A monogram -->
+    <text x="0" y="1.8" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display',serif" font-size="7" font-weight="700" fill="#FFFFFF" letter-spacing="0">A</text>
+  </g>
+  <!-- Wordmark -->
+  <text x="60" y="22" font-family="'Playfair Display',serif" font-size="18" font-weight="700" fill="#1C1C1C" letter-spacing="0.5">Ashritha</text>
+  <text x="60" y="38" font-family="'Inter',sans-serif" font-size="9" font-weight="500" fill="#B8860B" letter-spacing="3.5" text-transform="uppercase">JEWELLERIES</text>
+  <!-- thin gold rule -->
+  <line x1="60" y1="42" x2="208" y2="42" stroke="#B8860B" stroke-width="0.8" opacity="0.5"/>
+  <!-- tagline -->
+  <text x="60" y="52" font-family="'Inter',sans-serif" font-size="7.5" fill="#777" letter-spacing="1">1 Gram Gold &amp; 92.5 Silver</text>
+</svg>
+      </div>
+      <nav style="display:flex;margin-left:auto;margin-right:16px;gap:8px;">
+        <a style="padding:8px 16px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;" onclick="showPage('page-store')">Back to Shop</a>
+        <a style="padding:8px 16px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;" onclick="openPolicyPage('return')">Return Policy</a>
+      </nav>
+      <div class="header-actions"><div id="shippingHeaderAuth"></div></div>
+    </div>
+  </header>
+
+  <div class="policy-page-wrap">
+    <div class="policy-hero">
+      <span class="policy-hero-tag">Legal &amp; Policies</span>
+      <h1>Shipping Policy</h1>
+      <p>We are committed to delivering your jewellery safely and promptly across India. Please read our shipping terms carefully.</p>
+    </div>
+
+    <div class="policy-card">
+      <h2>1. Shipping Locations</h2>
+      <ul>
+        <li class="note">We offer <strong>pan-India delivery</strong> to ensure our customers receive their favourite jewellery anywhere in the country.</li>
+        <li class="note">For <strong>international shipping</strong>, please reach us on WhatsApp directly to discuss arrangements and charges.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <h2>2. Processing &amp; Dispatch Time</h2>
+      <div class="policy-highlight">
+        <strong>Standard Order Timeline</strong>
+        Once an order is confirmed and payment is received, it will be dispatched within <strong>24 hours</strong>. After dispatch, your order will be delivered within <strong>5–15 business days</strong> depending on your location.
+      </div>
+      <ul>
+        <li class="note">Dispatch Time: Orders are dispatched within <strong>24 hours</strong> of confirmation (standard products).</li>
+        <li class="note">Orders placed on public holidays may be dispatched on the next working day.</li>
+        <li class="note">Custom or personalised orders may take additional time — you will be informed separately.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <h2>3. Estimated Delivery Time</h2>
+      <table class="delivery-table">
+        <thead><tr><th>Location</th><th>Estimated Delivery</th></tr></thead>
+        <tbody>
+          <tr><td>Metro Cities (Hyderabad, Bangalore, Mumbai, Delhi, Chennai)</td><td>5–7 Business Days</td></tr>
+          <tr><td>Tier 2 &amp; Tier 3 Cities</td><td>7–10 Business Days</td></tr>
+          <tr><td>Remote Areas &amp; Villages</td><td>10–15 Business Days</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:8px;">Delivery times may vary due to weather conditions, courier service delays, peak seasons, or other unforeseen circumstances.</p>
+    </div>
+
+    <div class="policy-card">
+      <h2>4. Shipping Charges</h2>
+      <ul>
+        <li class="note"><strong>Standard Shipping:</strong> A flat shipping charge of <strong>Rs 100</strong> is applied to all orders.</li>
+        <li class="note"><strong>Free Shipping:</strong> Applicable on orders above <strong>Rs 499</strong> (as per current promotional offer).</li>
+        <li class="note"><strong>Cash on Delivery (COD):</strong> Additional COD handling charges may apply.</li>
+        <li class="note"><strong>International Shipping:</strong> Charges are calculated based on destination and weight — contact us via WhatsApp for a quote.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <h2>5. Order Tracking</h2>
+      <ul>
+        <li class="note">Once your order is shipped, you will receive a <strong>tracking number</strong> via WhatsApp or SMS.</li>
+        <li class="note">You can track your order on the respective courier partner's website using the provided tracking number.</li>
+        <li class="note">For any tracking issues, contact us on WhatsApp with your order ID and we will assist you.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <h2>6. Undelivered &amp; Lost Shipments</h2>
+      <ul>
+        <li class="note">If a package is lost in transit, we will assist in coordinating with the courier company to resolve the issue.</li>
+        <li class="note">If an order is returned to us due to an <strong>incorrect address</strong> or <strong>non-availability of the recipient</strong>, re-shipping charges will apply.</li>
+        <li class="note">Please ensure the delivery address and mobile number provided at checkout are accurate.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card">
+      <h2>7. Damaged Shipments</h2>
+      <div class="policy-warning">
+        If your order arrives damaged, you must inform us within <strong>24 hours of delivery</strong> with an unboxing video as proof. Requests raised after 24 hours will not be entertained.
+      </div>
+      <ul>
+        <li class="note">Record a 360-degree uninterrupted unboxing video showing the shipping label and the damage clearly.</li>
+        <li class="note">We will assess the case and initiate a replacement as per our Return &amp; Exchange Policy.</li>
+        <li class="note">No cash refunds are offered for damaged shipments — only exchanges are possible.</li>
+      </ul>
+    </div>
+
+    <div class="policy-card" style="background:var(--dark);border-color:transparent;">
+      <h2 style="color:var(--white);border-bottom-color:rgba(184,134,11,0.3);">8. Contact Us</h2>
+      <p style="color:#A09070;margin-bottom:18px;">For any queries regarding shipping, order tracking, or delivery — reach out to us on WhatsApp. We typically respond within a few hours.</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div>
+          <div style="font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">WhatsApp</div>
+          <div class="policy-number">+91 8688479975</div>
+        </div>
+        <button class="policy-wa-btn" onclick="openWhatsApp('Hi! I have a query about shipping / my order delivery.')">Chat on WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FLOATING MODALS ══════════ -->
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="prodModal" onclick="if(event.target===this)closeProdModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeProdModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-img-col" id="modalImgCol">
+      <div class="modal-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21"/></svg></div>
+    </div>
+    <div class="modal-info-col">
+      <div class="modal-badge" id="modalBadge"></div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <p class="modal-sub" id="modalSub"></p>
+      <div class="modal-price-row"><span class="modal-price" id="modalPrice"></span><span class="modal-mrp" id="modalMrp"></span><span class="modal-disc" id="modalDisc"></span></div>
+      <div class="modal-stock-info" id="modalStockInfo"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="qty-row" id="modalQtyRow">
+        <span class="qty-lbl">Qty</span>
+        <div class="qty-ctrl">
+          <button onclick="chgQty(-1)">&#8722;</button>
+          <span id="qtyDisp">1</span>
+          <button onclick="chgQty(1)">&#43;</button>
+        </div>
+      </div>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-hd">
+    <h3>Shopping Cart</h3>
+    <button class="modal-close" onclick="toggleCart()" style="position:static;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-ft">
+    <div class="cart-subtotal"><span class="cart-subtotal-lbl">Total</span><span class="cart-subtotal-val" id="cartTotal">Rs 0</span></div>
+    <div class="cart-ship-note" id="cartShipNote"></div>
+    <button class="btn btn-wa full" onclick="openCheckout()">Checkout via WhatsApp</button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutModal" onclick="if(event.target===this)closeCheckout()">
+  <div class="modal-box checkout-box">
+    <button class="modal-close" onclick="closeCheckout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="checkout-inner">
+      <h2 class="checkout-title">Complete Your Order</h2>
+      <p class="checkout-sub">Enter your delivery details — your order goes directly to our WhatsApp</p>
+      <div class="order-summ" id="checkoutSumm"></div>
+      <div class="co-grid">
+        <div class="form-group"><label>Full Name *</label><input type="text" id="co-name" placeholder="Your full name"></div>
+        <div class="form-group"><label>Mobile Number *</label><input type="tel" id="co-phone" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="form-group full"><label>Delivery Address *</label><textarea id="co-addr" placeholder="House/Flat No, Street, Area..."></textarea></div>
+        <div class="form-group"><label>City *</label><input type="text" id="co-city" placeholder="Your city"></div>
+        <div class="form-group"><label>State</label><input type="text" id="co-state" placeholder="Telangana"></div>
+        <div class="form-group full"><label>PIN Code *</label><input type="text" id="co-pin" placeholder="6-digit PIN code"></div>
+        <div class="form-group full"><label>Special Instructions (optional)</label><input type="text" id="co-notes" placeholder="Gift message, special requests..."></div>
+      </div>
+      <button class="btn btn-wa full" onclick="placeOrderWA()">Send Order on WhatsApp</button>
+      <div class="wa-order-note">Clicking will open WhatsApp with your complete order details pre-filled. Our team confirms within minutes and shares payment details.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════
+// CONFIG
+// ══════════════════════════════════
+const ADMIN_EMAIL = 'admin@ashritha.com';
+const ADMIN_PASS  = 'admin123';
+
+// ══════════════════════════════════
+// STATE
+// ══════════════════════════════════
+let settings = JSON.parse(localStorage.getItem('aj_settings') || '{}');
+settings.waNumber     = settings.waNumber || '919000000000';
+settings.freeShipping = settings.freeShipping || 499;
+settings.shippingCharge = settings.shippingCharge || 50;
+
+let products = JSON.parse(localStorage.getItem('aj_products') || 'null') || [
+  {id:1, name:'Kundan Bridal Necklace Set', category:'necklace', price:1850, mrp:2800, stock:8, badge:'Bestseller', desc:'Stunning Kundan work necklace with matching earrings. Perfect for bridal and festive occasions. Premium 1 gram gold finish.', image:'', active:true, date:Date.now()-10000},
+  {id:2, name:'Temple Coin Drop Earrings', category:'earrings', price:450, mrp:699, stock:15, badge:'Trending', desc:'Traditional temple-style coin drop earrings with intricate gold work. Lightweight and comfortable for all-day wear.', image:'', active:true, date:Date.now()-9000},
+  {id:3, name:'Antique Gold Bangles Set of 4', category:'bangles', price:780, mrp:1100, stock:3, badge:'', desc:'Beautiful antique-finish bangles with floral motif. Set of 4. Matches any traditional outfit perfectly.', image:'', active:true, date:Date.now()-8000},
+  {id:4, name:'Royal Kundan Bridal Set', category:'sets', price:3200, mrp:4500, stock:5, badge:'Sale', desc:'Complete bridal jewellery set: heavy kundan necklace, jhumka earrings, and maang tikka. A dream look for every bride.', image:'', active:true, date:Date.now()-7000},
+  {id:5, name:'Classic Pearl Finger Ring', category:'rings', price:299, mrp:450, stock:20, badge:'New', desc:'Elegant adjustable ring with freshwater pearl. Perfect for daily wear or special occasions.', image:'', active:true, date:Date.now()-6000},
+  {id:6, name:'Oxidised Choker Necklace', category:'necklace', price:650, mrp:950, stock:12, badge:'Trending', desc:'Gorgeous oxidised finish choker with beaded detailing. Pairs beautifully with both ethnic and western outfits.', image:'', active:true, date:Date.now()-5000},
+  {id:7, name:'Chandbali Jhumka Earrings', category:'earrings', price:580, mrp:850, stock:9, badge:'Bestseller', desc:'Traditional chandbali design with peacock motif and pearl drops. Perfect for Navratri, weddings and festivals.', image:'', active:true, date:Date.now()-4000},
+  {id:8, name:'92.5 Silver Jhumka Earrings', category:'silver', price:890, mrp:1200, stock:7, badge:'', desc:'Hallmarked 92.5 pure silver jhumkas with delicate filigree work. Lightweight, hypoallergenic and tarnish-resistant.', image:'', active:true, date:Date.now()-3500},
+  {id:9, name:'92.5 Silver Bangles Set', category:'silver', price:1200, mrp:1600, stock:4, badge:'New', desc:'Beautiful set of 4 hallmarked 92.5 silver bangles with intricate oxidised work. Certified and stamped.', image:'', active:true, date:Date.now()-3000},
+  {id:10, name:'Meenakari Bangles Set of 2', category:'bangles', price:520, mrp:750, stock:0, badge:'', desc:'Colourful meenakari work bangles in vibrant hues. Set of 2. A burst of colour for festive celebrations.', image:'', active:true, date:Date.now()-2000},
+];
+
+let cart = JSON.parse(localStorage.getItem('aj_cart') || '[]');
+let users = JSON.parse(localStorage.getItem('aj_users') || '[]');
+let currentUser = JSON.parse(localStorage.getItem('aj_user') || 'null');
+let currentProduct = null, currentQty = 1, currentFilter = 'all';
+
+const sv = {
+  products(){ localStorage.setItem('aj_products', JSON.stringify(products)); },
+  cart(){ localStorage.setItem('aj_cart', JSON.stringify(cart)); },
+  users(){ localStorage.setItem('aj_users', JSON.stringify(users)); },
+  user(u){ localStorage.setItem('aj_user', JSON.stringify(u)); currentUser = u; },
+  settings(){ localStorage.setItem('aj_settings', JSON.stringify(settings)); }
+};
+
+// ══════════════════════════════════
+// PAGE NAVIGATION
+// ══════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if (id === 'page-store') { renderHeaderAuth(); renderProducts(currentFilter); updateCartUI(); }
+  if (id === 'page-profile') renderProfilePage();
+  if (id === 'page-admin') { renderAdminProducts(); loadSettingsForm(); }
+}
+
+// ══════════════════════════════════
+// AUTH
+// ══════════════════════════════════
+function tglPw(id, btn) {
+  const el = document.getElementById(id);
+  if (el.type === 'password') { el.type = 'text'; btn.innerHTML = '&#128584;'; }
+  else { el.type = 'password'; btn.innerHTML = '&#128065;'; }
+}
+const vEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+function showErr(id, show) { document.getElementById(id).style.display = show ? 'block' : 'none'; }
+
+function handleSignIn() {
+  const email = document.getElementById('si-email').value.trim();
+  const pass  = document.getElementById('si-pw').value;
+  let ok = true;
+  if (!vEmail(email)) { showErr('si-email-err', true); ok = false; } else showErr('si-email-err', false);
+  if (pass.length < 6) { showErr('si-pw-err', true); ok = false; } else showErr('si-pw-err', false);
+  if (!ok) return;
+  if (email === ADMIN_EMAIL && pass === ADMIN_PASS) { sv.user({ email, name:'Admin', isAdmin:true }); toast('Welcome, Admin!'); showPage('page-admin'); return; }
+  const u = users.find(u => u.email === email && u.password === pass);
+  if (!u) { toast('Incorrect email or password'); return; }
+  sv.user(u); toast('Welcome back, ' + u.fname + '!'); showPage('page-store');
+}
+
+function handleSignUp() {
+  const fname = document.getElementById('su-fname').value.trim();
+  const email = document.getElementById('su-email').value.trim();
+  const pass  = document.getElementById('su-pw').value;
+  let ok = true;
+  if (!vEmail(email)) { showErr('su-email-err', true); ok = false; } else showErr('su-email-err', false);
+  if (pass.length < 6) { showErr('su-pw-err', true); ok = false; } else showErr('su-pw-err', false);
+  if (!fname || !ok) { toast('Please fill all required fields'); return; }
+  if (users.find(u => u.email === email)) { toast('Account already exists with this email'); return; }
+  const nu = { email, fname, lname: document.getElementById('su-lname').value.trim(), phone: document.getElementById('su-phone').value.trim(), password: pass, address: '' };
+  users.push(nu); sv.users(); sv.user(nu);
+  toast('Welcome to Ashritha Jewellers, ' + fname + '!'); showPage('page-store');
+}
+
+function handleForgot() {
+  const e = document.getElementById('fp-email').value.trim();
+  if (!vEmail(e)) { toast('Enter a valid email'); return; }
+  toast('Reset link sent to ' + e + ' (demo mode)');
+  setTimeout(() => showPage('page-signin'), 1800);
+}
+
+function googleSignIn() {
+  const u = { email:'demo@gmail.com', fname:'Google', lname:'User', phone:'', address:'', password:'' };
+  if (!users.find(x => x.email === u.email)) { users.push(u); sv.users(); }
+  sv.user(u); toast('Signed in with Google!'); showPage('page-store');
+}
+
+function handleLogout() {
+  localStorage.removeItem('aj_user'); currentUser = null;
+  renderHeaderAuth(); toast('Signed out successfully'); showPage('page-signin');
+}
+
+// ══════════════════════════════════
+// HEADER AUTH
+// ══════════════════════════════════
+function renderHeaderAuth() {
+  ['headerAuthArea','profileHeaderAuth'].forEach(areaId => {
+    const area = document.getElementById(areaId); if (!area) return;
+    if (!currentUser) {
+      area.innerHTML = `
+        <button class="hdr-btn" onclick="showPage('page-signin')">Sign In</button>
+        <button class="btn btn-gold btn-sm" onclick="showPage('page-signup')">Register</button>`;
+      return;
+    }
+    const init = (currentUser.fname || currentUser.email || 'A')[0].toUpperCase();
+    area.innerHTML = `
+      <div class="user-menu-wrap">
+        <button class="user-avatar-sm" onclick="this.nextElementSibling.classList.toggle('open')">${init}</button>
+        <div class="user-dropdown">
+          <div class="user-dropdown-head">
+            <div class="user-dropdown-name">${currentUser.fname ? currentUser.fname+' '+(currentUser.lname||'') : 'My Account'}</div>
+            <div class="user-dropdown-email">${currentUser.email}</div>
+          </div>
+          <div class="dd-divider"></div>
+          ${currentUser.isAdmin
+            ? `<button class="dd-item gold" onclick="showPage('page-admin');closeDD()">Admin Dashboard</button>`
+            : `<button class="dd-item" onclick="goProfile();closeDD()">My Profile</button>`}
+          <button class="dd-item red" onclick="handleLogout()">Sign Out</button>
+        </div>
+      </div>`;
+  });
+}
+function closeDD() { document.querySelectorAll('.user-dropdown').forEach(d => d.classList.remove('open')); }
+function goProfile() { currentUser ? showPage('page-profile') : showPage('page-signin'); }
+document.addEventListener('click', e => { if (!e.target.closest('.user-menu-wrap')) closeDD(); });
+
+// ══════════════════════════════════
+// PRODUCTS
+// ══════════════════════════════════
+const catLabel = c => ({ necklace:'Neckset', earrings:'Earrings', bangles:'Bangles', sets:'Bridal Set', rings:'Ring', silver:'92.5 Silver' }[c] || c);
+
+function stockStatus(p) {
+  if (p.stock === 0) return 'oos';
+  if (p.stock <= 3) return 'low';
+  return 'in';
+}
+
+function stockPct(p) {
+  const maxRef = 20;
+  return Math.min(100, Math.round((p.stock / maxRef) * 100));
+}
+
+function renderProducts(filter = 'all', sort = 'default', searchQuery = '') {
+  const grid = document.getElementById('prodGrid'); if (!grid) return;
+  let list = products.filter(p => p.active);
+
+  // Search
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    list = list.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+  }
+
+  // Filter
+  if (filter === 'sale') list = list.filter(p => p.badge === 'Sale' || (p.mrp && p.mrp > p.price));
+  else if (filter !== 'all') list = list.filter(p => p.category === filter);
+
+  // Sort
+  const sv = document.getElementById('sortSel')?.value || sort;
+  if (sv === 'price-asc') list.sort((a,b) => a.price - b.price);
+  else if (sv === 'price-desc') list.sort((a,b) => b.price - a.price);
+  else if (sv === 'newest') list.sort((a,b) => b.date - a.date);
+
+  const cnt = document.getElementById('prodCount');
+  if (cnt) cnt.textContent = `Showing ${list.length} product${list.length !== 1 ? 's' : ''}`;
+
+  // Update cat counts
+  const cats = ['necklace','earrings','bangles','sets','rings','silver'];
+  const allC = products.filter(p => p.active);
+  const allEl = document.getElementById('cnt-all');
+  if (allEl) allEl.textContent = allC.length + ' pieces';
+  cats.forEach(c => {
+    const el = document.getElementById('cnt-' + c);
+    if (el) { const n = allC.filter(p => p.category === c).length; el.textContent = n + ' piece' + (n!==1?'s':''); }
+  });
+
+  if (!list.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">No products found.</div>';
+    return;
+  }
+
+  grid.innerHTML = list.map(p => {
+    const ss = stockStatus(p);
+    const disc = p.mrp ? Math.round((1 - p.price/p.mrp)*100) : 0;
+    const pct = stockPct(p);
+
+    // Badge
+    let badgeHtml = '';
+    if (ss === 'oos') badgeHtml = '<span class="prod-badge badge-oos">Out of Stock</span>';
+    else if (p.badge) badgeHtml = `<span class="prod-badge ${p.badge==='Sale'?'badge-sale':p.badge==='New'?'badge-new':p.category==='silver'?'badge-silver':'badge-gold'}">${p.badge}</span>`;
+
+    // Image
+    const imgHtml = p.image
+      ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const phHtml = `<div class="prod-card-img-placeholder" style="${p.image?'display:none':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="52" height="52"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21"/></svg></div>`;
+
+    // Stock display
+    let stockHtml = '';
+    if (ss === 'low') stockHtml = `<div class="prod-stock-bar"><div class="prod-stock-fill" style="width:${pct}%;background:#F59E0B;"></div></div><div class="prod-stock-text prod-stock-low">Only ${p.stock} left!</div>`;
+    else if (ss === 'in') stockHtml = `<div class="prod-stock-bar"><div class="prod-stock-fill" style="width:${pct}%;"></div></div>`;
+
+    return `<div class="prod-card" onclick="openProdModal(${p.id})">
+      <div class="prod-card-img">
+        ${imgHtml}${phHtml}
+        ${badgeHtml}
+        ${ss==='oos' ? '<div class="prod-oos-overlay"><div class="prod-oos-tag">Out of Stock</div></div>' : ''}
+        <button class="prod-wish" onclick="event.stopPropagation();wishItem(${p.id})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="prod-info">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-sub">${catLabel(p.category)} · 1 Gram Gold</div>
+        <div class="prod-pricing">
+          <span class="prod-price">Rs ${p.price.toLocaleString()}</span>
+          ${p.mrp ? `<span class="prod-mrp">Rs ${p.mrp.toLocaleString()}</span>` : ''}
+          ${disc>0 ? `<span class="prod-disc">${disc}% off</span>` : ''}
+        </div>
+        ${stockHtml}
+        <button class="prod-add-btn${ss==='oos'?' oos':''}" onclick="event.stopPropagation();${ss==='oos'?'toast(\'This item is currently out of stock\')':'quickAdd('+p.id+')'}">${ss==='oos'?'Out of Stock':'Add to Cart'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterProducts(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderProducts(filter);
+  document.getElementById('products')?.scrollIntoView({ behavior:'smooth' });
+}
+function filterCatTile(filter, tile) {
+  document.querySelectorAll('.cat-tile').forEach(t => t.classList.remove('active'));
+  tile.classList.add('active');
+  filterProducts(filter, null);
+  document.querySelectorAll('.filter-pill').forEach(b => {
+    if (b.textContent.toLowerCase().includes(filter) || (filter==='all' && b.textContent==='All')) b.classList.add('active');
+  });
+}
+function sortProducts() { renderProducts(currentFilter); }
+function scrollToProducts() { document.getElementById('products')?.scrollIntoView({ behavior:'smooth' }); }
+
+let searchTimer;
+function handleSearch(v) {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => renderProducts(currentFilter, 'default', v), 250);
+}
+
+// ══════════════════════════════════
+// PRODUCT MODAL
+// ══════════════════════════════════
+function openProdModal(id) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  currentProduct = p; currentQty = 1;
+  const ss = stockStatus(p);
+  const disc = p.mrp ? Math.round((1 - p.price/p.mrp)*100) : 0;
+  const pct = stockPct(p);
+
+  // Image col
+  const imgCol = document.getElementById('modalImgCol');
+  if (p.image) {
+    imgCol.innerHTML = `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='<div class=modal-img-placeholder><svg viewBox=0 0 24 24 fill=none stroke=currentColor stroke-width=1.5 width=64 height=64><rect x=3 y=3 width=18 height=18 rx=2/></svg></div>'">`;
+  } else {
+    imgCol.innerHTML = `<div class="modal-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21"/></svg><span style="font-size:12px;color:var(--muted);margin-top:8px;">${p.name}</span></div>`;
+  }
+
+  document.getElementById('modalBadge').innerHTML = p.badge ? `<span class="prod-badge ${p.badge==='Sale'?'badge-sale':p.category==='silver'?'badge-silver':'badge-gold'}">${p.badge}</span>` : '';
+  document.getElementById('modalTitle').textContent = p.name;
+  document.getElementById('modalSub').textContent = `${catLabel(p.category)} · 1 Gram Gold`;
+  document.getElementById('qtyDisp').textContent = '1';
+
+  const priceEl = document.getElementById('modalPrice');
+  priceEl.textContent = `Rs ${p.price.toLocaleString()}`;
+
+  const mrpEl = document.getElementById('modalMrp');
+  mrpEl.textContent = p.mrp ? `Rs ${p.mrp.toLocaleString()}` : '';
+
+  const discEl = document.getElementById('modalDisc');
+  discEl.textContent = disc > 0 ? `${disc}% off` : '';
+
+  // Stock info
+  const stockInfo = document.getElementById('modalStockInfo');
+  if (ss === 'oos') {
+    stockInfo.innerHTML = `<div class="modal-stock-bar"><div class="modal-stock-fill" style="width:0;"></div></div><div class="modal-stock-text low">Currently out of stock</div>`;
+  } else if (ss === 'low') {
+    stockInfo.innerHTML = `<div class="modal-stock-bar"><div class="modal-stock-fill" style="width:${pct}%;background:#F59E0B;"></div></div><div class="modal-stock-text low">Only ${p.stock} pieces left — order soon!</div>`;
+  } else {
+    stockInfo.innerHTML = `<div class="modal-stock-bar"><div class="modal-stock-fill" style="width:${pct}%;"></div></div><div class="modal-stock-text">${p.stock} pieces available</div>`;
+  }
+
+  document.getElementById('modalDesc').textContent = p.desc || '';
+
+  // Qty + Actions
+  const qtyRow = document.getElementById('modalQtyRow');
+  const actions = document.getElementById('modalActions');
+  if (ss === 'oos') {
+    qtyRow.style.display = 'none';
+    actions.innerHTML = `<div class="modal-oos-msg">Out of Stock — Check back soon</div><button class="btn btn-wa" onclick="openWhatsApp('Hi! I am interested in ${p.name} (currently out of stock). Please notify me when it is available.')">Notify Me on WhatsApp</button>`;
+  } else {
+    qtyRow.style.display = 'flex';
+    actions.innerHTML = `<button class="btn btn-gold" onclick="addCartModal()">Add to Cart</button><button class="btn btn-wa" onclick="orderSingleWA()">Order via WhatsApp</button>`;
+  }
+
+  document.getElementById('prodModal').classList.add('open');
+}
+
+function closeProdModal() { document.getElementById('prodModal').classList.remove('open'); }
+
+function chgQty(d) {
+  if (!currentProduct) return;
+  const max = currentProduct.stock;
+  currentQty = Math.max(1, Math.min(max, currentQty + d));
+  document.getElementById('qtyDisp').textContent = currentQty;
+}
+
+function addCartModal() {
+  if (!currentProduct) return;
+  if (stockStatus(currentProduct) === 'oos') { toast('This item is out of stock'); return; }
+  addToCart(currentProduct, currentQty);
+  closeProdModal();
+}
+
+function orderSingleWA() {
+  if (!currentProduct) return;
+  const p = currentProduct;
+  const total = p.price * currentQty;
+  const msg = `Order Enquiry — Ashritha Jewellers\n\nProduct: ${p.name}\nCategory: ${catLabel(p.category)}\nPrice: Rs ${p.price.toLocaleString()} x ${currentQty} = Rs ${total.toLocaleString()}\n${p.badge ? 'Tag: ' + p.badge : ''}\n\nPlease share payment and delivery details to complete the order. Thank you!`;
+  closeProdModal();
+  openWhatsApp(msg);
+}
+
+// ══════════════════════════════════
+// CART
+// ══════════════════════════════════
+function addToCart(product, qty = 1) {
+  // Check live stock
+  const liveProduct = products.find(x => x.id === product.id);
+  if (!liveProduct || liveProduct.stock === 0) { toast('Sorry, this item is out of stock'); return; }
+  if (qty > liveProduct.stock) { toast(`Only ${liveProduct.stock} pieces available`); qty = liveProduct.stock; }
+
+  const ex = cart.find(i => i.id === product.id);
+  if (ex) {
+    const newQty = ex.qty + qty;
+    if (newQty > liveProduct.stock) { toast(`Only ${liveProduct.stock} pieces available`); ex.qty = liveProduct.stock; }
+    else ex.qty = newQty;
+  } else {
+    cart.push({ id:product.id, name:product.name, price:product.price, image:product.image||'', qty });
+  }
+  sv.cart(); updateCartUI(); toast(`${product.name} added to cart`);
+}
+
+function quickAdd(id) { const p = products.find(x => x.id === id); if (p) addToCart(p, 1); }
+
+function removeFromCart(id) { cart = cart.filter(i => i.id !== id); sv.cart(); updateCartUI(); }
+
+function changeCartQty(id, d) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+  const liveP = products.find(x => x.id === id);
+  const max = liveP ? liveP.stock : 999;
+  item.qty = Math.max(1, Math.min(max, item.qty + d));
+  if (item.qty <= 0) removeFromCart(id);
+  else { sv.cart(); updateCartUI(); }
+}
+
+function calcTotals() {
+  const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const ship = sub >= (settings.freeShipping || 499) ? 0 : (settings.shippingCharge || 50);
+  return { sub, ship, total: sub + ship };
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s,i) => s+i.qty, 0);
+  const badge = document.getElementById('cartBadge');
+  if (badge) badge.textContent = total;
+  renderCartItems();
+}
+
+function renderCartItems() {
+  const body = document.getElementById('cartBody'); if (!body) return;
+  const { sub, ship, total } = calcTotals();
+  if (!cart.length) {
+    body.innerHTML = `<div class="cart-empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><p style="font-weight:600;margin-bottom:4px;">Your cart is empty</p><p style="font-size:12px;">Add some beautiful jewellery!</p></div>`;
+    const ct = document.getElementById('cartTotal'); if (ct) ct.textContent = 'Rs 0';
+    const sn = document.getElementById('cartShipNote'); if (sn) sn.textContent = '';
+    return;
+  }
+
+  const svgThumb = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21"/></svg>`;
+  body.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-thumb">${item.image ? `<img src="${item.image}" alt="${item.name}" onerror="this.outerHTML='${svgThumb}'">` : svgThumb}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">Rs ${item.price.toLocaleString()}</div>
+        <div class="cart-item-qty-row">
+          <button class="ci-q-btn" onclick="changeCartQty(${item.id},-1)">&#8722;</button>
+          <span class="ci-q-num">${item.qty}</span>
+          <button class="ci-q-btn" onclick="changeCartQty(${item.id},1)">&#43;</button>
+        </div>
+      </div>
+      <button class="cart-item-rm" onclick="removeFromCart(${item.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>
+    </div>`).join('');
+
+  const ct = document.getElementById('cartTotal'); if (ct) ct.textContent = `Rs ${total.toLocaleString()}`;
+  const sn = document.getElementById('cartShipNote');
+  if (sn) sn.textContent = ship === 0 ? 'Free shipping applied!' : `+ Rs ${ship} shipping (Free above Rs ${settings.freeShipping || 499})`;
+}
+
+function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
+
+// ══════════════════════════════════
+// CHECKOUT
+// ══════════════════════════════════
+function openCheckout() {
+  if (!cart.length) { toast('Your cart is empty'); return; }
+  if (currentUser) {
+    document.getElementById('co-name').value = `${currentUser.fname||''} ${currentUser.lname||''}`.trim();
+    document.getElementById('co-phone').value = currentUser.phone || '';
+    if (currentUser.address) document.getElementById('co-addr').value = currentUser.address;
+  }
+  const { sub, ship, total } = calcTotals();
+  document.getElementById('checkoutSumm').innerHTML = `
+    <h4>Order Summary</h4>
+    ${cart.map(i => `<div class="order-row"><span>${i.name} × ${i.qty}</span><span>Rs ${(i.price*i.qty).toLocaleString()}</span></div>`).join('')}
+    <div class="order-row"><span>Shipping</span><span>${ship === 0 ? 'FREE' : 'Rs '+ship}</span></div>
+    <div class="order-total-row"><span>Total Payable</span><span>Rs ${total.toLocaleString()}</span></div>`;
+  document.getElementById('checkoutModal').classList.add('open');
+}
+function closeCheckout() { document.getElementById('checkoutModal').classList.remove('open'); }
+
+function placeOrderWA() {
+  const name    = document.getElementById('co-name').value.trim();
+  const phone   = document.getElementById('co-phone').value.trim();
+  const address = document.getElementById('co-addr').value.trim();
+  const city    = document.getElementById('co-city').value.trim();
+  const state   = document.getElementById('co-state').value.trim();
+  const pin     = document.getElementById('co-pin').value.trim();
+  const notes   = document.getElementById('co-notes').value.trim();
+  if (!name || !phone || !address || !city || !pin) { toast('Please fill all required fields'); return; }
+
+  const { sub, ship, total } = calcTotals();
+  const orderId = 'AJ' + Date.now().toString().slice(-6);
+  const lines = cart.map(i => `  - ${i.name} (Qty: ${i.qty}) — Rs ${(i.price*i.qty).toLocaleString()}`).join('\n');
+
+  const msg = `New Order — Ashritha Jewellers\n` +
+    `Order ID: #${orderId}\n\n` +
+    `Customer Details:\n` +
+    `  Name: ${name}\n` +
+    `  Mobile: ${phone}\n\n` +
+    `Delivery Address:\n` +
+    `  ${address}\n` +
+    `  ${city}${state ? ', '+state : ''} — ${pin}\n\n` +
+    `Items Ordered:\n${lines}\n\n` +
+    `Price Breakdown:\n` +
+    `  Subtotal: Rs ${sub.toLocaleString()}\n` +
+    `  Shipping: ${ship === 0 ? 'FREE' : 'Rs '+ship}\n` +
+    `  TOTAL PAYABLE: Rs ${total.toLocaleString()}\n` +
+    (notes ? `\nNote: ${notes}\n` : '') +
+    `\nPlease confirm this order and share payment details. Thank you!`;
+
+  closeCheckout();
+  document.getElementById('cartSidebar').classList.remove('open');
+  openWhatsApp(msg);
+
+  // Reduce stock
+  cart.forEach(item => {
+    const p = products.find(x => x.id === item.id);
+    if (p) p.stock = Math.max(0, p.stock - item.qty);
+  });
+  sv.products();
+
+  setTimeout(() => {
+    if (confirm('Order sent to WhatsApp! Clear your cart?')) {
+      cart = []; sv.cart(); updateCartUI();
+    }
+  }, 800);
+}
+
+// ══════════════════════════════════
+// PROFILE
+// ══════════════════════════════════
+function renderProfilePage() {
+  if (!currentUser) { showPage('page-signin'); return; }
+  const u = currentUser;
+  document.getElementById('profAv').textContent = (u.fname || u.email || 'A')[0].toUpperCase();
+  document.getElementById('profNm').textContent = `${u.fname||''} ${u.lname||''}`.trim() || 'My Account';
+  document.getElementById('profEm').textContent = u.email;
+  document.getElementById('pf-fname').value = u.fname || '';
+  document.getElementById('pf-lname').value = u.lname || '';
+  document.getElementById('pf-email').value = u.email || '';
+  document.getElementById('pf-phone').value = u.phone || '';
+  document.getElementById('pf-addr').value = u.address || '';
+  renderHeaderAuth();
+}
+function saveProfile() {
+  if (!currentUser) return;
+  currentUser.fname   = document.getElementById('pf-fname').value.trim();
+  currentUser.lname   = document.getElementById('pf-lname').value.trim();
+  currentUser.phone   = document.getElementById('pf-phone').value.trim();
+  currentUser.address = document.getElementById('pf-addr').value.trim();
+  const idx = users.findIndex(u => u.email === currentUser.email);
+  if (idx > -1) { users[idx] = currentUser; sv.users(); }
+  sv.user(currentUser); renderProfilePage(); toast('Profile saved successfully!');
+}
+
+// ══════════════════════════════════
+// VIDEOS
+// ══════════════════════════════════
+  list.innerHTML = videos.map(v => `
+    <div class="admin-video-row">
+      <div class="admin-video-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M15 10l4.553-2.069A1 1 0 0 1 21 8.87v6.26a1 1 0 0 1-1.447.894L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg></div>
+      <div class="admin-video-info"><div class="admin-video-name">${v.title}</div><div class="admin-video-meta" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px;">${v.url}</div></div>
+      <button class="delete-btn" onclick="deleteVideo(${v.id})">Remove</button>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════
+// ADMIN
+// ══════════════════════════════════
+function showAdminTab(tab, btn) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'manage') renderAdminProducts();
+  if (tab === 'videos') renderAdminVideos();
+  if (tab === 'settings') loadSettingsForm();
+}
+
+function addProduct() {
+  const name  = document.getElementById('pName').value.trim();
+  const price = parseFloat(document.getElementById('pPrice').value);
+  const stock = parseInt(document.getElementById('pStock').value);
+  if (!name || !price || isNaN(stock)) { toast('Please fill name, price and stock'); return; }
+  products.unshift({
+    id: Date.now(), name, price, stock,
+    category: document.getElementById('pCategory').value,
+    mrp: parseFloat(document.getElementById('pMRP').value) || null,
+    badge: document.getElementById('pBadge').value,
+    desc: document.getElementById('pDesc').value,
+    image: document.getElementById('pImage').value || '',
+    active: true, date: Date.now()
+  });
+  sv.products(); toast('Product added to catalog!');
+  ['pName','pPrice','pMRP','pStock','pDesc','pImage'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pBadge').value = '';
+}
+
+function renderAdminProducts(q = '') {
+  const list = document.getElementById('adminProdList'); if (!list) return;
+  const filtered = products.filter(p => !q || p.name.toLowerCase().includes(q.toLowerCase()));
+  const mc = document.getElementById('manageCount');
+  if (mc) mc.textContent = `${products.length} total products`;
+
+  list.innerHTML = filtered.map(p => {
+    const ss = stockStatus(p);
+    const stockPill = ss === 'oos'
+      ? `<span class="stock-pill stock-out">Out of Stock</span>`
+      : ss === 'low'
+      ? `<span class="stock-pill stock-low">${p.stock} left</span>`
+      : `<span class="stock-pill stock-in">In Stock: ${p.stock}</span>`;
+    const svgPh = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>`;
+    return `<div class="admin-prod-row">
+      <div class="admin-prod-thumb">${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.outerHTML='${svgPh}'">` : svgPh}</div>
+      <div class="admin-prod-info">
+        <div class="admin-prod-name">${p.name}</div>
+        <div class="admin-prod-meta">${catLabel(p.category)}${p.badge ? ' · '+p.badge : ''}</div>
+        <div class="admin-prod-stock">
+          ${stockPill}
+          <input type="number" value="${p.stock}" min="0" style="width:64px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:12px;" onchange="updateStock(${p.id},this.value)" title="Update stock count">
+        </div>
+      </div>
+      <div class="admin-prod-price">Rs ${p.price.toLocaleString()}</div>
+      <div class="admin-row-actions">
+        <button class="toggle-vis-btn ${p.active?'tog-live':'tog-hidden'}" onclick="toggleVis(${p.id})">${p.active?'Live':'Hidden'}</button>
+        <button class="edit-btn" onclick="editProduct(${p.id})">Edit</button>
+        <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateStock(id, val) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  p.stock = Math.max(0, parseInt(val) || 0);
+  sv.products();
+  renderProducts(currentFilter); // Update store in background
+  toast(`Stock updated: ${p.name} — ${p.stock} pieces`);
+}
+
+function toggleVis(id) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  p.active = !p.active; sv.products(); renderAdminProducts(); toast('Product visibility updated.');
+}
+
+function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  products = products.filter(x => x.id !== id);
+  sv.products(); renderAdminProducts(); toast('Product deleted.');
+}
+
+function searchAdmin(v) { renderAdminProducts(v); }
+
+function editProduct(id) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  showAdminTab('add', document.querySelectorAll('.admin-tab')[0]);
+  document.getElementById('pName').value    = p.name;
+  document.getElementById('pCategory').value = p.category;
+  document.getElementById('pPrice').value   = p.price;
+  document.getElementById('pMRP').value     = p.mrp || '';
+  document.getElementById('pStock').value   = p.stock;
+  document.getElementById('pBadge').value   = p.badge || '';
+  document.getElementById('pDesc').value    = p.desc || '';
+  document.getElementById('pImage').value   = p.image || '';
+  const btn = document.getElementById('adminSubmitBtn');
+  btn.textContent = 'Update Product';
+  btn.onclick = () => {
+    p.name     = document.getElementById('pName').value.trim();
+    p.category = document.getElementById('pCategory').value;
+    p.price    = parseFloat(document.getElementById('pPrice').value);
+    p.mrp      = parseFloat(document.getElementById('pMRP').value) || null;
+    p.stock    = parseInt(document.getElementById('pStock').value) || 0;
+    p.badge    = document.getElementById('pBadge').value;
+    p.desc     = document.getElementById('pDesc').value;
+    p.image    = document.getElementById('pImage').value || '';
+    sv.products(); renderAdminProducts(); toast('Product updated!');
+    btn.textContent = 'Add Product to Catalog';
+    btn.onclick = addProduct;
+    ['pName','pPrice','pMRP','pStock','pDesc','pImage'].forEach(id => document.getElementById(id).value = '');
+  };
+}
+
+function loadSettingsForm() {
+  document.getElementById('setWa').value = settings.waNumber || '';
+  document.getElementById('setUpi').value = settings.upiId || '';
+  document.getElementById('setFs').value = settings.freeShipping || 499;
+  document.getElementById('setSc').value = settings.shippingCharge || 50;
+}
+
+function saveSettings() {
+  settings.waNumber = document.getElementById('setWa').value.trim();
+  settings.upiId = document.getElementById('setUpi').value.trim();
+  settings.freeShipping = parseInt(document.getElementById('setFs').value) || 499;
+  settings.shippingCharge = parseInt(document.getElementById('setSc').value) || 50;
+  settings.annText = document.getElementById('setAnn').value.trim();
+  sv.settings();
+  const bar = document.getElementById('annBar');
+  if (bar && settings.annText) bar.textContent = settings.annText;
+  toast('Settings saved!');
+}
+
+// ══════════════════════════════════
+// UTILS
+// ══════════════════════════════════
+function openWhatsApp(msg) {
+  const n = (settings.waNumber || '919000000000').replace(/\D/g, '');
+  window.open(`https://wa.me/${n}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+function wishItem(id) { const p = products.find(x => x.id === id); if (p) toast(`${p.name} saved to wishlist`); }
+
+let _tt;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_tt); _tt = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ══════════════════════════════════
+// POLICY PAGES
+// ══════════════════════════════════
+function openPolicyPage(which) {
+  const id = which === 'return' ? 'page-return' : 'page-shipping';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+  // Sync auth in policy headers
+  ['returnHeaderAuth','shippingHeaderAuth'].forEach(aId => {
+    const el = document.getElementById(aId); if (!el) return;
+    if (!currentUser) {
+      el.innerHTML = `<button class="hdr-btn" onclick="showPage('page-signin')">Sign In</button>`;
+    } else {
+      const init = (currentUser.fname || currentUser.email || 'A')[0].toUpperCase();
+      el.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar-sm" style="cursor:default;">${init}</div><button class="hdr-btn" onclick="handleLogout()" style="color:var(--red);">Sign Out</button></div>`;
+    }
+  });
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+(function init() {
+  if (currentUser) showPage('page-store');
+  else showPage('page-signin');
+  renderProducts(); updateCartUI(); renderHeaderAuth();
+})();
+</script>
+</body>
+</html>

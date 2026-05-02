@@ -36,14 +36,14 @@ Open PowerShell inside your `backend` folder and run:
 python app.py
 ```
 
-The database (`ashritha.db`) is created automatically with all sample data.
+The database schema is created automatically on startup.
 
 You should see:
 ```
 ╔══════════════════════════════════════════════════════╗
 ║   Ashritha Jewellers API  v2.0                       ║
 ║   http://localhost:5000                              ║
-║   Admin: admin@ashritha.com / admin123               ║
+║   Environment: development                            ║
 ╚══════════════════════════════════════════════════════╝
 ```
 
@@ -65,13 +65,7 @@ Double-click `index.html` — it opens in Chrome.
 
 This step makes the website talk to your real database instead of browser storage.
 
-At the top of the `<script>` section in `index.html`, find this line:
-
-```javascript
-const ADMIN_EMAIL='admin@ashritha.com', ADMIN_PASS='admin123';
-```
-
-Add this line right below it:
+At the top of the `<script>` section in `index.html`, add this line:
 
 ```javascript
 const API = 'http://localhost:5000';  // Change to your Render URL after deployment
@@ -132,9 +126,15 @@ Render is a free hosting service that runs your Python backend online 24/7.
 | Key | Value |
 |---|---|
 | `FLASK_ENV` | `production` |
-| `SECRET_KEY` | (type any long random text, e.g. `Ashritha2025@SecretKey!Gold`) |
-| `JWT_SECRET` | (type any long random text, e.g. `AJ_JWT_2025_Secure_Key!`) |
+| `SECRET_KEY` | (required: long random string) |
+| `JWT_SECRET` | (required: long random string) |
+| `ADMIN_EMAIL` | `admin@ashritha.com` (or your admin email) |
+| `ADMIN_PASSWORD` | (required: strong password, set before first boot) |
 | `FRONTEND_URL` | (leave blank for now — fill after Netlify step) |
+| `ALLOWED_ORIGINS` | (same as frontend URL; comma-separate if multiple domains) |
+| `GOOGLE_CLIENT_ID` | (required only if using Google sign in) |
+| `ENABLE_SEED_DATA` | `false` |
+| `PURGE_DEMO_DATA` | `false` (set `true` once only if you need cleanup) |
 
 6. Click **Create Web Service**
 7. Wait 3–5 minutes for it to deploy
@@ -227,15 +227,15 @@ Search for `ashrithajewellery.com` and buy it.
 
 ---
 
-## PHASE 7 — CHANGE ADMIN PASSWORD (IMPORTANT!)
+## PHASE 7 — VERIFY ADMIN LOGIN (IMPORTANT!)
 
-**Do this immediately after deployment.**
+If your `ADMIN_PASSWORD` env var was set correctly before first production boot, use that password to log in.
 
 Using any API tool like Postman or this URL format:
 
 ```
 POST https://ashritha-jewellery-api.onrender.com/api/auth/login
-Body: {"email": "admin@ashritha.com", "password": "admin123"}
+Body: {"email": "admin@ashritha.com", "password": "<ADMIN_PASSWORD_FROM_ENV>"}
 ```
 
 Copy the `token` from the response, then:

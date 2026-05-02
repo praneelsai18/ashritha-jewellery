@@ -1,5 +1,6 @@
 """Rent routes — /api/rent  &  /api/admin/rent"""
 from datetime import datetime
+import re
 from flask import Blueprint, request, jsonify, g
 from config.database import get_conn
 from middleware.auth import admin_required, optional_auth, login_required
@@ -7,6 +8,7 @@ from middleware.auth import admin_required, optional_auth, login_required
 bp = Blueprint("rent", __name__)
 
 STATUSES = {"pending","confirmed","active","returned","cancelled"}
+PHONE_DIGITS = re.compile(r"\D")
 
 
 # ── Submit rent request ───────────────────────────────────────────────
@@ -19,6 +21,10 @@ def submit_rent():
     if missing: return jsonify(error=f"Missing: {', '.join(missing)}"), 400
 
     pid = int(d["product_id"])
+    customer_phone = PHONE_DIGITS.sub("", d.get("customer_phone", ""))
+    if len(customer_phone) < 10:
+        return jsonify(error="Enter a valid mobile number"), 400
+
     conn = get_conn()
     p = conn.execute(
         "SELECT * FROM products WHERE id=%s AND is_active=1 AND rent_enabled=1", (pid,)
@@ -47,7 +53,7 @@ def submit_rent():
             start_date,end_date,days,rent_total,deposit,grand_total)
            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
         (pid, g.user_id,
-         d["customer_name"].strip(), d["customer_phone"].strip(),
+         d["customer_name"].strip(), customer_phone,
          d["address"].strip(), d["start_date"], d["end_date"],
          days, rent_total, deposit, grand)
     )

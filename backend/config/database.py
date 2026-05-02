@@ -3,6 +3,7 @@ Ashritha Jewellers — Database (PostgreSQL via Supabase)
 Run standalone:  python config/database.py
 """
 import os
+import secrets
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash
@@ -11,6 +12,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
+ENABLE_SEED_DATA = os.environ.get("ENABLE_SEED_DATA", "false").lower() == "true"
+PURGE_DEMO_DATA = os.environ.get("PURGE_DEMO_DATA", "false").lower() == "true"
 
 SCHEMA = """
 -- ── USERS ──────────────────────────────────────────────────────────
@@ -125,7 +128,7 @@ SEED_PRODUCTS = [
 ]
 
 SEED_SETTINGS = [
-    ("wa_number",       "919000000000"),
+    ("wa_number",       "919381360636"),
     ("upi_id",          ""),
     ("ann_text",        "Free Shipping on Orders Above Rs 499  |  100% Genuine 1 Gram Gold"),
     ("free_shipping",   "499"),
@@ -196,27 +199,37 @@ def init_db():
         pass # Ignored if unsupported or already exists
 
     # Admin user
-    if not conn.execute("SELECT id FROM users WHERE email=%s", ("admin@ashritha.com",)).fetchone():
+    admin_email = os.environ.get("ADMIN_EMAIL", "admin@ashritha.com").strip().lower()
+    admin_password = os.environ.get("ADMIN_PASSWORD", "")
+    if not admin_password:
+        admin_password = secrets.token_urlsafe(16)
+        print("Warning: ADMIN_PASSWORD not set. Generated one-time admin password for this boot.")
+    if not conn.execute("SELECT id FROM users WHERE email=%s", (admin_email,)).fetchone():
         conn.execute(
             "INSERT INTO users (fname,email,password,is_admin) VALUES (%s,%s,%s,1)",
-            ("Admin", "admin@ashritha.com", generate_password_hash("admin123"))
+            ("Admin", admin_email, generate_password_hash(admin_password))
         )
 
-    # Products
-    if conn.execute("SELECT COUNT(*) AS count FROM products").fetchone()["count"] == 0:
-        conn.executemany(
-            """INSERT INTO products
-               (name,category,price,mrp,stock,badge,description,image_url,rent_enabled,rent_price,deposit,max_days)
-               VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-            SEED_PRODUCTS
-        )
+    # Optional development-only seeds
+    if ENABLE_SEED_DATA:
+        if conn.execute("SELECT COUNT(*) AS count FROM products").fetchone()["count"] == 0:
+            conn.executemany(
+                """INSERT INTO products
+                   (name,category,price,mrp,stock,badge,description,image_url,rent_enabled,rent_price,deposit,max_days)
+                   VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                SEED_PRODUCTS
+            )
 
-    # Reviews
-    if conn.execute("SELECT COUNT(*) AS count FROM reviews").fetchone()["count"] == 0:
-        conn.executemany(
-            "INSERT INTO reviews (product_id,user_id,author_name,rating,review_text,status) VALUES (%s,%s,%s,%s,%s,%s)",
-            SEED_REVIEWS
-        )
+        if conn.execute("SELECT COUNT(*) AS count FROM reviews").fetchone()["count"] == 0:
+            conn.executemany(
+                "INSERT INTO reviews (product_id,user_id,author_name,rating,review_text,status) VALUES (%s,%s,%s,%s,%s,%s)",
+                SEED_REVIEWS
+            )
+    elif PURGE_DEMO_DATA:
+        demo_names = [row[0] for row in SEED_PRODUCTS]
+        demo_authors = [row[2] for row in SEED_REVIEWS]
+        conn.execute("DELETE FROM reviews WHERE user_id IS NULL AND author_name = ANY(%s)", (demo_authors,))
+        conn.execute("DELETE FROM products WHERE name = ANY(%s)", (demo_names,))
 
     # Settings
     for k, v in SEED_SETTINGS:

@@ -6,6 +6,10 @@ from config.database import get_conn
 
 SECRET  = os.environ.get("JWT_SECRET", "ashritha_jwt_secret_CHANGE_IN_PROD_2025")
 EXPIRES = 60 * 60 * 24 * 7   # 7 days
+IS_PROD = os.environ.get("FLASK_ENV", "development") == "production"
+
+if IS_PROD and SECRET == "ashritha_jwt_secret_CHANGE_IN_PROD_2025":
+    raise RuntimeError("JWT_SECRET must be set in production")
 
 
 def make_token(user_id, is_admin):
@@ -59,8 +63,10 @@ def admin_required(f):
             return jsonify(error="Authentication required"), 401
         try:
             payload = jwt.decode(tok, SECRET, algorithms=["HS256"])
-        except Exception as e:
-            return jsonify(error=str(e)), 401
+        except jwt.ExpiredSignatureError:
+            return jsonify(error="Session expired — please sign in again"), 401
+        except jwt.InvalidTokenError:
+            return jsonify(error="Invalid token"), 401
         if not payload.get("is_admin"):
             return jsonify(error="Admin access required"), 403
         conn = get_conn()

@@ -1,5 +1,6 @@
 """Products routes — /api/products  &  /api/admin/products"""
 from flask import Blueprint, request, jsonify
+import psycopg2
 from config.database import get_conn
 from middleware.auth import admin_required, optional_auth
 
@@ -173,5 +174,21 @@ def delete_product(pid):
     conn = get_conn()
     if not conn.execute("SELECT id FROM products WHERE id=%s", (pid,)).fetchone():
         conn.close(); return jsonify(error="Not found"), 404
-    conn.execute("DELETE FROM products WHERE id=%s", (pid,)); conn.commit(); conn.close()
-    return jsonify(message="Product deleted"), 200
+    try:
+        conn.execute("DELETE FROM products WHERE id=%s", (pid,))
+        conn.commit()
+        conn.close()
+        return jsonify(message="Product deleted"), 200
+    except psycopg2.IntegrityError:
+        # Keep historical order/rental data intact and retire the product from storefront.
+        conn._conn.rollback()
+        conn.execute(
+            "UPDATE products SET is_active=0,updated_at=CURRENT_TIMESTAMP WHERE id=%s",
+            (pid,)
+        )
+        conn.commit()
+        conn.close()
+        return jsonify(
+            message="Product archived because it is linked with existing orders/rentals",
+            archived=True
+        ), 200

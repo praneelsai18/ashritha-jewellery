@@ -1,11 +1,14 @@
 """Orders routes — /api/orders  &  /api/admin/orders"""
 import time
+import re
 from flask import Blueprint, request, jsonify, g
 from config.database import get_conn
 from middleware.auth import login_required, admin_required, optional_auth
 
 bp = Blueprint("orders", __name__)
 STATUSES = {"pending","confirmed","shipped","delivered","cancelled"}
+PHONE_DIGITS = re.compile(r"\D")
+PIN_RE = re.compile(r"^\d{6}$")
 
 
 def calc_shipping(subtotal, conn):
@@ -28,6 +31,13 @@ def place_order():
 
     items = d["items"]
     if not items: return jsonify(error="Order needs at least one item"), 400
+    if len(items) > 30: return jsonify(error="Too many items in one order"), 400
+    customer_phone = PHONE_DIGITS.sub("", d.get("customer_phone", ""))
+    if len(customer_phone) < 10:
+        return jsonify(error="Enter a valid mobile number"), 400
+    pin = (d.get("pin_code") or "").strip()
+    if not PIN_RE.match(pin):
+        return jsonify(error="PIN code must be 6 digits"), 400
 
     conn = get_conn()
     order_items, subtotal = [], 0.0
@@ -55,9 +65,9 @@ def place_order():
            (order_ref,user_id,customer_name,customer_phone,address,city,state,pin_code,notes,subtotal,shipping,total)
            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
         (ref, g.user_id,
-         d["customer_name"].strip(), d["customer_phone"].strip(),
+         d["customer_name"].strip(), customer_phone,
          d["address"].strip(), d["city"].strip(),
-         d.get("state","").strip(), d["pin_code"].strip(),
+         d.get("state","").strip(), pin,
          d.get("notes","").strip(), subtotal, ship, total)
     )
     res = cur.fetchone()

@@ -8,6 +8,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     :root {
       --gold: #B8860B;
@@ -3455,10 +3456,11 @@
           <div class="form-group"><label>Password</label>
             <div class="password-wrap"><input type="password" id="si-pw" placeholder="Your password"><button
                 class="toggle-pw" onclick="tglPw('si-pw',this)">&#128065;</button></div>
-            <div class="field-error" id="si-pw-err">At least 6 characters</div>
+            <div class="field-error" id="si-pw-err">Use at least 8 characters</div>
           </div>
           <div class="forgot-row"><a onclick="showPage('page-forgot')">Forgot password?</a></div>
           <button class="btn btn-gold full" onclick="handleSignIn()">Sign In</button>
+          <button class="google-btn full" onclick="handleGoogleSignIn()">Sign In with Google</button>
           <div class="auth-switch">New here? <a onclick="showPage('page-signup')">Create an account</a></div>
           <div class="auth-guest"><a onclick="showPage('page-store')">Browse without signing in</a></div>
         </div>
@@ -3493,9 +3495,9 @@
           <div class="form-group"><label>Mobile</label><input type="tel" id="su-phone" placeholder="+91 XXXXX XXXXX">
           </div>
           <div class="form-group"><label>Password *</label>
-            <div class="password-wrap"><input type="password" id="su-pw" placeholder="Min. 6 characters"><button
+            <div class="password-wrap"><input type="password" id="su-pw" placeholder="Min. 8 characters (letters and numbers)"><button
                 class="toggle-pw" onclick="tglPw('su-pw',this)">&#128065;</button></div>
-            <div class="field-error" id="su-pw-err">At least 6 characters</div>
+            <div class="field-error" id="su-pw-err">Use at least 8 characters</div>
           </div>
           <button class="btn btn-gold full" onclick="handleSignUp()">Create Account</button>
           <div class="auth-switch">Already have an account? <a onclick="showPage('page-signin')">Sign in</a></div>
@@ -3518,10 +3520,16 @@
       <div class="auth-right">
         <div class="auth-card">
           <h2 class="auth-card-title">Forgot Password</h2>
-          <p class="auth-card-sub">We'll send a reset link to your email</p>
+          <p class="auth-card-sub">Verify your email and mobile to set a new password</p>
           <div class="form-group"><label>Email Address</label><input type="email" id="fp-email"
               placeholder="you@email.com"></div>
-          <button class="btn btn-gold full" onclick="handleForgot()">Send Reset Link</button>
+          <div class="form-group"><label>Registered Mobile Number</label><input type="tel" id="fp-phone"
+              placeholder="10-digit mobile number"></div>
+          <div class="form-group"><label>New Password</label>
+            <div class="password-wrap"><input type="password" id="fp-new-pw" placeholder="At least 8 characters (letters and numbers)"><button
+                class="toggle-pw" onclick="tglPw('fp-new-pw',this)">&#128065;</button></div>
+          </div>
+          <button class="btn btn-gold full" onclick="handleForgot()">Reset Password</button>
           <div class="auth-switch"><a onclick="showPage('page-signin')">Back to Sign In</a></div>
         </div>
       </div>
@@ -4174,7 +4182,7 @@
             <div class="policy-step-num">1</div>
             <div class="policy-step-content">
               <h4>Contact Us Immediately</h4>
-              <p>Reach out via WhatsApp at <strong>+91 8688479975</strong> within 24 hours of receiving your order.</p>
+              <p>Reach out via WhatsApp at <strong>+91 9381360636</strong> within 24 hours of receiving your order.</p>
             </div>
           </div>
           <div class="policy-step">
@@ -4203,7 +4211,7 @@
           <div>
             <div style="font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">
               WhatsApp</div>
-            <div class="policy-number">+91 8688479975</div>
+            <div class="policy-number">+91 9381360636</div>
           </div><button class="policy-wa-btn"
             onclick="openWhatsApp('Hi! I would like to raise an exchange request.')">Chat on WhatsApp</button>
         </div>
@@ -4282,7 +4290,7 @@
           <div>
             <div style="font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">
               WhatsApp</div>
-            <div class="policy-number">+91 8688479975</div>
+            <div class="policy-number">+91 9381360636</div>
           </div><button class="policy-wa-btn" onclick="openWhatsApp('Hi! I have a query about shipping.')">Chat on
             WhatsApp</button>
         </div>
@@ -4444,10 +4452,8 @@
     // ═══════════════════════════════════════════════════
     // CONFIG & STATE
     // ═══════════════════════════════════════════════════
-    const ADMIN_EMAIL = 'admin@ashritha.com', ADMIN_PASS = 'admin123';
-
     let settings = {
-      waNumber: '919000000000',
+      waNumber: '919381360636',
       freeShipping: 499,
       shippingCharge: 50,
       upiId: 'ashritha@upi',
@@ -4524,6 +4530,7 @@
 
     function tglPw(id, btn) { const el = document.getElementById(id); if (el.type === 'password') { el.type = 'text'; btn.innerHTML = '&#128584;'; } else { el.type = 'password'; btn.innerHTML = '&#128065;'; } }
     const vEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    const strongPw = p => /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(p || '');
     function showErr(id, show) { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; }
 
     async function handleSignIn() {
@@ -4531,7 +4538,7 @@
       const pass = document.getElementById('si-pw').value;
       let ok = true;
       if (!vEmail(email)) { showErr('si-email-err', true); ok = false; } else showErr('si-email-err', false);
-      if (pass.length < 6) { showErr('si-pw-err', true); ok = false; } else showErr('si-pw-err', false);
+      if (!strongPw(pass)) { showErr('si-pw-err', true); ok = false; } else showErr('si-pw-err', false);
       if (!ok) return;
       
       let btn = window.event ? window.event.target : null;
@@ -4580,7 +4587,7 @@
       const pass = document.getElementById('su-pw').value;
       let ok = true;
       if (!vEmail(email)) { showErr('su-email-err', true); ok = false; } else showErr('su-email-err', false);
-      if (pass.length < 6) { showErr('su-pw-err', true); ok = false; } else showErr('su-pw-err', false);
+      if (!strongPw(pass)) { showErr('su-pw-err', true); ok = false; } else showErr('su-pw-err', false);
       if (!fname || !ok) { toast('Please fill all required fields'); return; }
       
       let btn = window.event ? window.event.target : null;
@@ -4606,11 +4613,54 @@
       }
     }
 
-    function handleForgot() {
+    async function handleForgot() {
       const e = document.getElementById('fp-email').value.trim();
+      const phone = document.getElementById('fp-phone').value.trim();
+      const newPw = document.getElementById('fp-new-pw').value;
       if (!vEmail(e)) { toast('Enter a valid email'); return; }
-      toast('Reset link sent to ' + e + ' (demo)');
-      setTimeout(() => showPage('page-signin'), 1800);
+      if ((phone || '').replace(/\D/g, '').length < 10) { toast('Enter registered mobile number'); return; }
+      if (!strongPw(newPw)) { toast('Password must be 8+ chars with letters and numbers'); return; }
+      try {
+        await apiFetch('/api/auth/forgot-password', {
+          method: 'POST',
+          body: JSON.stringify({ email: e, phone, new_password: newPw })
+        });
+        toast('Password reset successful. Please sign in.');
+        setTimeout(() => showPage('page-signin'), 1200);
+      } catch (err) {
+        toast(err.message || 'Unable to reset password');
+      }
+    }
+
+    function handleGoogleSignIn() {
+      const clientId = window.GOOGLE_CLIENT_ID || '';
+      if (!clientId) {
+        toast('Google Sign-In is not configured yet');
+        return;
+      }
+      if (!window.google || !google.accounts || !google.accounts.id) {
+        toast('Google Sign-In failed to load. Refresh and try again.');
+        return;
+      }
+      google.accounts.id.initialize({
+        client_id: clientId,
+        callback: async (resp) => {
+          try {
+            const data = await apiFetch('/api/auth/google', {
+              method: 'POST',
+              body: JSON.stringify({ id_token: resp.credential })
+            });
+            localStorage.setItem('aj_token', data.token);
+            sv.user(data.user);
+            toast('Signed in with Google');
+            if (!products.length) await fetchInitialData();
+            showPage(data.user.is_admin ? 'page-admin' : 'page-store');
+          } catch (err) {
+            toast(err.message || 'Google sign-in failed');
+          }
+        }
+      });
+      google.accounts.id.prompt();
     }
 
 
@@ -4863,7 +4913,7 @@
         const rRes = await apiFetch(`/api/products/${id}/reviews`);
         const approvedReviews = (rRes.reviews || []).map(r => ({
            id: r.id, productId: r.product_id, productName: r.product_name,
-           author: r.name, rating: r.rating, text: r.comment,
+           author: r.author_name, rating: r.rating, text: r.review_text,
            date: r.created_at.split(' ')[0]
         }));
         
@@ -5410,10 +5460,10 @@
         const res = await apiFetch('/api/admin/reviews');
         let all = res.reviews || [];
         let filtered = all;
-        if (status === 'pending') filtered = all.filter(r => !r.is_approved);
-        else if (status === 'approved') filtered = all.filter(r => r.is_approved);
+        if (status === 'pending') filtered = all.filter(r => r.status === 'pending');
+        else if (status === 'approved') filtered = all.filter(r => r.status === 'approved');
         
-        const n = all.filter(r => !r.is_approved).length;
+        const n = all.filter(r => r.status === 'pending').length;
         const bdg = document.getElementById('pendingReviewBadge');
         if (bdg) bdg.textContent = n > 0 ? n : '';
         
@@ -5423,12 +5473,12 @@
     <div class="review-admin-row">
       <div class="review-admin-info">
         <div class="review-admin-product">${r.product_name}</div>
-        <div style="display:flex;align-items:center;gap:8px;"><span class="review-admin-name">${r.name}</span><span class="review-admin-stars">${starsHtml(r.rating)}</span><span class="review-admin-date">${r.created_at.split(' ')[0]}</span></div>
-        <div class="review-admin-text">${r.comment}</div>
+        <div style="display:flex;align-items:center;gap:8px;"><span class="review-admin-name">${r.author_name}</span><span class="review-admin-stars">${starsHtml(r.rating)}</span><span class="review-admin-date">${r.created_at.split(' ')[0]}</span></div>
+        <div class="review-admin-text">${r.review_text}</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">
-        <span class="review-admin-status ${!r.is_approved ? 'ras-pending' : 'ras-approved'}">${!r.is_approved ? 'Pending' : 'Approved'}</span>
-        ${!r.is_approved ? `<button class="approve-btn" onclick="moderateReview(${r.id},'approved')">Approve</button><button class="reject-btn" onclick="moderateReview(${r.id},'delete')">Delete</button>` : `<button class="reject-btn" onclick="moderateReview(${r.id},'delete')">Remove</button>`}
+        <span class="review-admin-status ${r.status !== 'approved' ? 'ras-pending' : 'ras-approved'}">${r.status !== 'approved' ? 'Pending' : 'Approved'}</span>
+        ${r.status !== 'approved' ? `<button class="approve-btn" onclick="moderateReview(${r.id},'approved')">Approve</button><button class="reject-btn" onclick="moderateReview(${r.id},'delete')">Delete</button>` : `<button class="reject-btn" onclick="moderateReview(${r.id},'delete')">Remove</button>`}
       </div>
     </div>`).join('');
       } catch(err) { list.innerHTML = 'Error loading reviews.'; }
@@ -5470,7 +5520,7 @@
         upi_id: settings.upiId,
         free_shipping: settings.freeShipping,
         shipping_charge: settings.shippingCharge,
-        announcement_text: settings.annText
+        ann_text: settings.annText
       };
       
       try {
@@ -5482,7 +5532,7 @@
     // ═══════════════════════════════════════════════════
     // UTILS
     // ═══════════════════════════════════════════════════
-    function openWhatsApp(msg) { const n = (settings.waNumber || '919000000000').replace(/\D/g, ''); window.open(`https://wa.me/${n}?text=${encodeURIComponent(msg)}`, '_blank'); }
+    function openWhatsApp(msg) { const n = (settings.waNumber || '919381360636').replace(/\D/g, ''); window.open(`https://wa.me/${n}?text=${encodeURIComponent(msg)}`, '_blank'); }
     function wishItem(id) { 
       const p = products.find(x => x.id === id); 
       if (!p) return; 
@@ -5659,7 +5709,7 @@
       const pass2 = document.getElementById('newAdminPassConfirm').value;
       if (!name) { toast('Enter full name'); return; }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Enter valid email'); return; }
-      if (pass.length < 6) { toast('Password must be at least 6 characters'); return; }
+      if (!strongPw(pass)) { toast('Password must be 8+ chars with letters and numbers'); return; }
       if (pass !== pass2) { toast('Passwords do not match'); return; }
       
       const btn = event.target;
@@ -5693,7 +5743,7 @@
       const curPass = document.getElementById('curAdminPass').value;
       const newPass = document.getElementById('newAdminPassChange').value;
       if (!curPass || !newPass) { toast('Fill both password fields'); return; }
-      if (newPass.length < 6) { toast('New password must be at least 6 characters'); return; }
+      if (!strongPw(newPass)) { toast('New password must be 8+ chars with letters and numbers'); return; }
       
       // Update password via profile edit API 
       const payload = {
@@ -5747,7 +5797,7 @@
           settings.upiId = sRes.settings.upi_id || settings.upiId;
           settings.freeShipping = sRes.settings.free_shipping ?? settings.freeShipping;
           settings.shippingCharge = sRes.settings.shipping_charge ?? settings.shippingCharge;
-          settings.annText = sRes.settings.announcement_text || '';
+          settings.annText = sRes.settings.ann_text || '';
         }
       } catch (e) {}
       

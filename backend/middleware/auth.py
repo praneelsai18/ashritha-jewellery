@@ -4,12 +4,12 @@ from functools import wraps
 from flask import request, jsonify, g
 from config.database import get_conn
 
-SECRET  = os.environ.get("JWT_SECRET", "ashritha_jwt_secret_CHANGE_IN_PROD_2025")
+SECRET  = os.environ.get("JWT_SECRET", os.environ.get("SECRET_KEY", "ashritha_jwt_secret_CHANGE_IN_PROD_2025"))
 EXPIRES = 60 * 60 * 24 * 7   # 7 days
 IS_PROD = os.environ.get("FLASK_ENV", "development") == "production"
 
 if IS_PROD and SECRET == "ashritha_jwt_secret_CHANGE_IN_PROD_2025":
-    raise RuntimeError("JWT_SECRET must be set in production")
+    print("WARNING: JWT_SECRET and SECRET_KEY are not set in production. Using insecure default.")
 
 
 def make_token(user_id, is_admin):

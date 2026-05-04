@@ -1,12 +1,15 @@
 import os
 import sys
+import traceback
+from pathlib import Path
+from flask import Flask, jsonify
 
-backend_dir = os.path.join(os.getcwd(), 'backend')
-if not os.path.exists(backend_dir):
-    backend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'backend')
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+os.chdir(PROJECT_ROOT)
+backend_dir = PROJECT_ROOT / "backend"
 
-if backend_dir not in sys.path:
-    sys.path.insert(0, backend_dir)
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
 
 try:
     from app import app
@@ -17,14 +20,15 @@ try:
     except Exception as e:
         print("Database initialization failed:", e)
 
-except Exception as boot_error:
-    import traceback
-    from flask import Flask, jsonify
-    app = Flask(__name__)
+except Exception:
     err_trace = traceback.format_exc()
     print("FATAL BOOT ERROR:", err_trace)
-    
+    app = Flask(__name__)
+
     @app.route('/', defaults={'path': ''}, methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
     @app.route('/<path:path>', methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
     def catch_all(path):
         return jsonify(error="Vercel App Crash", details=err_trace), 500
+
+application = app
+handler = app

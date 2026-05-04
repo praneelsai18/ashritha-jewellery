@@ -9,9 +9,32 @@ from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
 
-load_dotenv()
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+DOTENV_PATHS = [
+    os.path.join(REPO_ROOT, ".env"),
+    os.path.join(REPO_ROOT, "api", ".env"),
+    os.path.join(os.path.dirname(__file__), ".env"),
+]
+for path in DOTENV_PATHS:
+    if not os.path.exists(path):
+        continue
+
+    with open(path, "r", encoding="utf-8") as f:
+        contents = f.read().strip()
+
+    if contents and "=" not in contents and contents.startswith(("postgres://", "postgresql://")):
+        os.environ.setdefault("DATABASE_URL", contents)
+    else:
+        load_dotenv(path, override=False)
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
+if not DATABASE_URL:
+    for fallback_key in ("PGDATABASE_URL", "DATABASE_URI", "DB_URL", "SUPABASE_DATABASE_URL"):
+        DATABASE_URL = os.environ.get(fallback_key, "")
+        if DATABASE_URL:
+            break
+
+DATABASE_URL = DATABASE_URL.strip()
 ENABLE_SEED_DATA = os.environ.get("ENABLE_SEED_DATA", "false").lower() == "true"
 PURGE_DEMO_DATA = os.environ.get("PURGE_DEMO_DATA", "false").lower() == "true"
 
@@ -179,8 +202,19 @@ class DBWrapper:
 
 def get_conn():
     if not DATABASE_URL:
-        raise Exception("DATABASE_URL environment variable is not set!")
-    conn = psycopg2.connect(DATABASE_URL)
+        raise Exception(
+            "DATABASE_URL environment variable is not set! "
+            "Set DATABASE_URL in your deployment environment or add a .env file with the Supabase PostgreSQL URL."
+        )
+
+    db_url = DATABASE_URL
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+    if "sslmode=" not in db_url:
+        db_url = f"{db_url}?sslmode=require" if "?" not in db_url else f"{db_url}&sslmode=require"
+
+    conn = psycopg2.connect(db_url)
     return DBWrapper(conn)
 
 

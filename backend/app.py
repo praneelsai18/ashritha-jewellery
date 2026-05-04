@@ -54,6 +54,9 @@ DEFAULT_DEV_ORIGINS = [
 _front = [x.strip() for x in os.environ.get("FRONTEND_URL", "").split(",") if x.strip()]
 _allow = [x.strip() for x in os.environ.get("ALLOWED_ORIGINS", "").split(",") if x.strip()]
 ALLOWED_ORIGINS = set(DEFAULT_DEV_ORIGINS + _front + _allow)
+if not _front and not _allow:
+    # No explicit origin config means allow the calling origin for API routes.
+    ALLOWED_ORIGINS = None
 
 RATE_LOCK = threading.Lock()
 RATE_BUCKETS = {}
@@ -88,7 +91,7 @@ def _apply_rate_limit(bucket_name):
 @app.after_request
 def cors(resp):
     origin = request.headers.get("Origin", "")
-    if origin and origin in ALLOWED_ORIGINS:
+    if origin and (ALLOWED_ORIGINS is None or origin in ALLOWED_ORIGINS):
         resp.headers["Access-Control-Allow-Origin"]      = origin
         resp.headers["Access-Control-Allow-Headers"]     = "Content-Type, Authorization"
         resp.headers["Access-Control-Allow-Methods"]     = "GET, POST, PUT, DELETE, OPTIONS"
@@ -127,7 +130,7 @@ def preflight():
         from flask import make_response
         r = make_response()
         origin = request.headers.get("Origin", "")
-        if origin and origin in ALLOWED_ORIGINS:
+        if origin and (ALLOWED_ORIGINS is None or origin in ALLOWED_ORIGINS):
             r.headers["Access-Control-Allow-Origin"] = origin
             r.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
             r.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"

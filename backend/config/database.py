@@ -37,6 +37,7 @@ if not DATABASE_URL:
 DATABASE_URL = DATABASE_URL.strip()
 ENABLE_SEED_DATA = os.environ.get("ENABLE_SEED_DATA", "false").lower() == "true"
 PURGE_DEMO_DATA = os.environ.get("PURGE_DEMO_DATA", "false").lower() == "true"
+BANGLE_DEFAULT_SIZES = '["2.2","2.4","2.6","2.8","2.10"]'
 
 SCHEMA = """
 -- ── USERS ──────────────────────────────────────────────────────────
@@ -69,6 +70,7 @@ CREATE TABLE IF NOT EXISTS products (
     rent_price   REAL    DEFAULT 0,
     deposit      REAL    DEFAULT 0,
     max_days     INTEGER DEFAULT 7,
+    bangle_sizes TEXT    DEFAULT '',
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -231,6 +233,22 @@ def init_db():
         conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS cart_data TEXT DEFAULT '[]'")
     except Exception:
         pass # Ignored if unsupported or already exists
+
+    try:
+        conn.execute("ALTER TABLE products ADD COLUMN IF NOT EXISTS bangle_sizes TEXT DEFAULT ''")
+    except Exception:
+        pass
+
+    # Backfill legacy bangle products with the default full size range.
+    conn.execute(
+        """
+        UPDATE products
+           SET bangle_sizes=%s
+         WHERE category='bangles'
+           AND (bangle_sizes IS NULL OR bangle_sizes='' OR bangle_sizes='[]')
+        """,
+        (BANGLE_DEFAULT_SIZES,)
+    )
 
     # Admin user
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@ashritha.com").strip().lower()

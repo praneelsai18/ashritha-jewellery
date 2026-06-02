@@ -3970,7 +3970,7 @@
             <div class="form-group"><label>Product Name *</label><input type="text" id="pName"
                 placeholder="e.g. Kundan Bridal Necklace Set"></div>
             <div class="form-group"><label>Category *</label><select id="pCategory"
-                onchange="toggleComboField(this.value)">
+                onchange="toggleProductFields(this.value)">
                 <option value="necklace">Neckset</option>
                 <option value="earrings">Earrings</option>
                 <option value="bangles">Bangles</option>
@@ -3979,6 +3979,12 @@
                 <option value="combo">Combo Set</option>
                 <option value="longchains">Long Chains</option>
               </select></div>
+            <div class="form-group full" id="bangleSizesWrap"
+              style="display:none;background:#F8F9FF;border:1px solid #D8DDF8;border-radius:8px;padding:16px;">
+              <label style="color:#3F51B5;">Bangle Sizes</label>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Comma-separated values (example: 2.2, 2.4, 2.6, 2.8, 2.10)</p>
+              <input type="text" id="pBangleSizes" placeholder="2.2, 2.4, 2.6, 2.8, 2.10">
+            </div>
             <div class="form-group"><label>Selling Price (Rs) *</label><input type="number" id="pPrice"
                 placeholder="850"></div>
             <div class="form-group"><label>MRP / Original Price (Rs)</label><input type="number" id="pMRP"
@@ -4468,7 +4474,8 @@
     let users = JSON.parse(localStorage.getItem('aj_users') || '[]');
     let currentUser = JSON.parse(localStorage.getItem('aj_user') || 'null');
     let wishlist = JSON.parse(localStorage.getItem('aj_wishlist') || '[]');
-    let currentProduct = null, currentQty = 1, currentFilter = 'all', currentRentProduct = null, reviewProductId = null;
+    const DEFAULT_BANGLE_SIZES = ['2.2', '2.4', '2.6', '2.8', '2.10'];
+    let currentProduct = null, currentQty = 1, currentFilter = 'all', currentRentProduct = null, reviewProductId = null, selectedDetailSize = '';
     let isLoadingProducts = false;
 
     const sv = {
@@ -4811,6 +4818,7 @@
     async function openProductDetail(id) {
       const p = products.find(x => x.id === id); if (!p) return;
       currentProduct = p; currentQty = 1;
+      selectedDetailSize = p.category === 'bangles' ? productBangleSizes(p)[0] : '';
       const ss = stockStatus(p);
       const disc = p.mrp ? Math.round((1 - p.price / p.mrp) * 100) : 0;
       const pct = stockPct(p);
@@ -4870,6 +4878,7 @@
       }
 
       let rating = null;
+      const sizeHtml = p.category === 'bangles' ? `<div style="margin-bottom:16px;"><div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Size:</div><div id="pdBangleSizeRow" style="display:flex;gap:8px;flex-wrap:wrap;">${productBangleSizes(p).map((sz, i) => `<button type="button" onclick="setDetailSize('${String(sz).replace(/'/g, "\\'")}')" style="min-width:52px;padding:9px 12px;border-radius:0;border:1px solid ${i === 0 ? 'var(--dark)' : '#DDD'};background:${i === 0 ? '#FFF' : '#FAFAFA'};font-size:14px;cursor:pointer;">${sz}</button>`).join('')}</div></div>` : '';
       // Show modal immediately with skeleton placeholders
       document.getElementById('productDetailContent').innerHTML = `
   <div class="breadcrumb"><a onclick="showPage('page-store')">Home</a><span class="breadcrumb-sep">›</span><a onclick="filterCatTile('${p.category}',{classList:{add:()=>{},remove:()=>{}}});showPage('page-store')">${catLabel(p.category)}</a><span class="breadcrumb-sep">›</span><span style="color:var(--dark);">${p.name}</span></div>
@@ -4890,6 +4899,7 @@
       <div class="prod-detail-stock">${stockHtml}</div>
       <div class="prod-detail-desc">${p.desc || 'No description available.'}</div>
       ${p.comboItems && p.comboItems.length ? `<div style="background:#FFF8E1;border:1px solid #FFD54F;border-radius:8px;padding:16px;margin-bottom:20px;"><div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#795548;margin-bottom:10px;">What's Included in this Combo</div>${p.comboItems.map((item, i) => `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13.5px;color:var(--body);"><span style="width:22px;height:22px;background:var(--gold);color:white;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${i + 1}</span>${item}</div>`).join('')}</div>` : ''}
+      ${sizeHtml}
       ${ss !== 'oos' ? `<div class="qty-row"><span class="qty-lbl">Qty</span><div class="qty-ctrl"><button onclick="chgDetailQty(-1)">−</button><span id="detailQtyDisp">1</span><button onclick="chgDetailQty(1)">+</button></div></div>` : ''}
       <div class="prod-detail-actions">${actionsHtml}</div>
       ${rentHtml}
@@ -4970,18 +4980,33 @@
         }
       }
     }
+    function setDetailSize(size) {
+      if (!currentProduct || currentProduct.category !== 'bangles') return;
+      selectedDetailSize = size;
+      const row = document.getElementById('pdBangleSizeRow');
+      if (!row) return;
+      Array.from(row.children).forEach(btn => {
+        const active = btn.textContent.trim() === size;
+        btn.style.border = active ? '1px solid var(--dark)' : '1px solid #DDD';
+        btn.style.background = active ? '#FFF' : '#FAFAFA';
+      });
+    }
 
     function chgDetailQty(d) {
       if (!currentProduct) return;
       currentQty = Math.max(1, Math.min(currentProduct.stock, currentQty + d));
       const el = document.getElementById('detailQtyDisp'); if (el) el.textContent = currentQty;
     }
-    function addCartFromDetail() { if (!currentProduct) return; addToCart(currentProduct, currentQty); }
+    function addCartFromDetail() {
+      if (!currentProduct) return;
+      addToCart(currentProduct, currentQty, currentProduct.category === 'bangles' ? selectedDetailSize : '');
+    }
     function orderDetailWA() {
       if (!currentProduct) return;
       const p = currentProduct;
       const total = p.price * currentQty;
-      openWhatsApp(`Order Enquiry — Ashritha Jewellers\n\nProduct: ${p.name}\nCategory: ${catLabel(p.category)}\nPrice: Rs ${p.price.toLocaleString()} x ${currentQty} = Rs ${total.toLocaleString()}\n\nPlease share payment and delivery details. Thank you!`);
+      const sizeLine = p.category === 'bangles' ? `\nSize: ${selectedDetailSize || productBangleSizes(p)[0]}` : '';
+      openWhatsApp(`Order Enquiry — Ashritha Jewellers\n\nProduct: ${p.name}${sizeLine}\nCategory: ${catLabel(p.category)}\nPrice: Rs ${p.price.toLocaleString()} x ${currentQty} = Rs ${total.toLocaleString()}\n\nPlease share payment and delivery details. Thank you!`);
     }
 
     // ═══════════════════════════════════════════════════
@@ -5110,26 +5135,27 @@
     // ═══════════════════════════════════════════════════
     // CART
     // ═══════════════════════════════════════════════════
-    function addToCart(product, qty = 1) {
+    function addToCart(product, qty = 1, size = '') {
       const lp = products.find(x => x.id === product.id);
       if (!lp || lp.stock === 0) { toast('Sorry, this item is out of stock'); return; }
       if (qty > lp.stock) { toast(`Only ${lp.stock} pieces available`); qty = lp.stock; }
-      const ex = cart.find(i => i.id === product.id);
+      const normalizedSize = product.category === 'bangles' ? (size || productBangleSizes(product)[0]) : '';
+      const ex = cart.find(i => i.id === product.id && (i.size || '') === normalizedSize);
       
       let firstImage = null;
       try { const arr = JSON.parse(product.image || '[]'); firstImage = Array.isArray(arr) && arr.length > 0 ? arr[0] : null; } catch(e) { firstImage = product.image; }
       
       if (ex) { const nq = ex.qty + qty; if (nq > lp.stock) { toast(`Only ${lp.stock} pieces available`); ex.qty = lp.stock; } else ex.qty = nq; }
-      else cart.push({ id: product.id, name: product.name, price: product.price, image: firstImage || '', qty });
+      else cart.push({ id: product.id, name: product.name, price: product.price, image: firstImage || '', qty, size: normalizedSize });
       sv.cart(); updateCartUI(); toast(`${product.name} added to cart`);
     }
     function quickAdd(id) { const p = products.find(x => x.id === id); if (p) addToCart(p, 1); }
-    function removeFromCart(id) { cart = cart.filter(i => i.id !== id); sv.cart(); updateCartUI(); }
-    function changeCartQty(id, d) {
-      const item = cart.find(x => x.id === id); if (!item) return;
+    function removeFromCart(id, size = '') { cart = cart.filter(i => !(i.id === id && (i.size || '') === size)); sv.cart(); updateCartUI(); }
+    function changeCartQty(id, size, d) {
+      const item = cart.find(x => x.id === id && (x.size || '') === (size || '')); if (!item) return;
       const lp = products.find(x => x.id === id); const max = lp ? lp.stock : 999;
       item.qty = Math.max(1, Math.min(max, item.qty + d));
-      if (item.qty <= 0) removeFromCart(id); else { sv.cart(); updateCartUI(); }
+      if (item.qty <= 0) removeFromCart(id, size); else { sv.cart(); updateCartUI(); }
     }
     function calcTotals() {
       const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
@@ -5152,7 +5178,7 @@
         const ct = document.getElementById('cartTotal'); if (ct) ct.textContent = 'Rs 0';
         const sn = document.getElementById('cartShipNote'); if (sn) sn.textContent = ''; return;
       }
-      body.innerHTML = cart.map(item => `<div class="cart-item"><div class="cart-item-thumb">${item.image ? `<img src="${item.image}" alt="${item.name}" onerror="this.outerHTML='${svgTh}'">` : svgTh}</div><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">Rs ${item.price.toLocaleString()}</div><div class="cart-item-qty-row"><button class="ci-q-btn" onclick="changeCartQty(${item.id},-1)">−</button><span class="ci-q-num">${item.qty}</span><button class="ci-q-btn" onclick="changeCartQty(${item.id},1)">+</button></div></div><button class="cart-item-rm" onclick="removeFromCart(${item.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button></div>`).join('');
+      body.innerHTML = cart.map(item => `<div class="cart-item"><div class="cart-item-thumb">${item.image ? `<img src="${item.image}" alt="${item.name}" onerror="this.outerHTML='${svgTh}'">` : svgTh}</div><div class="cart-item-info"><div class="cart-item-name">${item.name}</div>${item.size ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">Size: ${item.size}</div>` : ''}<div class="cart-item-price">Rs ${item.price.toLocaleString()}</div><div class="cart-item-qty-row"><button class="ci-q-btn" onclick="changeCartQty(${item.id},'${(item.size || '').replace(/'/g, "\\'")}',-1)">−</button><span class="ci-q-num">${item.qty}</span><button class="ci-q-btn" onclick="changeCartQty(${item.id},'${(item.size || '').replace(/'/g, "\\'")}',1)">+</button></div></div><button class="cart-item-rm" onclick="removeFromCart(${item.id},'${(item.size || '').replace(/'/g, "\\'")}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button></div>`).join('');
       const ct = document.getElementById('cartTotal'); if (ct) ct.textContent = `Rs ${total.toLocaleString()}`;
       const sn = document.getElementById('cartShipNote'); if (sn) sn.textContent = ship === 0 ? 'Free shipping applied!' : `+ Rs ${ship} shipping (Free above Rs ${settings.freeShipping || 499})`;
     }
@@ -5170,7 +5196,7 @@
       }
       const { sub, ship, total } = calcTotals();
       const summEl = document.getElementById('checkoutSumm');
-      if (summEl) summEl.innerHTML = `<h4>Order Summary</h4>${cart.map(i => `<div class="order-row"><span>${i.name} × ${i.qty}</span><span>Rs ${(i.price * i.qty).toLocaleString()}</span></div>`).join('')}<div class="order-row"><span>Shipping</span><span>${ship === 0 ? 'FREE' : 'Rs ' + ship}</span></div><div class="order-total-row"><span>Total Payable</span><span>Rs ${total.toLocaleString()}</span></div>`;
+      if (summEl) summEl.innerHTML = `<h4>Order Summary</h4>${cart.map(i => `<div class="order-row"><span>${i.name}${i.size ? ` (${i.size})` : ''} × ${i.qty}</span><span>Rs ${(i.price * i.qty).toLocaleString()}</span></div>`).join('')}<div class="order-row"><span>Shipping</span><span>${ship === 0 ? 'FREE' : 'Rs ' + ship}</span></div><div class="order-total-row"><span>Total Payable</span><span>Rs ${total.toLocaleString()}</span></div>`;
       document.getElementById('checkoutModal').classList.add('open');
     }
     function closeCheckout() { document.getElementById('checkoutModal').classList.remove('open'); }
@@ -5199,7 +5225,7 @@
         const res = await apiFetch('/api/orders', { method: 'POST', body: JSON.stringify(payload) });
         const orderId = res.order.id;
         
-        const lines = cart.map(i => `  - ${i.name} (Qty: ${i.qty}) — Rs ${(i.price * i.qty).toLocaleString()}`).join('\n');
+        const lines = cart.map(i => `  - ${i.name}${i.size ? ` (Size: ${i.size})` : ''} (Qty: ${i.qty}) — Rs ${(i.price * i.qty).toLocaleString()}`).join('\n');
         const msg = `New Order — Ashritha Jewellers\nOrder ID: #${orderId}\n\nCustomer Details:\n  Name: ${name}\n  Mobile: ${phone}\n\nDelivery Address:\n  ${address}\n  ${city}${state ? ', ' + state : ''} — ${pin}\n\nItems Ordered:\n${lines}\n\nPrice Breakdown:\n  Subtotal: Rs ${sub.toLocaleString()}\n  Shipping: ${ship === 0 ? 'FREE' : 'Rs ' + ship}\n  TOTAL PAYABLE: Rs ${total.toLocaleString()}\n${notes ? '\nNote: ' + notes : ''}\n\nPlease confirm and share payment details. Thank you!`;
         closeCheckout(); document.getElementById('cartSidebar').classList.remove('open');
         openWhatsApp(msg);
@@ -5339,15 +5365,17 @@
         rent_enabled: document.getElementById('pRentEnabled').checked,
         rent_price: parseFloat(document.getElementById('pRentPrice').value) || 0,
         deposit: parseFloat(document.getElementById('pDeposit').value) || 0,
-        max_days: parseInt(document.getElementById('pMaxDays').value) || 7
+        max_days: parseInt(document.getElementById('pMaxDays').value) || 7,
+        bangle_sizes: cat === 'bangles' ? normalizeBangleSizesInput(document.getElementById('pBangleSizes').value) : []
       };
       
       try {
         await apiFetch('/api/admin/products', { method: 'POST', body: JSON.stringify(payload) });
         toast('Product added!');
-        ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pRentPrice', 'pDeposit', 'pMaxDays'].forEach(id => document.getElementById(id).value = '');
+        ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pRentPrice', 'pDeposit', 'pMaxDays', 'pBangleSizes'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('pBadge').value = ''; document.getElementById('pRentEnabled').checked = false;
         document.getElementById('pCategory').value = 'necklace';
+        toggleProductFields('necklace');
         clearImage();
         fetchInitialData().then(() => renderAdminProducts());
       } catch (err) {
@@ -5395,6 +5423,8 @@
       showAdminTab('add', document.querySelectorAll('.admin-tab')[0]);
       document.getElementById('pName').value = p.name;
       document.getElementById('pCategory').value = p.category;
+      toggleProductFields(p.category);
+      document.getElementById('pBangleSizes').value = productBangleSizes(p).join(', ');
       document.getElementById('pPrice').value = p.price;
       document.getElementById('pMRP').value = p.mrp || '';
       document.getElementById('pStock').value = p.stock;
@@ -5430,16 +5460,21 @@
           rent_enabled: document.getElementById('pRentEnabled').checked,
           rent_price: parseFloat(document.getElementById('pRentPrice').value) || 0,
           deposit: parseFloat(document.getElementById('pDeposit').value) || 0,
-          max_days: parseInt(document.getElementById('pMaxDays').value) || 7
+          max_days: parseInt(document.getElementById('pMaxDays').value) || 7,
+          bangle_sizes: document.getElementById('pCategory').value === 'bangles'
+            ? normalizeBangleSizesInput(document.getElementById('pBangleSizes').value)
+            : []
         };
         try {
           await apiFetch('/api/admin/products/' + id, { method: 'PUT', body: JSON.stringify(payload) });
           toast('Product updated!');
           fetchInitialData().then(() => renderAdminProducts());
           btn.textContent = 'Add Product to Catalog'; btn.onclick = addProduct;
-          ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pRentPrice', 'pDeposit', 'pMaxDays'].forEach(id => document.getElementById(id).value = '');
+          ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pRentPrice', 'pDeposit', 'pMaxDays', 'pBangleSizes'].forEach(id => document.getElementById(id).value = '');
           clearImage();
           document.getElementById('pRentEnabled').checked = false;
+          document.getElementById('pCategory').value = 'necklace';
+          toggleProductFields('necklace');
         } catch (err) { toast(err.message || 'Failed to update'); }
       };
     }
@@ -5632,11 +5667,47 @@
     }
 
     // ═══════════════════════════════════════════════════
-    // COMBO FIELD
+    // COMBO / BANGLE FIELDS
     // ═══════════════════════════════════════════════════
-    function toggleComboField(cat) {
+    function normalizeBangleSizesInput(value) {
+      if (Array.isArray(value)) {
+        const out = [];
+        const seen = new Set();
+        value.forEach(v => {
+          const s = String(v || '').trim();
+          if (!s || seen.has(s)) return;
+          seen.add(s);
+          out.push(s);
+        });
+        return out.length ? out : [...DEFAULT_BANGLE_SIZES];
+      }
+      const text = String(value || '').trim();
+      if (!text) return [...DEFAULT_BANGLE_SIZES];
+      return normalizeBangleSizesInput(text.split(','));
+    }
+    function productBangleSizes(product) {
+      const raw = product?.bangleSizes ?? product?.bangle_sizes;
+      if (Array.isArray(raw)) return normalizeBangleSizesInput(raw);
+      if (typeof raw === 'string') {
+        const t = raw.trim();
+        if (!t) return product?.category === 'bangles' ? [...DEFAULT_BANGLE_SIZES] : [];
+        try {
+          const parsed = JSON.parse(t);
+          if (Array.isArray(parsed)) return normalizeBangleSizesInput(parsed);
+        } catch (e) {}
+        return normalizeBangleSizesInput(t.split(','));
+      }
+      return product?.category === 'bangles' ? [...DEFAULT_BANGLE_SIZES] : [];
+    }
+    function toggleProductFields(cat) {
       const wrap = document.getElementById('comboFieldWrap');
       if (wrap) wrap.style.display = cat === 'combo' ? 'block' : 'none';
+      const sizeWrap = document.getElementById('bangleSizesWrap');
+      if (sizeWrap) sizeWrap.style.display = cat === 'bangles' ? 'block' : 'none';
+      if (cat === 'bangles') {
+        const inp = document.getElementById('pBangleSizes');
+        if (inp && !inp.value.trim()) inp.value = DEFAULT_BANGLE_SIZES.join(', ');
+      }
     }
     function addComboItem() {
       const list = document.getElementById('comboItemsList');
@@ -5781,7 +5852,8 @@
           active: p.is_active,
           rentEnabled: p.rent_enabled,
           rentPrice: p.rent_price,
-          maxDays: p.max_days
+          maxDays: p.max_days,
+          bangleSizes: p.bangle_sizes
         }));
       } catch (err) {
         console.error("Failed to load products", err);

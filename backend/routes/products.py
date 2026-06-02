@@ -1,5 +1,6 @@
 """Products routes — /api/products  &  /api/admin/products"""
 from flask import Blueprint, request, jsonify
+import json
 import psycopg2
 from config.database import get_conn
 from middleware.auth import admin_required, optional_auth
@@ -8,6 +9,34 @@ bp = Blueprint("products", __name__)
 
 CATS   = {"necklace","earrings","bangles","sets","rings"}
 BADGES = {"","New","Bestseller","Sale","Limited","Trending"}
+DEFAULT_BANGLE_SIZES = ["2.2", "2.4", "2.6", "2.8", "2.10"]
+
+
+def _norm_bangle_sizes(value):
+    if value is None:
+        return list(DEFAULT_BANGLE_SIZES)
+    if isinstance(value, list):
+        vals = value
+    elif isinstance(value, str):
+        s = value.strip()
+        if not s:
+            return list(DEFAULT_BANGLE_SIZES)
+        try:
+            parsed = json.loads(s)
+            vals = parsed if isinstance(parsed, list) else s.split(",")
+        except Exception:
+            vals = s.split(",")
+    else:
+        return list(DEFAULT_BANGLE_SIZES)
+    cleaned = []
+    seen = set()
+    for raw in vals:
+        item = str(raw).strip()
+        if not item or item in seen:
+            continue
+        seen.add(item)
+        cleaned.append(item)
+    return cleaned or list(DEFAULT_BANGLE_SIZES)
 
 
 def fmt(row):
@@ -17,6 +46,10 @@ def fmt(row):
     price, mrp = d.get("price",0), d.get("mrp")
     d["discount_pct"] = round((1 - price/mrp)*100) if mrp and mrp > price else 0
     d["stock_status"] = "oos" if d["stock"]==0 else "low" if d["stock"]<=3 else "in"
+    if d.get("category") == "bangles":
+        d["bangle_sizes"] = _norm_bangle_sizes(d.get("bangle_sizes"))
+    else:
+        d["bangle_sizes"] = []
     return d
 
 
@@ -85,8 +118,8 @@ def add_product():
     cur = conn.execute(
         """INSERT INTO products
            (name,category,price,mrp,stock,badge,description,image_url,
-            rent_enabled,rent_price,deposit,max_days)
-           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+            rent_enabled,rent_price,deposit,max_days,bangle_sizes)
+           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
         (name, cat, float(price),
          float(d["mrp"]) if d.get("mrp") else None,
          int(stock), badge if badge in BADGES else "",
@@ -95,7 +128,8 @@ def add_product():
          1 if d.get("rent_enabled") else 0,
          float(d.get("rent_price") or 0),
          float(d.get("deposit") or 0),
-         int(d.get("max_days") or 7))
+         int(d.get("max_days") or 7),
+         json.dumps(_norm_bangle_sizes(d.get("bangle_sizes")) if cat == "bangles" else []))
     )
     res = cur.fetchone()
     if res and isinstance(res, dict):
@@ -123,7 +157,8 @@ def edit_product(pid):
         "name":"name","category":"category","price":"price","mrp":"mrp",
         "stock":"stock","badge":"badge","description":"description",
         "image_url":"image_url","rent_enabled":"rent_enabled",
-        "rent_price":"rent_price","deposit":"deposit","max_days":"max_days"
+        "rent_price":"rent_price","deposit":"deposit","max_days":"max_days",
+        "bangle_sizes":"bangle_sizes",
     }
     for k, col in MAP.items():
         if k in d:
@@ -131,6 +166,8 @@ def edit_product(pid):
             if k == "rent_enabled": v = 1 if v else 0
             elif k == "category" and v not in CATS: continue
             elif k == "badge" and v not in BADGES: v = ""
+            elif k == "bangle_sizes":
+                v = json.dumps(_norm_bangle_sizes(v))
             fields.append(f"{col}=%s"); args.append(v)
     if len(fields)==1: conn.close(); return jsonify(error="Nothing to update"), 400
     args.append(pid)

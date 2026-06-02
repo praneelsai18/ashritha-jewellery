@@ -250,6 +250,11 @@ def init_db():
         (BANGLE_DEFAULT_SIZES,)
     )
 
+    # Performance indexes for common listing/search paths.
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_products_active_category ON products (is_active, category)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_products_created_at ON products (created_at DESC)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_products_name ON products (name)")
+
     # Admin user
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@ashritha.com").strip().lower()
     admin_password = os.environ.get("ADMIN_PASSWORD", "")

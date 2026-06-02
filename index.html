@@ -3574,6 +3574,7 @@
         <div class="nav-item"><span class="nav-link" onclick="filterProducts('rings',this)">Rings</span></div>
         <div class="nav-item"><span class="nav-link" onclick="filterProducts('combo',this)">Combo Sets</span></div>
         <div class="nav-item"><span class="nav-link" onclick="filterProducts('longchains',this)">Long Chains</span></div>
+        <div class="nav-item"><span class="nav-link" onclick="filterProducts('blackbeads',this)">Black Beads</span></div>
       </div>
     </nav>
 
@@ -3688,6 +3689,15 @@
             <div class="cat-tile-name">Long Chains</div>
             <div class="cat-tile-count" id="cnt-longchains">—</div>
           </div>
+          <div class="cat-tile" onclick="filterCatTile('blackbeads',this)">
+            <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M6 8c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v8c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2V8z" />
+                <circle cx="10" cy="12" r="1.3" />
+                <circle cx="14" cy="12" r="1.3" />
+              </svg></div>
+            <div class="cat-tile-name">Black Beads</div>
+            <div class="cat-tile-count" id="cnt-blackbeads">—</div>
+          </div>
         </div>
       </div>
     </section>
@@ -3704,6 +3714,7 @@
         <button class="filter-pill" onclick="filterProducts('rings',this)">Rings</button>
         <button class="filter-pill" onclick="filterProducts('combo',this)">Combo Sets</button>
         <button class="filter-pill" onclick="filterProducts('longchains',this)">Long Chains</button>
+        <button class="filter-pill" onclick="filterProducts('blackbeads',this)">Black Beads</button>
         <button class="filter-pill" onclick="filterProducts('rent',this)" style="color:var(--rent);">For Rent</button>
         <button class="filter-pill" onclick="filterProducts('sale',this)">On Sale</button>
         <select class="sort-sel" id="sortSel" onchange="sortProducts()">
@@ -3823,6 +3834,7 @@
               onclick="filterProducts('bangles',null);showPage('page-store')">Bangles</a><a
               onclick="filterProducts('sets',null);showPage('page-store')">Bridal Sets</a>
             <a onclick="filterProducts('combo',null);showPage('page-store')">Combo Sets</a><a
+              onclick="filterProducts('blackbeads',null);showPage('page-store')">Black Beads</a><a
               onclick="filterProducts('rent',null);showPage('page-store')" style="color:var(--rent);">Jewellery on
               Rent</a>
           </div>
@@ -3978,6 +3990,7 @@
                 <option value="rings">Ring</option>
                 <option value="combo">Combo Set</option>
                 <option value="longchains">Long Chains</option>
+                <option value="blackbeads">Black Beads</option>
               </select></div>
             <div class="form-group full" id="bangleSizesWrap"
               style="display:none;background:#F8F9FF;border:1px solid #D8DDF8;border-radius:8px;padding:16px;">
@@ -4718,7 +4731,7 @@
     // ═══════════════════════════════════════════════════
     // HELPERS
     // ═══════════════════════════════════════════════════
-    const catLabel = c => ({ necklace: 'Neckset', earrings: 'Earrings', bangles: 'Bangles', sets: 'Bridal Set', rings: 'Ring', combo: 'Combo Set', longchains: 'Long Chain' }[c] || c);
+    const catLabel = c => ({ necklace: 'Neckset', earrings: 'Earrings', bangles: 'Bangles', sets: 'Bridal Set', rings: 'Ring', combo: 'Combo Set', longchains: 'Long Chain', blackbeads: 'Black Beads' }[c] || c);
     function stockStatus(p) { if (p.stock === 0) return 'oos'; if (p.stock <= 3) return 'low'; return 'in'; }
     function stockPct(p) { return Math.min(100, Math.round((p.stock / 20) * 100)); }
 
@@ -4743,7 +4756,7 @@
       else if (sv2 === 'newest') list.sort((a, b) => b.date - a.date);
       const cnt = document.getElementById('prodCount');
       if (cnt) cnt.textContent = `Showing ${isLoadingProducts ? '...': list.length} product${list.length !== 1 ? 's' : ''}`;
-      const cats = ['necklace', 'earrings', 'bangles', 'sets', 'rings', 'combo', 'longchains'];
+      const cats = ['necklace', 'earrings', 'bangles', 'sets', 'rings', 'combo', 'longchains', 'blackbeads'];
       const allC = products.filter(p => p.active);
       const allEl = document.getElementById('cnt-all'); if (allEl) allEl.textContent = allC.length + ' pieces';
       cats.forEach(c => { const el = document.getElementById('cnt-' + c); if (el) { const n = allC.filter(p => p.category === c).length; el.textContent = n + ' piece' + (n !== 1 ? 's' : ''); } });
@@ -5232,7 +5245,7 @@
         
         cart = []; sv.cart(); updateCartUI();
         toast('Order placed successfully!');
-        fetchInitialData(); // Refresh stock
+        refreshProductsOnly(); // Refresh stock quickly
       } catch (err) {
         toast(err.message || 'Failed to place order');
       } finally {
@@ -5377,7 +5390,7 @@
         document.getElementById('pCategory').value = 'necklace';
         toggleProductFields('necklace');
         clearImage();
-        fetchInitialData().then(() => renderAdminProducts());
+        refreshProductsOnly().then(() => renderAdminProducts());
       } catch (err) {
         toast(err.message || 'Failed to add product');
       }
@@ -5399,14 +5412,14 @@
       try {
         await apiFetch('/api/admin/products/' + id + '/stock', { method: 'PUT', body: JSON.stringify({ stock: parseInt(val) || 0 }) });
         toast('Stock updated!');
-        fetchInitialData().then(() => renderAdminProducts());
+        refreshProductsOnly().then(() => renderAdminProducts());
       } catch (err) { toast(err.message || 'Failed to update stock'); }
     }
     async function toggleVis(id) {
        try {
          await apiFetch('/api/admin/products/' + id + '/toggle', { method: 'PUT' });
          toast('Visibility updated');
-         fetchInitialData().then(() => renderAdminProducts());
+         refreshProductsOnly().then(() => renderAdminProducts());
        } catch (err) { toast(err.message || 'Error updating visibility'); }
     }
     async function deleteProduct(id) { 
@@ -5414,7 +5427,7 @@
        try {
          await apiFetch('/api/admin/products/' + id, { method: 'DELETE' });
          toast('Product deleted');
-         fetchInitialData().then(() => renderAdminProducts());
+         refreshProductsOnly().then(() => renderAdminProducts());
        } catch (err) { toast(err.message || 'Error deleting product'); }
     }
     function searchAdmin(v) { renderAdminProducts(v); }
@@ -5468,7 +5481,7 @@
         try {
           await apiFetch('/api/admin/products/' + id, { method: 'PUT', body: JSON.stringify(payload) });
           toast('Product updated!');
-          fetchInitialData().then(() => renderAdminProducts());
+          refreshProductsOnly().then(() => renderAdminProducts());
           btn.textContent = 'Add Product to Catalog'; btn.onclick = addProduct;
           ['pName', 'pPrice', 'pMRP', 'pStock', 'pDesc', 'pRentPrice', 'pDeposit', 'pMaxDays', 'pBangleSizes'].forEach(id => document.getElementById(id).value = '');
           clearImage();
@@ -5840,7 +5853,7 @@
     // ═══════════════════════════════════════════════════
     // INIT
     // ═══════════════════════════════════════════════════
-    async function fetchInitialData() {
+    async function refreshProductsOnly() {
       isLoadingProducts = true;
       renderProducts(currentFilter);
       try {
@@ -5858,8 +5871,14 @@
       } catch (err) {
         console.error("Failed to load products", err);
         products = [];
+      } finally {
+        isLoadingProducts = false;
       }
-      isLoadingProducts = false;
+      renderProducts(currentFilter);
+    }
+
+    async function fetchInitialData() {
+      await refreshProductsOnly();
 
       
       try {
@@ -5901,7 +5920,6 @@
         }
       }
       
-      renderProducts(currentFilter);
       renderHeaderAuth();
       updateCartUI();
     }

@@ -25,6 +25,10 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "ashritha_secret_CHANGE_IN_PROD")
 app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024   # 20 MB
 MAX_JSON_BYTES = int(os.environ.get("MAX_JSON_BYTES", 1024 * 1024))
+MAX_MEDIA_JSON_BYTES = int(os.environ.get("MAX_MEDIA_JSON_BYTES", app.config["MAX_CONTENT_LENGTH"]))
+LARGE_JSON_PATH_PREFIXES = (
+    "/api/admin/products",
+)
 IS_PROD = os.environ.get("FLASK_ENV", "development") == "production"
 if IS_PROD and app.config["SECRET_KEY"] == "ashritha_secret_CHANGE_IN_PROD":
     print("WARNING: SECRET_KEY must be set in production. Using insecure default.")
@@ -110,7 +114,11 @@ def cors(resp):
 
 @app.before_request
 def preflight():
-    if request.path.startswith("/api/") and request.content_length and request.content_length > MAX_JSON_BYTES:
+    path_limit = MAX_MEDIA_JSON_BYTES if any(
+        request.path.startswith(prefix) for prefix in LARGE_JSON_PATH_PREFIXES
+    ) else MAX_JSON_BYTES
+
+    if request.path.startswith("/api/") and request.content_length and request.content_length > path_limit:
         return jsonify(error="Request payload too large"), 413
 
     if request.path in ("/api/auth/login", "/api/auth/register", "/api/auth/forgot-password", "/api/auth/google"):

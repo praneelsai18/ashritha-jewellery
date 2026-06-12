@@ -3,8 +3,10 @@ Ashritha Jewellers — Database (PostgreSQL via Supabase)
 Run standalone:  python config/database.py
 """
 import os
+import threading
 import secrets
 import psycopg2
+from psycopg2 import pool as _pg_pool
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
@@ -170,9 +172,16 @@ SEED_REVIEWS = [
 
 
 class DBWrapper:
-    """Wrapper to make psycopg2 act like sqlite3 for this app."""
-    def __init__(self, conn):
+    """Wrapper to make a pooled psycopg2 connection act like sqlite3 for this app.
+
+    On close(), the underlying connection is rolled back and returned to the
+    pool instead of being torn down — this avoids paying the full SSL/TCP
+    handshake cost (200-800ms against Supabase) on every API request.
+    """
+    def __init__(self, conn, pool=None):
         self._conn = conn
+        self._pool = pool
+        self._released = False
 
     def cursor(self):
         return self._conn.cursor(cursor_factory=RealDictCursor)
@@ -199,25 +208,87 @@ class DBWrapper:
         self._conn.commit()
 
     def close(self):
-        self._conn.close()
+        if self._released:
+            return
+        self._released = True
+
+        if self._pool is None:
+            try:
+                self._conn.close()
+            except Exception:
+                pass
+            return
+
+        # Clear any in-flight transaction (incl. aborted ones) before
+        # returning the connection so the next caller gets a clean slate.
+        broken = False
+        try:
+            self._conn.rollback()
+        except Exception:
+            broken = True
+        if getattr(self._conn, "closed", 0):
+            broken = True
+
+        try:
+            self._pool.putconn(self._conn, close=broken)
+        except Exception:
+            try:
+                self._conn.close()
+            except Exception:
+                pass
 
 
-def get_conn():
+_POOL = None
+_POOL_LOCK = threading.Lock()
+
+
+def _build_db_url():
     if not DATABASE_URL:
         raise Exception(
             "DATABASE_URL environment variable is not set! "
             "Set DATABASE_URL in your deployment environment or add a .env file with the Supabase PostgreSQL URL."
         )
-
     db_url = DATABASE_URL
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)
-
     if "sslmode=" not in db_url:
         db_url = f"{db_url}?sslmode=require" if "?" not in db_url else f"{db_url}&sslmode=require"
+    return db_url
 
-    conn = psycopg2.connect(db_url)
-    return DBWrapper(conn)
+
+def _get_pool():
+    global _POOL
+    if _POOL is not None:
+        return _POOL
+    with _POOL_LOCK:
+        if _POOL is not None:
+            return _POOL
+        minconn = max(1, int(os.environ.get("DB_POOL_MIN", "1")))
+        maxconn = max(minconn, int(os.environ.get("DB_POOL_MAX", "10")))
+        _POOL = _pg_pool.ThreadedConnectionPool(
+            minconn, maxconn, _build_db_url(),
+            # Keep idle TCP connections alive across NAT/firewall timeouts
+            # so the pool can actually reuse them.
+            keepalives=1, keepalives_idle=30,
+            keepalives_interval=10, keepalives_count=3,
+        )
+        return _POOL
+
+
+def get_conn():
+    pool = _get_pool()
+    raw = pool.getconn()
+
+    # Pool can hand back a connection the server closed while idle. Discard it
+    # and grab a fresh one so callers never see a dead socket.
+    if getattr(raw, "closed", 0):
+        try:
+            pool.putconn(raw, close=True)
+        except Exception:
+            pass
+        raw = pool.getconn()
+
+    return DBWrapper(raw, pool=pool)
 
 
 def init_db():

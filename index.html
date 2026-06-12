@@ -2800,7 +2800,7 @@
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.55);
-      z-index: 2000;
+      z-index: 4000;
       display: none;
       align-items: center;
       justify-content: center;
@@ -3555,7 +3555,7 @@
     </header>
     <nav class="site-nav">
       <div class="nav-inner">
-        <div class="nav-item"><span class="nav-link" onclick="filterProducts('all',this)">All Collections</span></div>
+        <div class="nav-item"><span class="nav-link active" onclick="filterProducts('all',this)">All Collections</span></div>
         <div class="nav-item"><span class="nav-link" onclick="filterProducts('necklace',this)">Necksets</span>
           <div class="nav-dropdown"><a onclick="filterProducts('necklace',null)">All Necksets</a><a
               onclick="filterProducts('necklace',null)">Antique Necksets</a><a
@@ -3620,7 +3620,7 @@
           </div>
         </div>
         <div class="cat-strip">
-          <div class="cat-tile" onclick="filterCatTile('all',this)">
+          <div class="cat-tile active" onclick="filterCatTile('all',this)">
             <div class="cat-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="7" height="7" />
                 <rect x="14" y="3" width="7" height="7" />
@@ -4772,7 +4772,7 @@
       let firstImage = null;
       try { const arr = JSON.parse(p.image || '[]'); firstImage = Array.isArray(arr) && arr.length > 0 ? arr[0] : null; } catch(e) { firstImage = p.image; }
       
-      const imgHtml = firstImage ? `<img src="${firstImage}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
+      const imgHtml = firstImage ? `<img src="${firstImage}" alt="${p.name}" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
       const phHtml = `<div class="prod-card-img-placeholder" style="${firstImage ? 'display:none' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="52" height="52"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21"/></svg></div>`;
       let stockHtml = '';
       if (ss === 'low') stockHtml = `<div class="prod-stock-bar"><div class="prod-stock-fill" style="width:${pct}%;background:#F59E0B;"></div></div><div class="prod-stock-text prod-stock-low">Only ${p.stock} left!</div>`;
@@ -4799,15 +4799,31 @@
 
     function filterProducts(filter, btn) {
       currentFilter = filter;
-      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+
+      // Reset active state across every category selector group so only one
+      // category is ever highlighted at a time.
+      document.querySelectorAll('.nav-link.active, .filter-pill.active, .cat-tile.active')
+        .forEach(el => el.classList.remove('active'));
+
       if (btn) btn.classList.add('active');
+
+      // Keep the nav, filter pills, and category tiles in sync by also
+      // highlighting matching entries in the other groups.
+      document.querySelectorAll('.nav-link, .filter-pill, .cat-tile').forEach(el => {
+        const onclickAttr = el.getAttribute('onclick') || '';
+        if (
+          onclickAttr.includes(`filterProducts('${filter}'`) ||
+          onclickAttr.includes(`filterCatTile('${filter}'`)
+        ) {
+          el.classList.add('active');
+        }
+      });
+
       renderProducts(filter);
       document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
     }
     function filterCatTile(filter, tile) {
-      document.querySelectorAll('.cat-tile').forEach(t => t.classList.remove('active'));
-      tile.classList.add('active');
-      filterProducts(filter, null);
+      filterProducts(filter, tile);
     }
     function sortProducts() { renderProducts(currentFilter); }
     function scrollToProducts() { document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }); }
@@ -5781,8 +5797,10 @@
     async function fetchInitialData() {
       isLoadingProducts = true;
       renderProducts(currentFilter);
-      try {
-        const pRes = await apiFetch('/api/products');
+
+      // Kick off all three independent fetches in parallel so total wait
+      // time is max(slowest), not sum(all).
+      const productsP = apiFetch('/api/products').then(pRes => {
         products = (pRes.products || []).map(p => ({
           ...p,
           image: p.image_url,
@@ -5792,15 +5810,12 @@
           rentPrice: p.rent_price,
           maxDays: p.max_days
         }));
-      } catch (err) {
+      }).catch(err => {
         console.error("Failed to load products", err);
         products = [];
-      }
-      isLoadingProducts = false;
+      });
 
-      
-      try {
-        const sRes = await apiFetch('/api/settings/public');
+      const settingsP = apiFetch('/api/settings/public').then(sRes => {
         if (sRes && sRes.settings) {
           settings.waNumber = sRes.settings.wa_number || settings.waNumber;
           settings.upiId = sRes.settings.upi_id || settings.upiId;
@@ -5808,37 +5823,46 @@
           settings.shippingCharge = sRes.settings.shipping_charge ?? settings.shippingCharge;
           settings.annText = sRes.settings.ann_text || '';
         }
-      } catch (e) {}
-      
-      if (localStorage.getItem('aj_token')) {
+      }).catch(() => {});
+
+      const authP = (async () => {
+        if (!localStorage.getItem('aj_token')) return;
         try {
           const uRes = await apiFetch('/api/auth/me');
           sv.user(uRes.user);
           if (!uRes.user.is_admin) {
-              try {
-                  const cRes = await apiFetch('/api/auth/cart');
-                  const clCart = JSON.parse(cRes.cart || '[]');
-                  if (clCart.length > 0) {
-                      let merged = [...cart];
-                      clCart.forEach(serverItem => {
-                         const existing = merged.find(i => i.id === serverItem.id);
-                         if (existing) existing.qty = Math.max(existing.qty, serverItem.qty);
-                         else merged.push(serverItem);
-                      });
-                      cart = merged;
-                      sv.cart(); // Save locally and push up
-                  } else if (cart.length > 0) {
-                      sv.cart(); // Try to sync local up
-                  }
-              } catch(e) {}
+            try {
+              const cRes = await apiFetch('/api/auth/cart');
+              const clCart = JSON.parse(cRes.cart || '[]');
+              if (clCart.length > 0) {
+                let merged = [...cart];
+                clCart.forEach(serverItem => {
+                  const existing = merged.find(i => i.id === serverItem.id);
+                  if (existing) existing.qty = Math.max(existing.qty, serverItem.qty);
+                  else merged.push(serverItem);
+                });
+                cart = merged;
+                sv.cart();
+              } else if (cart.length > 0) {
+                sv.cart();
+              }
+            } catch(e) {}
           }
         } catch (err) {
           localStorage.removeItem('aj_token');
           sv.user(null);
         }
-      }
-      
+      })();
+
+      // Render products as soon as they arrive — don't wait on settings/auth.
+      await productsP;
+      isLoadingProducts = false;
       renderProducts(currentFilter);
+      renderHeaderAuth();
+      updateCartUI();
+
+      // Let settings + auth finish in the background.
+      await Promise.allSettled([settingsP, authP]);
       renderHeaderAuth();
       updateCartUI();
     }

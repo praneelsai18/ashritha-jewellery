@@ -6,13 +6,23 @@ Prod: gunicorn app:app
 
 import os
 import sys
+import gzip
 import time
 import threading
 import uuid
+from io import BytesIO
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from flask import Flask, jsonify, request
-from config.database import init_db
+from flask import Flask, jsonify, request, send_from_directory
+from config.database import init_db, get_conn
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+STATIC_EXTENSIONS = {
+    ".html", ".js", ".mjs", ".css", ".map",
+    ".jpg", ".jpeg", ".png", ".gif", ".svg", ".ico", ".webp",
+    ".woff", ".woff2", ".ttf", ".eot",
+    ".json", ".txt", ".pdf",
+}
 from routes.auth     import bp as auth_bp
 from routes.products import bp as products_bp
 from routes.orders   import bp as orders_bp
@@ -35,14 +45,30 @@ if IS_PROD and app.config["SECRET_KEY"] == "ashritha_secret_CHANGE_IN_PROD":
 
 
 # ----------------------------------------------------
-# NEW HOME ROUTE (ADDED)
+# FRONTEND + STATIC FILE SERVING
+# Mirrors Vercel: /api/* -> Flask, everything else -> index.html / static assets.
 # ----------------------------------------------------
 @app.route("/")
 def home():
-    return jsonify(
-        status="Ashritha Jewellers API running",
-        message="Backend deployed successfully"
-    ), 200
+    return send_from_directory(PROJECT_ROOT, "index.html")
+
+
+@app.route("/<path:filename>")
+def static_or_spa(filename):
+    if filename.startswith("api/"):
+        return jsonify(error="Endpoint not found"), 404
+
+    # Block hidden files like .env, .git/*, etc.
+    if any(part.startswith(".") for part in filename.split("/")):
+        return jsonify(error="Forbidden"), 403
+
+    ext = os.path.splitext(filename)[1].lower()
+    full_path = os.path.join(PROJECT_ROOT, filename)
+    if ext in STATIC_EXTENSIONS and os.path.isfile(full_path):
+        return send_from_directory(PROJECT_ROOT, filename)
+
+    # SPA fallback: anything else falls back to index.html
+    return send_from_directory(PROJECT_ROOT, "index.html")
 
 
 # ----------------------------------------------------
@@ -108,7 +134,53 @@ def cors(resp):
     resp.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
     if IS_PROD:
         resp.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
-        resp.headers["Cache-Control"] = "no-store"
+        # Default to no-store for sensitive responses, but let individual
+        # routes opt into caching (e.g. public product listing) by setting
+        # their own Cache-Control header.
+        if "Cache-Control" not in resp.headers:
+            resp.headers["Cache-Control"] = "no-store"
+    return resp
+
+
+GZIP_MIN_BYTES = 1024
+# Only gzip text-ish payloads. Real image binaries (jpeg/png/webp) are
+# already compressed — re-compressing just burns CPU for ~0 wire savings.
+GZIP_TYPES = ("application/json", "text/", "application/javascript", "image/svg+xml")
+
+
+@app.after_request
+def gzip_response(resp):
+    """Transparently gzip JSON/text responses so the product catalog payload
+    (which can run several MB once base64 images are involved) ships in a
+    fraction of the bytes."""
+    accept = request.headers.get("Accept-Encoding", "")
+    if "gzip" not in accept.lower():
+        return resp
+    if resp.status_code < 200 or resp.status_code >= 300:
+        return resp
+    if "Content-Encoding" in resp.headers:
+        return resp
+    if getattr(resp, "direct_passthrough", False):
+        # Streamed responses (e.g. send_from_directory) can't be rewritten safely.
+        return resp
+    ct = resp.headers.get("Content-Type", "")
+    if not any(ct.startswith(p) for p in GZIP_TYPES):
+        return resp
+
+    data = resp.get_data()
+    if len(data) < GZIP_MIN_BYTES:
+        return resp
+
+    buf = BytesIO()
+    with gzip.GzipFile(fileobj=buf, mode="wb", compresslevel=6) as gz:
+        gz.write(data)
+    resp.set_data(buf.getvalue())
+    resp.headers["Content-Encoding"] = "gzip"
+    resp.headers["Content-Length"] = str(len(resp.get_data()))
+    vary = [v.strip() for v in resp.headers.get("Vary", "").split(",") if v.strip()]
+    if "Accept-Encoding" not in vary:
+        vary.append("Accept-Encoding")
+        resp.headers["Vary"] = ", ".join(vary)
     return resp
 
 
@@ -150,6 +222,22 @@ def preflight():
 # ----------------------------------------------------
 for bp in [auth_bp, products_bp, orders_bp, reviews_bp, rent_bp, settings_bp]:
     app.register_blueprint(bp)
+
+
+def _warm_db_pool():
+    """Open one connection at boot so the first real request doesn't
+    have to pay the ~500ms Supabase TLS handshake."""
+    try:
+        c = get_conn()
+        c.close()
+    except Exception as e:
+        print(f"[startup] DB pool warm-up skipped: {e}")
+
+
+# Run in a background thread so Flask startup isn't blocked if the DB
+# is briefly unreachable. Triggers for both `flask run` / `python app.py`
+# and gunicorn worker boot (module import time).
+threading.Thread(target=_warm_db_pool, daemon=True).start()
 
 
 # ----------------------------------------------------

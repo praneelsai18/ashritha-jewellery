@@ -256,6 +256,18 @@ def _build_db_url():
     return db_url
 
 
+def _create_pool():
+    minconn = max(1, int(os.environ.get("DB_POOL_MIN", "1")))
+    maxconn = max(minconn, int(os.environ.get("DB_POOL_MAX", "10")))
+    return _pg_pool.ThreadedConnectionPool(
+        minconn, maxconn, _build_db_url(),
+        # Keep idle TCP connections alive across NAT/firewall timeouts
+        # so the pool can actually reuse them.
+        keepalives=1, keepalives_idle=30,
+        keepalives_interval=10, keepalives_count=3,
+    )
+
+
 def _get_pool():
     global _POOL
     if _POOL is not None:
@@ -263,32 +275,86 @@ def _get_pool():
     with _POOL_LOCK:
         if _POOL is not None:
             return _POOL
-        minconn = max(1, int(os.environ.get("DB_POOL_MIN", "1")))
-        maxconn = max(minconn, int(os.environ.get("DB_POOL_MAX", "10")))
-        _POOL = _pg_pool.ThreadedConnectionPool(
-            minconn, maxconn, _build_db_url(),
-            # Keep idle TCP connections alive across NAT/firewall timeouts
-            # so the pool can actually reuse them.
-            keepalives=1, keepalives_idle=30,
-            keepalives_interval=10, keepalives_count=3,
-        )
+        _POOL = _create_pool()
         return _POOL
 
 
-def get_conn():
-    pool = _get_pool()
-    raw = pool.getconn()
+def _reset_pool():
+    """Drop the current pool entirely. Used after we detect the pool is
+    serving only dead sockets (e.g. all connections were killed while a
+    serverless container was frozen)."""
+    global _POOL
+    with _POOL_LOCK:
+        old = _POOL
+        _POOL = None
+    if old is not None:
+        try:
+            old.closeall()
+        except Exception:
+            pass
 
-    # Pool can hand back a connection the server closed while idle. Discard it
-    # and grab a fresh one so callers never see a dead socket.
+
+def _ping(raw):
+    """Cheap liveness probe. Returns True if the connection is usable.
+
+    psycopg2's `connection.closed` flag only reflects locally initiated
+    closures; a socket killed by the database server (or by NAT while a
+    Vercel container was frozen) still reports closed=0 until the next
+    read/write actually fails. A `SELECT 1` is the only reliable check."""
     if getattr(raw, "closed", 0):
+        return False
+    try:
+        cur = raw.cursor()
+        try:
+            cur.execute("SELECT 1")
+            cur.fetchone()
+        finally:
+            cur.close()
+        raw.rollback()
+        return True
+    except Exception:
+        try:
+            raw.rollback()
+        except Exception:
+            pass
+        return False
+
+
+def get_conn():
+    """Return a live pooled connection. Validates each checkout with a
+    `SELECT 1` ping so callers never see a dead socket — without this the
+    first request after a Vercel cold-thaw raises
+    `OperationalError: server closed the connection unexpectedly` and the
+    caller gets an opaque 500 "Unexpected server error"."""
+    last_err = None
+    for attempt in range(4):
+        try:
+            pool = _get_pool()
+            raw = pool.getconn()
+        except Exception as e:
+            # Pool creation or checkout itself failed. Reset and retry.
+            last_err = e
+            _reset_pool()
+            continue
+
+        if _ping(raw):
+            return DBWrapper(raw, pool=pool)
+
+        # Stale / dead — drop from pool and try again.
         try:
             pool.putconn(raw, close=True)
         except Exception:
-            pass
-        raw = pool.getconn()
+            try:
+                raw.close()
+            except Exception:
+                pass
 
-    return DBWrapper(raw, pool=pool)
+        # If even fresh checkouts keep coming back dead, the pool itself
+        # is poisoned (common after a long freeze): blow it away.
+        if attempt == 1:
+            _reset_pool()
+
+    raise last_err or Exception("Database connection unavailable")
 
 
 def init_db():

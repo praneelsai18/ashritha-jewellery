@@ -3531,11 +3531,12 @@
           <h2 class="auth-card-title">Welcome Back</h2>
           <p class="auth-card-sub">Sign in to your account to continue</p>
           <div class="form-group"><label>Email or Phone Number</label><input type="text" id="si-email"
-              placeholder="you@email.com or mobile number">
+              placeholder="you@email.com or mobile number" autocomplete="username">
             <div class="field-error" id="si-email-err">Enter a valid email or phone number</div>
           </div>
           <div class="form-group"><label>Password</label>
-            <div class="password-wrap"><input type="password" id="si-pw" placeholder="Your password"><button
+            <div class="password-wrap"><input type="password" id="si-pw" placeholder="Your password"
+                autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')"><button
                 class="toggle-pw" onclick="tglPw('si-pw',this)">&#128065;</button></div>
             <div class="field-error" id="si-pw-err">Use at least 8 characters</div>
           </div>
@@ -4597,10 +4598,23 @@
     // ═══════════════════════════════════════════════════
     // PAGE NAVIGATION
     // ═══════════════════════════════════════════════════
+    function resetSignInForm() {
+      const pw = document.getElementById('si-pw');
+      if (!pw) return;
+      pw.value = '';
+      pw.type = 'password';
+      const btn = pw.closest('.password-wrap')?.querySelector('.toggle-pw');
+      if (btn) btn.innerHTML = '&#128065;';
+      setTimeout(() => {
+        if (document.getElementById('page-signin')?.classList.contains('active')) pw.value = '';
+      }, 100);
+    }
+
     function showPage(id) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       window.scrollTo(0, 0);
+      if (id === 'page-signin') resetSignInForm();
       if (id === 'page-store') { renderHeaderAuth(); renderProducts(currentFilter); updateCartUI(); }
       if (id === 'page-profile') renderProfilePage();
       if (id === 'page-admin') { renderAdminProducts(); renderAdminReviews('pending'); loadSettingsForm(); updatePendingBadge(); }
@@ -5998,6 +6012,7 @@
 
     (function init() {
       injectLogos();
+      resetSignInForm();
       showPage('page-store');
       
       isLoadingProducts = true;

@@ -32,8 +32,32 @@ def _ip():
     return xfwd.split(",")[0].strip() if xfwd else (request.remote_addr or "unknown")
 
 
-def _attempt_key(email):
-    return f"{(email or '').lower()}::{_ip()}"
+def _attempt_key(identifier):
+    key = (identifier or "").strip().lower()
+    if not valid_email(key):
+        digits = PHONE_DIGITS.sub("", key)
+        key = digits[-10:] if len(digits) >= 10 else digits
+    return f"{key}::{_ip()}"
+
+
+def _find_user_by_login(identifier):
+    identifier = (identifier or "").strip()
+    conn = get_conn()
+    if valid_email(identifier):
+        row = conn.execute(
+            "SELECT * FROM users WHERE email=%s", (identifier.lower(),)
+        ).fetchone()
+    else:
+        phone = PHONE_DIGITS.sub("", identifier)
+        if len(phone) < 10:
+            conn.close()
+            return None
+        row = conn.execute(
+            "SELECT * FROM users WHERE phone=%s OR RIGHT(phone, 10)=%s",
+            (phone, phone[-10:]),
+        ).fetchone()
+    conn.close()
+    return row
 
 
 @bp.route("/register", methods=["POST"])
@@ -69,26 +93,26 @@ def register():
 @bp.route("/login", methods=["POST"])
 def login():
     d = request.get_json(silent=True) or {}
-    email = (d.get("email") or "").strip().lower()
+    identifier = (d.get("email") or "").strip()
     pw    = d.get("password") or ""
-    if not email or not pw: return jsonify(error="Email and password required"), 400
-    key = _attempt_key(email)
+    if not identifier or not pw:
+        return jsonify(error="Email/phone and password required"), 400
+    if not valid_email(identifier) and len(PHONE_DIGITS.sub("", identifier)) < 10:
+        return jsonify(error="Enter a valid email or phone number"), 400
+    key = _attempt_key(identifier)
     now = int(time.time())
     hist = LOGIN_ATTEMPTS.get(key, {"count": 0, "lock_until": 0})
     if hist.get("lock_until", 0) > now:
         return jsonify(error="Too many failed attempts. Try again later."), 429
 
-    conn = get_conn()
-    row = conn.execute(
-        "SELECT * FROM users WHERE email=%s", (email,)
-    ).fetchone(); conn.close()
+    row = _find_user_by_login(identifier)
     if not row or not check_password_hash(row["password"], pw):
         hist["count"] = hist.get("count", 0) + 1
         if hist["count"] >= MAX_FAILS:
             hist["lock_until"] = now + LOCK_SECS
             hist["count"] = 0
         LOGIN_ATTEMPTS[key] = hist
-        return jsonify(error="Incorrect email or password"), 401
+        return jsonify(error="Incorrect email/phone or password"), 401
     LOGIN_ATTEMPTS.pop(key, None)
     return jsonify(token=make_token(row["id"], bool(row["is_admin"])), user=safe(row)), 200
 

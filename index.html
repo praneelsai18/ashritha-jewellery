@@ -488,8 +488,63 @@
 
     .header-search {
       flex: 1;
-      max-width: 400px;
+      min-width: 0;
       position: relative;
+    }
+
+    .header-search-row {
+      flex: 1;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .header-sort {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .header-sort-sel {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 9px 38px 9px 14px;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--dark);
+      background: var(--light);
+      cursor: pointer;
+      margin-left: 0;
+      min-width: 108px;
+      transition: all .2s;
+    }
+
+    .header-sort-sel:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: var(--white);
+    }
+
+    .header-sort-lines {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      pointer-events: none;
+    }
+
+    .header-sort-lines span {
+      display: block;
+      width: 14px;
+      height: 2px;
+      background: var(--muted);
+      border-radius: 1px;
     }
 
     .header-search input {
@@ -960,7 +1015,7 @@
       border-bottom: 1px solid var(--border);
       padding: 12px 24px;
       position: sticky;
-      top: 72px;
+      top: var(--header-h, 72px);
       z-index: 800;
     }
 
@@ -3332,10 +3387,36 @@
 
     @media(max-width:768px) {
       .header-top { flex-wrap: wrap; height: auto; padding: 12px 16px; }
-      .header-search { display: block; flex: 0 0 100%; margin: 12px 0 0 0; max-width: 100%; order: 3; }
+      .header-search-row { display: flex; flex: 0 0 100%; margin: 12px 0 0 0; max-width: 100%; order: 3; gap: 10px; align-items: center; }
+      .header-search { flex: 1; min-width: 0; }
       .site-nav { display: block; }
       .nav-inner { overflow-x: auto; white-space: nowrap; padding: 0 8px; }
       .nav-inner::-webkit-scrollbar { display: none; }
+
+      .filter-bar {
+        padding: 10px 0;
+      }
+
+      .filter-bar-inner {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 0 16px;
+        gap: 8px;
+      }
+
+      .filter-bar-inner::-webkit-scrollbar {
+        display: none;
+      }
+
+      .filter-label,
+      .filter-pill {
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
 
       .hero-inner {
         grid-template-columns: 1fr;
@@ -3449,9 +3530,9 @@
         <div class="auth-card">
           <h2 class="auth-card-title">Welcome Back</h2>
           <p class="auth-card-sub">Sign in to your account to continue</p>
-          <div class="form-group"><label>Email Address</label><input type="email" id="si-email"
-              placeholder="you@email.com">
-            <div class="field-error" id="si-email-err">Enter a valid email</div>
+          <div class="form-group"><label>Email or Phone Number</label><input type="text" id="si-email"
+              placeholder="you@email.com or mobile number">
+            <div class="field-error" id="si-email-err">Enter a valid email or phone number</div>
           </div>
           <div class="form-group"><label>Password</label>
             <div class="password-wrap"><input type="password" id="si-pw" placeholder="Your password"><button
@@ -3541,41 +3622,29 @@
     <header class="site-header">
       <div class="header-top">
         <div class="header-logo-area" id="storeLogo" onclick="showPage('page-store')"></div>
-        <div class="header-search"><span class="header-search-icon"><svg viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" width="16" height="16">
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg></span><input type="text" placeholder="Search jewellery..." id="searchInput"
-            oninput="handleSearch(this.value)"></div>
+        <div class="header-search-row">
+          <div class="header-search"><span class="header-search-icon"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" width="16" height="16">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg></span><input type="text" placeholder="Search jewellery..." id="searchInput"
+              oninput="handleSearch(this.value)"></div>
+          <div class="header-sort">
+            <select class="sort-sel header-sort-sel" id="sortSel" onchange="sortProducts()">
+              <option value="default">Filters</option>
+              <option value="price-asc">Low to High</option>
+              <option value="price-desc">High to Low</option>
+              <option value="newest">Newest First</option>
+            </select>
+            <span class="header-sort-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+          </div>
+        </div>
         <div class="header-actions">
           <div id="headerAuthArea"></div>
           <div id="cartBtnWrap"></div>
         </div>
       </div>
     </header>
-    <nav class="site-nav">
-      <div class="nav-inner">
-        <div class="nav-item"><span class="nav-link active" onclick="filterProducts('all',this)">All Collections</span></div>
-        <div class="nav-item"><span class="nav-link" onclick="filterProducts('necklace',this)">Necksets</span>
-          <div class="nav-dropdown"><a onclick="filterProducts('necklace',null)">All Necksets</a><a
-              onclick="filterProducts('necklace',null)">Antique Necksets</a><a
-              onclick="filterProducts('necklace',null)">Kundan Necksets</a></div>
-        </div>
-        <div class="nav-item"><span class="nav-link" onclick="filterProducts('earrings',this)">Earrings</span>
-          <div class="nav-dropdown"><a onclick="filterProducts('earrings',null)">All Earrings</a><a
-              onclick="filterProducts('earrings',null)">Jhumkas</a><a
-              onclick="filterProducts('earrings',null)">Chandbalis</a></div>
-        </div>
-        <div class="nav-item"><span class="nav-link" onclick="filterProducts('bangles',this)">Bangles</span>
-          <div class="nav-dropdown"><a onclick="filterProducts('bangles',null)">All Bangles</a><a
-              onclick="filterProducts('bangles',null)">Antique Bangles</a></div>
-        </div>
-        <div class="nav-item"><span class="nav-link" onclick="filterProducts('sets',this)">Bridal Sets</span></div>
-        <div class="nav-item"><span class="nav-link" onclick="filterProducts('rings',this)">Rings</span></div>
-        <div class="nav-item"><span class="nav-link" onclick="filterProducts('combo',this)">Combo Sets</span></div>
-        <div class="nav-item"><span class="nav-link" onclick="filterProducts('longchains',this)">Long Chains</span></div>
-      </div>
-    </nav>
 
     <!-- HERO -->
     <section class="hero-banner">
@@ -3706,12 +3775,6 @@
         <button class="filter-pill" onclick="filterProducts('longchains',this)">Long Chains</button>
         <button class="filter-pill" onclick="filterProducts('rent',this)" style="color:var(--rent);">For Rent</button>
         <button class="filter-pill" onclick="filterProducts('sale',this)">On Sale</button>
-        <select class="sort-sel" id="sortSel" onchange="sortProducts()">
-          <option value="default">Featured</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="newest">Newest First</option>
-        </select>
       </div>
     </div>
 
@@ -4445,6 +4508,39 @@
     </div>
   </div>
 
+  <!-- AUTH REQUIRED MODAL (shown when a guest tries to add to cart) -->
+  <div class="modal-overlay" id="authPromptModal" onclick="if(event.target===this)closeAuthPrompt()">
+    <div class="modal-box" style="max-width:420px;">
+      <button class="modal-close" onclick="closeAuthPrompt()"><svg viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" width="18" height="18">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg></button>
+      <div style="padding:32px 28px;text-align:center;">
+        <div
+          style="width:64px;height:64px;border-radius:50%;background:var(--light);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--gold);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="30" height="30">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+        </div>
+        <h2
+          style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark);margin-bottom:8px;">
+          Sign in to continue</h2>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:22px;line-height:1.5;">
+          Please sign in or create an account to add items to your cart.
+        </p>
+        <button class="btn btn-gold full" style="margin-bottom:10px;" onclick="goAuthFromPrompt('signin')">Sign
+          In</button>
+        <button class="btn btn-outline-dark" style="width:100%;padding:11px;"
+          onclick="goAuthFromPrompt('signup')">Create Account</button>
+        <p style="font-size:12px;color:var(--muted);margin-top:14px;">We'll add this item to your cart right after
+          you're signed in.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
 
@@ -4508,6 +4604,9 @@
       if (id === 'page-store') { renderHeaderAuth(); renderProducts(currentFilter); updateCartUI(); }
       if (id === 'page-profile') renderProfilePage();
       if (id === 'page-admin') { renderAdminProducts(); renderAdminReviews('pending'); loadSettingsForm(); updatePendingBadge(); }
+      if (typeof updateHeaderHeightVar === 'function') {
+        requestAnimationFrame(updateHeaderHeightVar);
+      }
     }
     function openPolicyPage(which) {
       showPage(which === 'return' ? 'page-return' : 'page-shipping');
@@ -4539,6 +4638,7 @@
 
     function tglPw(id, btn) { const el = document.getElementById(id); if (el.type === 'password') { el.type = 'text'; btn.innerHTML = '&#128584;'; } else { el.type = 'password'; btn.innerHTML = '&#128065;'; } }
     const vEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    const vEmailOrPhone = v => vEmail(v) || (v || '').replace(/\D/g, '').length >= 10;
     const strongPw = p => /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(p || '');
     function showErr(id, show) { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; }
 
@@ -4546,7 +4646,7 @@
       const email = document.getElementById('si-email').value.trim();
       const pass = document.getElementById('si-pw').value;
       let ok = true;
-      if (!vEmail(email)) { showErr('si-email-err', true); ok = false; } else showErr('si-email-err', false);
+      if (!vEmailOrPhone(email)) { showErr('si-email-err', true); ok = false; } else showErr('si-email-err', false);
       if (!strongPw(pass)) { showErr('si-pw-err', true); ok = false; } else showErr('si-pw-err', false);
       if (!ok) return;
       
@@ -4583,6 +4683,7 @@
         toast('Welcome back, ' + (data.user.fname || 'Admin') + '!');
         if (!products.length) await fetchInitialData();
         showPage(data.user.is_admin ? 'page-admin' : 'page-store');
+        flushPendingCart();
       } catch (err) {
         toast(err.message || 'Login failed');
       } finally {
@@ -4615,6 +4716,7 @@
         toast('Welcome to Ashritha Jewellers, ' + fname + '!');
         if (!products.length) await fetchInitialData();
         showPage('page-store');
+        flushPendingCart();
       } catch (err) {
         toast(err.message || 'Registration failed');
       } finally {
@@ -4664,6 +4766,7 @@
             toast('Signed in with Google');
             if (!products.length) await fetchInitialData();
             showPage(data.user.is_admin ? 'page-admin' : 'page-store');
+            flushPendingCart();
           } catch (err) {
             toast(err.message || 'Google sign-in failed');
           }
@@ -5135,7 +5238,33 @@
     // ═══════════════════════════════════════════════════
     // CART
     // ═══════════════════════════════════════════════════
+    let _pendingCartItem = null;
+
+    function openAuthPrompt() {
+      const m = document.getElementById('authPromptModal');
+      if (m) m.classList.add('open');
+    }
+    function closeAuthPrompt() {
+      const m = document.getElementById('authPromptModal');
+      if (m) m.classList.remove('open');
+    }
+    function goAuthFromPrompt(which) {
+      closeAuthPrompt();
+      showPage(which === 'signup' ? 'page-signup' : 'page-signin');
+    }
+    function flushPendingCart() {
+      if (!currentUser || !_pendingCartItem) return;
+      const { product, qty } = _pendingCartItem;
+      _pendingCartItem = null;
+      addToCart(product, qty);
+    }
+
     function addToCart(product, qty = 1) {
+      if (!currentUser) {
+        _pendingCartItem = { product, qty };
+        openAuthPrompt();
+        return;
+      }
       const lp = products.find(x => x.id === product.id);
       if (!lp || lp.stock === 0) { toast('Sorry, this item is out of stock'); return; }
       if (qty > lp.stock) { toast(`Only ${lp.stock} pieces available`); qty = lp.stock; }
@@ -5869,8 +5998,7 @@
 
     (function init() {
       injectLogos();
-      if (currentUser) showPage('page-store');
-      else showPage('page-signin');
+      showPage('page-store');
       
       isLoadingProducts = true;
       renderProducts(currentFilter); 
@@ -5879,7 +6007,19 @@
       
       // Fetch live data to overwrite local cache
       fetchInitialData();
+
+      updateHeaderHeightVar();
+      window.addEventListener('resize', updateHeaderHeightVar);
+      window.addEventListener('orientationchange', updateHeaderHeightVar);
+      window.addEventListener('load', updateHeaderHeightVar);
     })();
+
+    function updateHeaderHeightVar() {
+      const activeHeader = document.querySelector('.page.active .site-header');
+      if (!activeHeader) return;
+      const h = Math.round(activeHeader.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--header-h', h + 'px');
+    }
   </script>
 </body>
 <script>

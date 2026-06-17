@@ -3,24 +3,18 @@ import os
 import re
 import secrets
 import time
-from datetime import datetime, timedelta, timezone
 from flask import Blueprint, request, jsonify, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from config.database import get_conn
 from middleware.auth import make_token, login_required
-from services.email import send_password_reset_email
 
 bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 valid_email = lambda e: bool(re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", e))
 PHONE_DIGITS = re.compile(r"\D")
 PASSWORD_RE = re.compile(r"^(?=.*[A-Za-z])(?=.*\d).{8,}$")
 LOGIN_ATTEMPTS = {}
-RESET_REQUESTS = {}
 MAX_FAILS = 7
 LOCK_SECS = 10 * 60
-RESET_TOKEN_MINS = 15
-RESET_MAX_PER_EMAIL = 3
-RESET_WINDOW_SECS = 60 * 60
 
 
 def safe(row):
@@ -167,118 +161,33 @@ def google_login():
     return jsonify(token=make_token(row["id"], bool(row["is_admin"])), user=safe(row)), 200
 
 
-def _utcnow():
-    return datetime.now(timezone.utc)
-
-
-def _reset_link_base():
-    base = (os.environ.get("FRONTEND_URL", "") or "").strip().rstrip("/")
-    if not base and request:
-        base = request.host_url.rstrip("/")
-    return base
-
-
-def _can_request_reset(email):
-    now = int(time.time())
-    key = email.lower()
-    hist = [ts for ts in RESET_REQUESTS.get(key, []) if now - ts <= RESET_WINDOW_SECS]
-    RESET_REQUESTS[key] = hist
-    return len(hist) < RESET_MAX_PER_EMAIL
-
-
-def _record_reset_request(email):
-    key = email.lower()
-    RESET_REQUESTS.setdefault(key, []).append(int(time.time()))
-
-
 @bp.route("/forgot-password", methods=["POST"])
 def forgot_password():
     d = request.get_json(silent=True) or {}
     email = (d.get("email") or "").strip().lower()
+    phone = re.sub(r"\D", "", (d.get("phone") or ""))
+    new_pw = d.get("new_password") or ""
     if not valid_email(email):
         return jsonify(error="Enter a valid email"), 400
-
-    generic = {"message": "If an account exists for that email, we sent a password reset link."}
-
-    if not _can_request_reset(email):
-        return jsonify(generic), 200
-
-    conn = get_conn()
-    row = conn.execute("SELECT id,email FROM users WHERE email=%s", (email,)).fetchone()
-    if not row:
-        conn.close()
-        return jsonify(generic), 200
-
-    raw_token = secrets.token_urlsafe(32)
-    token_hash = generate_password_hash(raw_token)
-    expires_at = _utcnow() + timedelta(minutes=RESET_TOKEN_MINS)
-
-    conn.execute(
-        "UPDATE password_reset_tokens SET used=1 WHERE user_id=%s AND used=0",
-        (row["id"],),
-    )
-    conn.execute(
-        """INSERT INTO password_reset_tokens (user_id, token_hash, expires_at)
-           VALUES (%s, %s, %s)""",
-        (row["id"], token_hash, expires_at),
-    )
-    conn.commit()
-    conn.close()
-
-    reset_url = f"{_reset_link_base()}/?reset_token={raw_token}"
-    ok, err = send_password_reset_email(email, reset_url)
-    if ok:
-        _record_reset_request(email)
-    elif os.environ.get("FLASK_ENV", "development") != "production":
-        print(f"[dev] Password reset link for {email}: {reset_url}")
-        if err:
-            print(f"[dev] Brevo email failed: {err}")
-        _record_reset_request(email)
-
-    return jsonify(generic), 200
-
-
-@bp.route("/reset-password", methods=["POST"])
-def reset_password():
-    d = request.get_json(silent=True) or {}
-    token = (d.get("token") or "").strip()
-    new_pw = d.get("new_password") or ""
-    if not token:
-        return jsonify(error="Reset link is invalid or expired"), 400
+    if len(phone) < 10:
+        return jsonify(error="Enter the mobile number linked to your account"), 400
     if not _valid_password(new_pw):
         return jsonify(error="Password must be 8+ chars and include letters + numbers"), 400
 
     conn = get_conn()
-    rows = conn.execute(
-        """SELECT prt.id, prt.user_id, prt.token_hash, prt.expires_at, prt.used
-           FROM password_reset_tokens prt
-           WHERE prt.used=0
-           ORDER BY prt.created_at DESC
-           LIMIT 50"""
-    ).fetchall()
-
-    match = None
-    for row in rows:
-        expires = row["expires_at"]
-        if expires.tzinfo is None:
-            expires = expires.replace(tzinfo=timezone.utc)
-        if expires < _utcnow():
-            continue
-        if check_password_hash(row["token_hash"], token):
-            match = row
-            break
-
-    if not match:
+    row = conn.execute("SELECT id,phone FROM users WHERE email=%s", (email,)).fetchone()
+    if not row:
         conn.close()
-        return jsonify(error="Reset link is invalid or expired"), 400
+        return jsonify(error="Account not found for this email"), 404
+
+    db_phone = re.sub(r"\D", "", row.get("phone") or "")
+    if not db_phone or db_phone[-10:] != phone[-10:]:
+        conn.close()
+        return jsonify(error="Mobile number does not match this account"), 400
 
     conn.execute(
         "UPDATE users SET password=%s WHERE id=%s",
-        (generate_password_hash(new_pw), match["user_id"]),
-    )
-    conn.execute(
-        "UPDATE password_reset_tokens SET used=1 WHERE id=%s",
-        (match["id"],),
+        (generate_password_hash(new_pw), row["id"])
     )
     conn.commit()
     conn.close()

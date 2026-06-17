@@ -3602,40 +3602,16 @@
       <div class="auth-right">
         <div class="auth-card">
           <h2 class="auth-card-title">Forgot Password</h2>
-          <p class="auth-card-sub">Enter your email and we'll send you a secure reset link</p>
+          <p class="auth-card-sub">Verify your email and mobile to set a new password</p>
           <div class="form-group"><label>Email Address</label><input type="email" id="fp-email"
               placeholder="you@email.com"></div>
-          <button class="btn btn-gold full" onclick="handleForgot()">Send Reset Link</button>
-          <div class="auth-switch"><a onclick="showPage('page-signin')">Back to Sign In</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════ RESET PASSWORD (from email link) ══════════ -->
-  <div class="page" id="page-reset-password">
-    <div class="auth-wrap">
-      <div class="auth-left">
-        <div class="auth-brand">
-          <div class="auth-brand-logo" id="authLogoR"></div>
-          <h1>Set a New<br><span>Password</span></h1>
-          <p>Choose a strong password for your Ashritha Jewellers account.</p>
-        </div>
-      </div>
-      <div class="auth-right">
-        <div class="auth-card">
-          <h2 class="auth-card-title">Reset Password</h2>
-          <p class="auth-card-sub">Enter your new password below</p>
-          <input type="hidden" id="rp-token" value="">
+          <div class="form-group"><label>Registered Mobile Number</label><input type="tel" id="fp-phone"
+              placeholder="10-digit mobile number"></div>
           <div class="form-group"><label>New Password</label>
-            <div class="password-wrap"><input type="password" id="rp-new-pw" placeholder="At least 8 characters (letters and numbers)"><button
-                class="toggle-pw" onclick="tglPw('rp-new-pw',this)">&#128065;</button></div>
+            <div class="password-wrap"><input type="password" id="fp-new-pw" placeholder="At least 8 characters (letters and numbers)"><button
+                class="toggle-pw" onclick="tglPw('fp-new-pw',this)">&#128065;</button></div>
           </div>
-          <div class="form-group"><label>Confirm New Password</label>
-            <div class="password-wrap"><input type="password" id="rp-confirm-pw" placeholder="Re-enter your new password"><button
-                class="toggle-pw" onclick="tglPw('rp-confirm-pw',this)">&#128065;</button></div>
-          </div>
-          <button class="btn btn-gold full" onclick="handleResetPassword()">Update Password</button>
+          <button class="btn btn-gold full" onclick="handleForgot()">Reset Password</button>
           <div class="auth-switch"><a onclick="showPage('page-signin')">Back to Sign In</a></div>
         </div>
       </div>
@@ -4764,59 +4740,21 @@
 
     async function handleForgot() {
       const e = document.getElementById('fp-email').value.trim();
+      const phone = document.getElementById('fp-phone').value.trim();
+      const newPw = document.getElementById('fp-new-pw').value;
       if (!vEmail(e)) { toast('Enter a valid email'); return; }
-      const btn = window.event?.target;
-      const oldTxt = btn?.textContent;
-      if (btn?.tagName === 'BUTTON') { btn.textContent = 'Sending...'; btn.disabled = true; }
-      try {
-        const data = await apiFetch('/api/auth/forgot-password', {
-          method: 'POST',
-          body: JSON.stringify({ email: e })
-        });
-        toast(data.message || 'If an account exists, we sent a reset link.');
-        document.getElementById('fp-email').value = '';
-      } catch (err) {
-        toast(err.message || 'Unable to send reset link');
-      } finally {
-        if (btn?.tagName === 'BUTTON') { btn.textContent = oldTxt || 'Send Reset Link'; btn.disabled = false; }
-      }
-    }
-
-    async function handleResetPassword() {
-      const token = document.getElementById('rp-token').value.trim();
-      const newPw = document.getElementById('rp-new-pw').value;
-      const confirmPw = document.getElementById('rp-confirm-pw').value;
-      if (!token) { toast('Reset link is invalid. Request a new one.'); return; }
+      if ((phone || '').replace(/\D/g, '').length < 10) { toast('Enter registered mobile number'); return; }
       if (!strongPw(newPw)) { toast('Password must be 8+ chars with letters and numbers'); return; }
-      if (newPw !== confirmPw) { toast('Passwords do not match'); return; }
-      const btn = window.event?.target;
-      const oldTxt = btn?.textContent;
-      if (btn?.tagName === 'BUTTON') { btn.textContent = 'Updating...'; btn.disabled = true; }
       try {
-        await apiFetch('/api/auth/reset-password', {
+        await apiFetch('/api/auth/forgot-password', {
           method: 'POST',
-          body: JSON.stringify({ token, new_password: newPw })
+          body: JSON.stringify({ email: e, phone, new_password: newPw })
         });
         toast('Password reset successful. Please sign in.');
-        document.getElementById('rp-token').value = '';
-        document.getElementById('rp-new-pw').value = '';
-        document.getElementById('rp-confirm-pw').value = '';
         setTimeout(() => showPage('page-signin'), 1200);
       } catch (err) {
         toast(err.message || 'Unable to reset password');
-      } finally {
-        if (btn?.tagName === 'BUTTON') { btn.textContent = oldTxt || 'Update Password'; btn.disabled = false; }
       }
-    }
-
-    function openResetFromUrl() {
-      const token = new URLSearchParams(window.location.search).get('reset_token');
-      if (!token) return false;
-      document.getElementById('rp-token').value = token;
-      showPage('page-reset-password');
-      const clean = window.location.pathname + window.location.hash;
-      history.replaceState(null, '', clean);
-      return true;
     }
 
     function handleGoogleSignIn() {
@@ -6075,9 +6013,7 @@
     (function init() {
       injectLogos();
       resetSignInForm();
-      if (!openResetFromUrl()) {
-        showPage('page-store');
-      }
+      showPage('page-store');
       
       isLoadingProducts = true;
       renderProducts(currentFilter); 

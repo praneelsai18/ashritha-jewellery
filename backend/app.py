@@ -193,7 +193,7 @@ def preflight():
     if request.path.startswith("/api/") and request.content_length and request.content_length > path_limit:
         return jsonify(error="Request payload too large"), 413
 
-    if request.path in ("/api/auth/login", "/api/auth/register", "/api/auth/forgot-password", "/api/auth/reset-password", "/api/auth/google"):
+    if request.path in ("/api/auth/login", "/api/auth/register", "/api/auth/forgot-password", "/api/auth/google"):
         retry_after = _apply_rate_limit("auth")
         if retry_after is not None:
             return jsonify(error="Too many requests. Please try again shortly."), 429

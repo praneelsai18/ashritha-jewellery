@@ -136,16 +136,6 @@ CREATE TABLE IF NOT EXISTS rent_requests (
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ── PASSWORD RESET TOKENS ──────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS password_reset_tokens (
-    id         SERIAL PRIMARY KEY,
-    user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    token_hash TEXT    NOT NULL,
-    expires_at TIMESTAMP NOT NULL,
-    used       INTEGER DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- ── SETTINGS ───────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS settings (
     key   TEXT PRIMARY KEY,
@@ -335,7 +325,6 @@ def init_db():
     conn.execute("CREATE INDEX IF NOT EXISTS idx_products_active_category ON products (is_active, category)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_products_created_at ON products (created_at DESC)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_products_name ON products (name)")
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_pwd_reset_user ON password_reset_tokens (user_id)")
 
     # Admin user
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@ashritha.com").strip().lower()

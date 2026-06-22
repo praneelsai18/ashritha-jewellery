@@ -135,6 +135,8 @@ Render is a free hosting service that runs your Python backend online 24/7.
 | `GOOGLE_CLIENT_ID` | (required only if using Google sign in) |
 | `ENABLE_SEED_DATA` | `false` |
 | `PURGE_DEMO_DATA` | `false` (set `true` once only if you need cleanup) |
+| `BREVO_API_KEY` | Your Brevo API key (required for password reset emails) |
+| `MAIL_FROM` | Verified sender email in Brevo, e.g. `noreply@yourdomain.com` |
 
 6. Click **Create Web Service**
 7. Wait 3–5 minutes for it to deploy
@@ -337,6 +339,28 @@ Alternatively, download it via the Render Files section.
 | Website shows old data after update | Hard refresh: press `Ctrl + Shift + R` in Chrome |
 | WhatsApp button not working | Go to Admin → Settings and set your real WhatsApp number |
 | CORS error in browser console | Make sure `FRONTEND_URL` in Render environment matches your Netlify URL exactly |
+| Password reset email not received | Add `BREVO_API_KEY` and `MAIL_FROM` in your host's environment (`.env` is not deployed). Open `/api/health` — if `email_configured` is `false`, those vars are missing. Verify the sender domain in Brevo → Senders & Domains. Check server logs for `[password-reset] Email not sent`. |
+
+---
+
+## PASSWORD RESET EMAILS (BREVO)
+
+Local `.env` is gitignored, so Brevo settings **must** be added in your hosting dashboard after every deploy target change.
+
+### Vercel (if you deploy the full repo to Vercel)
+
+1. Vercel dashboard → your project → **Settings** → **Environment Variables**
+2. Add:
+   - `BREVO_API_KEY` — from Brevo → SMTP & API → API Keys
+   - `MAIL_FROM` — must match a **verified** sender in Brevo (e.g. `noreply@ashrithajewellers.com`)
+   - `FRONTEND_URL` — your live site URL (e.g. `https://your-site.vercel.app`)
+3. Redeploy, then open `https://your-site.vercel.app/api/health` and confirm `"email_configured": true`
+
+### Brevo sender setup
+
+1. Log in at [brevo.com](https://www.brevo.com)
+2. Go to **Senders, Domains & Dedicated IPs** → add and verify your domain or single sender email
+3. Create an API key under **SMTP & API** → **API Keys**
 
 ---
 
@@ -349,6 +373,8 @@ Alternatively, download it via the Render Files section.
 - [ ] Deployed backend to Render
 - [ ] Deployed website to Netlify
 - [ ] Updated `FRONTEND_URL` in Render
+- [ ] Added `BREVO_API_KEY` and `MAIL_FROM` in Render/Vercel environment
+- [ ] `/api/health` shows `"email_configured": true` on production
 - [ ] Updated `API` URL in `index.html` to Render URL
 - [ ] Re-uploaded updated `index.html` to Netlify
 - [ ] Changed admin password

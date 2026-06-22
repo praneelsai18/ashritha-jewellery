@@ -7,6 +7,13 @@ import urllib.request
 BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
 
 
+def email_service_configured():
+    return bool(
+        os.environ.get("BREVO_API_KEY", "").strip()
+        and os.environ.get("MAIL_FROM", "").strip()
+    )
+
+
 def send_password_reset_email(to_email, reset_url):
     api_key = os.environ.get("BREVO_API_KEY", "").strip()
     mail_from = os.environ.get("MAIL_FROM", "").strip()

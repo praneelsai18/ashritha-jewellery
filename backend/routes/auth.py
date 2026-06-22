@@ -234,6 +234,8 @@ def forgot_password():
         if err:
             print(f"[dev] Brevo email failed: {err}")
         _record_reset_request(email)
+    elif err:
+        print(f"[password-reset] Email not sent for {email}: {err}")
 
     return jsonify(generic), 200
 

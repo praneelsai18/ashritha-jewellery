@@ -29,6 +29,7 @@ from routes.orders   import bp as orders_bp
 from routes.reviews  import bp as reviews_bp
 from routes.rent     import bp as rent_bp
 from routes.settings import bp as settings_bp
+from services.email import email_service_configured
 
 app = Flask(__name__)
 
@@ -248,7 +249,8 @@ def health():
     return jsonify(
         status="ok",
         service="Ashritha Jewellers API",
-        version="2.0.0"
+        version="2.0.0",
+        email_configured=email_service_configured(),
     ), 200
 
 
